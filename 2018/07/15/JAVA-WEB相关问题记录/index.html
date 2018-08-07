@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32×32.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16×16.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="添加了@ResponseBody注解但是返回500错误原因：springmvc默认的json转换器需要jack依赖1234567891011121314151617&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;com.fasterxml.jackson.core&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;jackson-databind&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA WEB相关问题记录">
+<meta property="og:url" content="http://yoursite.com/2018/07/15/JAVA-WEB相关问题记录/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="添加了@ResponseBody注解但是返回500错误原因：springmvc默认的json转换器需要jack依赖1234567891011121314151617&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;com.fasterxml.jackson.core&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;jackson-databind&amp;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-07T13:04:34.250Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JAVA WEB相关问题记录">
+<meta name="twitter:description" content="添加了@ResponseBody注解但是返回500错误原因：springmvc默认的json转换器需要jack依赖1234567891011121314151617&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;com.fasterxml.jackson.core&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;jackson-databind&amp;">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/15/JAVA-WEB相关问题记录/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>JAVA WEB相关问题记录 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/JAVA-WEB相关问题记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JAVA WEB相关问题记录
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-15 16:51:04" itemprop="dateCreated datePublished" datetime="2018-07-15T16:51:04+00:00">2018-07-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="添加了-ResponseBody注解但是返回500错误"><a href="#添加了-ResponseBody注解但是返回500错误" class="headerlink" title="添加了@ResponseBody注解但是返回500错误"></a>添加了@ResponseBody注解但是返回500错误</h3><p>原因：springmvc默认的json转换器需要jack依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.9.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jackson-annotations&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.9.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jackson-core&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.9.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="添加依赖没有生效"><a href="#添加依赖没有生效" class="headerlink" title="添加依赖没有生效"></a>添加依赖没有生效</h3><p>可能是新添加的依赖没有打包到war包中，在project structure 中 artifacts 中将未包含的包加入到output中即可</p>
+<h3 id="spring-mvc-ResponseBody注解返回枚举类型"><a href="#spring-mvc-ResponseBody注解返回枚举类型" class="headerlink" title="spring mvc @ResponseBody注解返回枚举类型"></a>spring mvc @ResponseBody注解返回枚举类型</h3><p><a href="http://www.baeldung.com/jackson-serialize-enums" target="_blank" rel="noopener">http://www.baeldung.com/jackson-serialize-enums</a></p>
+<h3 id="spring-mvc-返回400"><a href="#spring-mvc-返回400" class="headerlink" title="spring mvc 返回400"></a>spring mvc 返回400</h3><p>将org.springframework.web 包中的log级别调整为DEBUG,可以看到错误原因</p>
+<h3 id="mbatis-动态更新"><a href="#mbatis-动态更新" class="headerlink" title="mbatis 动态更新"></a>mbatis 动态更新</h3><p>set 元素可以用于动态包含需要更新的列，而舍去其它的。比如：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">"updateAuthorIfNecessary"</span>&gt;</span></span><br><span class="line">  update Author</span><br><span class="line">    <span class="tag">&lt;<span class="name">set</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"username != null"</span>&gt;</span>username=#&#123;username&#125;,<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"password != null"</span>&gt;</span>password=#&#123;password&#125;,<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"email != null"</span>&gt;</span>email=#&#123;email&#125;,<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"bio != null"</span>&gt;</span>bio=#&#123;bio&#125;<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br><span class="line">  where id=#&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这里，set 元素会动态前置 SET 关键字，同时也会删掉无关的逗号，因为用了条件语句之后很可能就会在生成的 SQL 语句的后面留下这些逗号。（译者注：因为用的是“if”元素，若最后一个“if”没有匹配上而前面的匹配上，SQL 语句的最后就会有一个逗号遗留）</p>
+<h3 id="mybatis-报错-org-apache-ibatis-executor-ExecutorException-No-constructor-found"><a href="#mybatis-报错-org-apache-ibatis-executor-ExecutorException-No-constructor-found" class="headerlink" title="mybatis 报错 org.apache.ibatis.executor.ExecutorException: No constructor found"></a>mybatis 报错 org.apache.ibatis.executor.ExecutorException: No constructor found</h3><p>问题是由于自己定义了一个构造函数,所以没有默认的构造函数,添加默认构造函数之后就可以了。<br>原因暂时不明白。</p>
+<h3 id="react项目-ngnix静态资源服务器配置"><a href="#react项目-ngnix静态资源服务器配置" class="headerlink" title="react项目 ngnix静态资源服务器配置"></a>react项目 ngnix静态资源服务器配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   E:\\workspace\\IdeaProjects\\classroomsys\\front\\dist;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">            </span><br><span class="line">            try_files $uri $uri/ /index.html;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">		location /api &#123;</span><br><span class="line">			proxy_pass http://127.0.0.1:8080;</span><br><span class="line">		&#125;</span><br><span class="line">        </span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="maven项目中读取properties文件"><a href="#maven项目中读取properties文件" class="headerlink" title="maven项目中读取properties文件"></a>maven项目中读取properties文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PROPERTIES.load(×××.class.getClassLoader().getResourceAsStream(<span class="string">"config.properties"</span>));</span><br></pre></td></tr></table></figure>
+<p><a href="https://blog.csdn.net/winwill2012/article/details/39641401" target="_blank" rel="noopener">java getResourceAsStream的使用方法
+</a></p>
+<h3 id="java-mysql-时区问题"><a href="#java-mysql-时区问题" class="headerlink" title="java mysql 时区问题"></a>java mysql 时区问题</h3><p><a href="https://www.jianshu.com/p/7e9247c0b81a" target="_blank" rel="noopener">如何规避mysql的url时区的陷阱</a></p>
+<h3 id="mysql-8-0升级问题"><a href="#mysql-8-0升级问题" class="headerlink" title="mysql 8.0升级问题"></a>mysql 8.0升级问题</h3><ol>
+<li>报错<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.sql.SQLException: Unknown system variable <span class="string">'query_cache_size'</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>解决办法：<br>升级connector jar包</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.0.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>报错<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unable to load authentication plugin &apos;caching_sha2_password&apos;.</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>解决办法：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'ip_address'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">'password'</span>;</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://stackoverflow.com/questions/49194719/authentication-plugin-caching-sha2-password-cannot-be-loaded" target="_blank" rel="noopener">mysql - Authentication plugin ‘caching_sha2_password’ cannot be loaded - Stack Overflow</a></p>
+<h3 id="静态资源处理-与-拦截器、异常处理器"><a href="#静态资源处理-与-拦截器、异常处理器" class="headerlink" title="静态资源处理 与 拦截器、异常处理器"></a>静态资源处理 与 拦截器、异常处理器</h3><p>问题:springMVC配置了静态资源处理<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:resources</span> <span class="attr">mapping</span>=<span class="string">"/file/**"</span> <span class="attr">location</span>=<span class="string">"/static/"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>但是访问静态资源报错：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.ClassCastException: org.springframework.web.servlet.resource.ResourceHttpRequestHandler cannot be to org.springframework.web.method.HandlerMethod</span><br></pre></td></tr></table></figure></p>
+<p>报错位置在全局异常处理器</p>
+<p>ExceptionResolver.java<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">resolveException</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> </span>&#123;</span><br><span class="line">        ModelAndView mv = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">        </span><br><span class="line">        HandlerMethod handlerMethod = (HandlerMethod) handler; <span class="comment">//报错在这一行</span></span><br><span class="line">        Method method = handlerMethod.getMethod();</span><br><span class="line">        …………………</span><br><span class="line">        …………………</span><br><span class="line">        <span class="keyword">return</span> mv;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>ResourceHttpRequestHandler不能够被强制转换成HandlerMethod所以报错</p>
+<p>解决办法便是在强制转换之前判断一下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">resolveException</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> </span>&#123;</span><br><span class="line">        ModelAndView mv = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">        <span class="comment">//先判断</span></span><br><span class="line">        <span class="keyword">if</span>(!(handler <span class="keyword">instanceof</span> HandlerMethod))&#123;</span><br><span class="line">            <span class="keyword">return</span> mv;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        HandlerMethod handlerMethod = (HandlerMethod) handler; <span class="comment">//报错在这一行</span></span><br><span class="line">        Method method = handlerMethod.getMethod();</span><br><span class="line">        …………………</span><br><span class="line">        …………………</span><br><span class="line">        <span class="keyword">return</span> mv;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>同样在拦截器中也有类似的处理：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TokenInterceptor</span> <span class="keyword">implements</span> <span class="title">HandlerInterceptor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(TokenInterceptor.class);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//先判断</span></span><br><span class="line">        <span class="keyword">if</span>(!(handler <span class="keyword">instanceof</span> HandlerMethod))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        HandlerMethod handlerMethod = (HandlerMethod) handler;</span><br><span class="line">        Method method = handlerMethod.getMethod();</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 注解的类或方法需要校验</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">if</span>(method.getDeclaringClass().getAnnotation(TokenValidate.class) == <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">                method.getAnnotation(TokenValidate.class) == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ……………………</span><br><span class="line">        ……………………</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>回过头来看下ResourceHttpRequestHandler和HandlerMethod都是什么？为什么不能强制转?</p>
+<p>简单的说，ResourceHttpRequestHandler是用来处理静态资源的；而HandlerMethod则是springMVC中用@Controller声明的一个bean及对应的处理方法。</p>
+<p><a href="https://blog.csdn.net/lqzkcx3/article/details/78601545" target="_blank" rel="noopener">SpringMVC源码研究之 mvc:resources</a></p>
+<p><a href="https://my.oschina.net/pingpangkuangmo/blog/388208" target="_blank" rel="noopener">SpringMVC处理静态文件源码分析</a></p>
+<h3 id="typehandler"><a href="#typehandler" class="headerlink" title="typehandler"></a>typehandler</h3><h3 id="maven-pom配置"><a href="#maven-pom配置" class="headerlink" title="maven pom配置"></a>maven pom配置</h3><h3 id="jenkins-项目部署"><a href="#jenkins-项目部署" class="headerlink" title="jenkins 项目部署"></a>jenkins 项目部署</h3><p>git,maven,tomcat,jdk,nginx</p>
+<h3 id="IDEA-突然找不到所有引入的包"><a href="#IDEA-突然找不到所有引入的包" class="headerlink" title="IDEA 突然找不到所有引入的包"></a>IDEA 突然找不到所有引入的包</h3><p>File -&gt; Invalidate Caches/Restarts</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/15/windwos-tree命令-生成目录结构树/" rel="next" title="windwos tree命令 生成目录结构树">
+                <i class="fa fa-chevron-left"></i> windwos tree命令 生成目录结构树
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Keaper" />
+            
+              <p class="site-author-name" itemprop="name">Keaper</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">49</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/J-keaper" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加了-ResponseBody注解但是返回500错误"><span class="nav-number">1.</span> <span class="nav-text">添加了@ResponseBody注解但是返回500错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加依赖没有生效"><span class="nav-number">2.</span> <span class="nav-text">添加依赖没有生效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-mvc-ResponseBody注解返回枚举类型"><span class="nav-number">3.</span> <span class="nav-text">spring mvc @ResponseBody注解返回枚举类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-mvc-返回400"><span class="nav-number">4.</span> <span class="nav-text">spring mvc 返回400</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mbatis-动态更新"><span class="nav-number">5.</span> <span class="nav-text">mbatis 动态更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mybatis-报错-org-apache-ibatis-executor-ExecutorException-No-constructor-found"><span class="nav-number">6.</span> <span class="nav-text">mybatis 报错 org.apache.ibatis.executor.ExecutorException: No constructor found</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#react项目-ngnix静态资源服务器配置"><span class="nav-number">7.</span> <span class="nav-text">react项目 ngnix静态资源服务器配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven项目中读取properties文件"><span class="nav-number">8.</span> <span class="nav-text">maven项目中读取properties文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-mysql-时区问题"><span class="nav-number">9.</span> <span class="nav-text">java mysql 时区问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql-8-0升级问题"><span class="nav-number">10.</span> <span class="nav-text">mysql 8.0升级问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态资源处理-与-拦截器、异常处理器"><span class="nav-number">11.</span> <span class="nav-text">静态资源处理 与 拦截器、异常处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#typehandler"><span class="nav-number">12.</span> <span class="nav-text">typehandler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven-pom配置"><span class="nav-number">13.</span> <span class="nav-text">maven pom配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jenkins-项目部署"><span class="nav-number">14.</span> <span class="nav-text">jenkins 项目部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IDEA-突然找不到所有引入的包"><span class="nav-number">15.</span> <span class="nav-text">IDEA 突然找不到所有引入的包</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Keaper</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -64,10 +64,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32*32.png?v=6.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32×32.png?v=6.3.0">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16*16.png?v=6.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16×16.png?v=6.3.0">
 
 
   <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
@@ -115,13 +115,13 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="浏览器输入网址后发生了什么？这是一道很经典的 面试题目。  浏览器解析URL，生成HTTP请求报文。 如果输入的是域名，则需要根据域名向DNS服务器查询IP地址。调用sockt库中的获取域名函数（gethostbyname()）解析输入的域名。解析过程如下： - 委托操作系统内部协议栈发送UDP报文，包含请求消息 - ... - 中间包含IP层和数据链路层的封装，解封，以及路由寻址等（下面会提到）">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/socket.jpg">
-<meta property="og:image" content="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/tcp-socket.gif">
-<meta property="og:updated_time" content="2018-08-07T01:25:49.989Z">
+<meta property="og:image" content="http://yoursite.com/images/socket.jpg">
+<meta property="og:image" content="http://yoursite.com/images/tcp-socket.gif">
+<meta property="og:updated_time" content="2018-08-07T13:04:34.250Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器输入网址发生了什么？">
 <meta name="twitter:description" content="浏览器输入网址后发生了什么？这是一道很经典的 面试题目。  浏览器解析URL，生成HTTP请求报文。 如果输入的是域名，则需要根据域名向DNS服务器查询IP地址。调用sockt库中的获取域名函数（gethostbyname()）解析输入的域名。解析过程如下： - 委托操作系统内部协议栈发送UDP报文，包含请求消息 - ... - 中间包含IP层和数据链路层的封装，解封，以及路由寻址等（下面会提到）">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/socket.jpg">
+<meta name="twitter:image" content="http://yoursite.com/images/socket.jpg">
 
 
 
@@ -366,7 +366,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
               
             
           </span>
@@ -413,9 +413,9 @@
 <li><p>知道了IP 地址之后，就可以委托操作系统内部的协议栈向这个目标IP地址发送消息。<br>通过socket库与服务器通信。socket通信过程如下：</p>
 </li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/socket.jpg" alt=""></p>
+<p><img src="/images/socket.jpg" alt=""></p>
 <ol start="4">
-<li><p>socket会调用 TCP协议模块 去建立连接（三次握手），收发数据，断开连接（四次挥手）。TCP模块会在原始数据上加上TCP控制信息，例如端口信息等。<br><img src="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/tcp-socket.gif" alt=""></p>
+<li><p>socket会调用 TCP协议模块 去建立连接（三次握手），收发数据，断开连接（四次挥手）。TCP模块会在原始数据上加上TCP控制信息，例如端口信息等。<br><img src="/images/tcp-socket.gif" alt=""></p>
 </li>
 <li><p>TCP在执行连接，收发，断开等各个阶段操作时都需要委托 IP协议模块 封装数据包发送通信对象。IP协议模块接受TCP协议模块的委托负责包的收发，他会生成IP头部（包括发送方和接收方的IP地址等）附加在TCP头部前面。</p>
 </li>
@@ -541,7 +541,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-count">49</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

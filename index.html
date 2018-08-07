@@ -64,10 +64,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32*32.png?v=6.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32×32.png?v=6.3.0">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16*16.png?v=6.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16×16.png?v=6.3.0">
 
 
   <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
@@ -301,6 +301,347 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/JAVA-WEB相关问题记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/15/JAVA-WEB相关问题记录/" itemprop="url">
+                  JAVA WEB相关问题记录
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-15 16:51:04" itemprop="dateCreated datePublished" datetime="2018-07-15T16:51:04+00:00">2018-07-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="添加了-ResponseBody注解但是返回500错误"><a href="#添加了-ResponseBody注解但是返回500错误" class="headerlink" title="添加了@ResponseBody注解但是返回500错误"></a>添加了@ResponseBody注解但是返回500错误</h3><p>原因：springmvc默认的json转换器需要jack依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.9.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jackson-annotations&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.9.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jackson-core&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.9.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="添加依赖没有生效"><a href="#添加依赖没有生效" class="headerlink" title="添加依赖没有生效"></a>添加依赖没有生效</h3><p>可能是新添加的依赖没有打包到war包中，在project structure 中 artifacts 中将未包含的包加入到output中即可</p>
+<h3 id="spring-mvc-ResponseBody注解返回枚举类型"><a href="#spring-mvc-ResponseBody注解返回枚举类型" class="headerlink" title="spring mvc @ResponseBody注解返回枚举类型"></a>spring mvc @ResponseBody注解返回枚举类型</h3><p><a href="http://www.baeldung.com/jackson-serialize-enums" target="_blank" rel="noopener">http://www.baeldung.com/jackson-serialize-enums</a></p>
+<h3 id="spring-mvc-返回400"><a href="#spring-mvc-返回400" class="headerlink" title="spring mvc 返回400"></a>spring mvc 返回400</h3><p>将org.springframework.web 包中的log级别调整为DEBUG,可以看到错误原因</p>
+<h3 id="mbatis-动态更新"><a href="#mbatis-动态更新" class="headerlink" title="mbatis 动态更新"></a>mbatis 动态更新</h3><p>set 元素可以用于动态包含需要更新的列，而舍去其它的。比如：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">"updateAuthorIfNecessary"</span>&gt;</span></span><br><span class="line">  update Author</span><br><span class="line">    <span class="tag">&lt;<span class="name">set</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"username != null"</span>&gt;</span>username=#&#123;username&#125;,<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"password != null"</span>&gt;</span>password=#&#123;password&#125;,<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"email != null"</span>&gt;</span>email=#&#123;email&#125;,<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"bio != null"</span>&gt;</span>bio=#&#123;bio&#125;<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br><span class="line">  where id=#&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这里，set 元素会动态前置 SET 关键字，同时也会删掉无关的逗号，因为用了条件语句之后很可能就会在生成的 SQL 语句的后面留下这些逗号。（译者注：因为用的是“if”元素，若最后一个“if”没有匹配上而前面的匹配上，SQL 语句的最后就会有一个逗号遗留）</p>
+<h3 id="mybatis-报错-org-apache-ibatis-executor-ExecutorException-No-constructor-found"><a href="#mybatis-报错-org-apache-ibatis-executor-ExecutorException-No-constructor-found" class="headerlink" title="mybatis 报错 org.apache.ibatis.executor.ExecutorException: No constructor found"></a>mybatis 报错 org.apache.ibatis.executor.ExecutorException: No constructor found</h3><p>问题是由于自己定义了一个构造函数,所以没有默认的构造函数,添加默认构造函数之后就可以了。<br>原因暂时不明白。</p>
+<h3 id="react项目-ngnix静态资源服务器配置"><a href="#react项目-ngnix静态资源服务器配置" class="headerlink" title="react项目 ngnix静态资源服务器配置"></a>react项目 ngnix静态资源服务器配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   E:\\workspace\\IdeaProjects\\classroomsys\\front\\dist;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">            </span><br><span class="line">            try_files $uri $uri/ /index.html;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">		location /api &#123;</span><br><span class="line">			proxy_pass http://127.0.0.1:8080;</span><br><span class="line">		&#125;</span><br><span class="line">        </span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="maven项目中读取properties文件"><a href="#maven项目中读取properties文件" class="headerlink" title="maven项目中读取properties文件"></a>maven项目中读取properties文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PROPERTIES.load(×××.class.getClassLoader().getResourceAsStream(<span class="string">"config.properties"</span>));</span><br></pre></td></tr></table></figure>
+<p><a href="https://blog.csdn.net/winwill2012/article/details/39641401" target="_blank" rel="noopener">java getResourceAsStream的使用方法
+</a></p>
+<h3 id="java-mysql-时区问题"><a href="#java-mysql-时区问题" class="headerlink" title="java mysql 时区问题"></a>java mysql 时区问题</h3><p><a href="https://www.jianshu.com/p/7e9247c0b81a" target="_blank" rel="noopener">如何规避mysql的url时区的陷阱</a></p>
+<h3 id="mysql-8-0升级问题"><a href="#mysql-8-0升级问题" class="headerlink" title="mysql 8.0升级问题"></a>mysql 8.0升级问题</h3><ol>
+<li>报错<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.sql.SQLException: Unknown system variable <span class="string">'query_cache_size'</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>解决办法：<br>升级connector jar包</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.0.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>报错<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unable to load authentication plugin &apos;caching_sha2_password&apos;.</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>解决办法：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'ip_address'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">'password'</span>;</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://stackoverflow.com/questions/49194719/authentication-plugin-caching-sha2-password-cannot-be-loaded" target="_blank" rel="noopener">mysql - Authentication plugin ‘caching_sha2_password’ cannot be loaded - Stack Overflow</a></p>
+<h3 id="静态资源处理-与-拦截器、异常处理器"><a href="#静态资源处理-与-拦截器、异常处理器" class="headerlink" title="静态资源处理 与 拦截器、异常处理器"></a>静态资源处理 与 拦截器、异常处理器</h3><p>问题:springMVC配置了静态资源处理<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:resources</span> <span class="attr">mapping</span>=<span class="string">"/file/**"</span> <span class="attr">location</span>=<span class="string">"/static/"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>但是访问静态资源报错：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.ClassCastException: org.springframework.web.servlet.resource.ResourceHttpRequestHandler cannot be to org.springframework.web.method.HandlerMethod</span><br></pre></td></tr></table></figure></p>
+<p>报错位置在全局异常处理器</p>
+<p>ExceptionResolver.java<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">resolveException</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> </span>&#123;</span><br><span class="line">        ModelAndView mv = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">        </span><br><span class="line">        HandlerMethod handlerMethod = (HandlerMethod) handler; <span class="comment">//报错在这一行</span></span><br><span class="line">        Method method = handlerMethod.getMethod();</span><br><span class="line">        …………………</span><br><span class="line">        …………………</span><br><span class="line">        <span class="keyword">return</span> mv;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>ResourceHttpRequestHandler不能够被强制转换成HandlerMethod所以报错</p>
+<p>解决办法便是在强制转换之前判断一下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">resolveException</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> </span>&#123;</span><br><span class="line">        ModelAndView mv = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">        <span class="comment">//先判断</span></span><br><span class="line">        <span class="keyword">if</span>(!(handler <span class="keyword">instanceof</span> HandlerMethod))&#123;</span><br><span class="line">            <span class="keyword">return</span> mv;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        HandlerMethod handlerMethod = (HandlerMethod) handler; <span class="comment">//报错在这一行</span></span><br><span class="line">        Method method = handlerMethod.getMethod();</span><br><span class="line">        …………………</span><br><span class="line">        …………………</span><br><span class="line">        <span class="keyword">return</span> mv;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>同样在拦截器中也有类似的处理：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TokenInterceptor</span> <span class="keyword">implements</span> <span class="title">HandlerInterceptor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(TokenInterceptor.class);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//先判断</span></span><br><span class="line">        <span class="keyword">if</span>(!(handler <span class="keyword">instanceof</span> HandlerMethod))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        HandlerMethod handlerMethod = (HandlerMethod) handler;</span><br><span class="line">        Method method = handlerMethod.getMethod();</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 注解的类或方法需要校验</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">if</span>(method.getDeclaringClass().getAnnotation(TokenValidate.class) == <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">                method.getAnnotation(TokenValidate.class) == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ……………………</span><br><span class="line">        ……………………</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>回过头来看下ResourceHttpRequestHandler和HandlerMethod都是什么？为什么不能强制转?</p>
+<p>简单的说，ResourceHttpRequestHandler是用来处理静态资源的；而HandlerMethod则是springMVC中用@Controller声明的一个bean及对应的处理方法。</p>
+<p><a href="https://blog.csdn.net/lqzkcx3/article/details/78601545" target="_blank" rel="noopener">SpringMVC源码研究之 mvc:resources</a></p>
+<p><a href="https://my.oschina.net/pingpangkuangmo/blog/388208" target="_blank" rel="noopener">SpringMVC处理静态文件源码分析</a></p>
+<h3 id="typehandler"><a href="#typehandler" class="headerlink" title="typehandler"></a>typehandler</h3><h3 id="maven-pom配置"><a href="#maven-pom配置" class="headerlink" title="maven pom配置"></a>maven pom配置</h3><h3 id="jenkins-项目部署"><a href="#jenkins-项目部署" class="headerlink" title="jenkins 项目部署"></a>jenkins 项目部署</h3><p>git,maven,tomcat,jdk,nginx</p>
+<h3 id="IDEA-突然找不到所有引入的包"><a href="#IDEA-突然找不到所有引入的包" class="headerlink" title="IDEA 突然找不到所有引入的包"></a>IDEA 突然找不到所有引入的包</h3><p>File -&gt; Invalidate Caches/Restarts</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/windwos-tree命令-生成目录结构树/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/15/windwos-tree命令-生成目录结构树/" itemprop="url">
+                  windwos tree命令 生成目录结构树
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-15 16:49:52" itemprop="dateCreated datePublished" datetime="2018-07-15T16:49:52+00:00">2018-07-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>tree命令的格式是<br><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">tree</span> [drive:][<span class="built_in">path</span>] [/F] [/A]</span><br><span class="line"></span><br><span class="line">   /F   显示每个文件夹中文件的名称。</span><br><span class="line">   /A   使用 ASCII 字符，而不使用扩展字符。</span><br></pre></td></tr></table></figure></p>
+<p>可以重定向输出到文件中：<br>例如：<br><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">tree</span> . /F &gt; <span class="built_in">tree</span>.txt</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/webpack-配置antd/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,7 +705,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
               
             
           </span>
@@ -519,7 +860,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
               
             
           </span>
@@ -675,7 +1016,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
               
             
           </span>
@@ -724,9 +1065,9 @@
 <li><p>知道了IP 地址之后，就可以委托操作系统内部的协议栈向这个目标IP地址发送消息。<br>通过socket库与服务器通信。socket通信过程如下：</p>
 </li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/socket.jpg" alt=""></p>
+<p><img src="/images/socket.jpg" alt=""></p>
 <ol start="4">
-<li><p>socket会调用 TCP协议模块 去建立连接（三次握手），收发数据，断开连接（四次挥手）。TCP模块会在原始数据上加上TCP控制信息，例如端口信息等。<br><img src="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/tcp-socket.gif" alt=""></p>
+<li><p>socket会调用 TCP协议模块 去建立连接（三次握手），收发数据，断开连接（四次挥手）。TCP模块会在原始数据上加上TCP控制信息，例如端口信息等。<br><img src="/images/tcp-socket.gif" alt=""></p>
 </li>
 <li><p>TCP在执行连接，收发，断开等各个阶段操作时都需要委托 IP协议模块 封装数据包发送通信对象。IP协议模块接受TCP协议模块的委托负责包的收发，他会生成IP头部（包括发送方和接收方的IP地址等）附加在TCP头部前面。</p>
 </li>
@@ -864,7 +1205,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
               
             
           </span>
@@ -1016,7 +1357,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
               
             
           </span>
@@ -1187,7 +1528,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
               
             
           </span>
@@ -1341,7 +1682,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
               
             
           </span>
@@ -1496,7 +1837,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-07 13:04:34" itemprop="dateModified" datetime="2018-08-07T13:04:34+00:00">2018-08-07</time>
               
             
           </span>
@@ -1598,345 +1939,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/网易校招-射击游戏/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/20/网易校招-射击游戏/" itemprop="url">
-                  [网易校招]射击游戏
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-09-20 16:26:08" itemprop="dateCreated datePublished" datetime="2017-09-20T16:26:08+00:00">2017-09-20</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><a href="https://www.nowcoder.com/questionTerminal/d3f26db0325444078717cc802e0056d8" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/d3f26db0325444078717cc802e0056d8</a></p>
-<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>小易正在玩一款新出的射击游戏,这个射击游戏在一个二维平面进行,小易在坐标原点(0,0),平面上有n只怪物,每个怪物有所在的坐标(x[i], y[i])。小易进行一次射击会把x轴和y轴上(包含坐标原点)的怪物一次性消灭。<br>小易是这个游戏的VIP玩家,他拥有两项特权操作:<br>1、让平面内的所有怪物同时向任意同一方向移动任意同一距离<br>2、让平面内的所有怪物同时对于小易(0,0)旋转任意同一角度<br>小易要进行一次射击。小易在进行射击前,可以使用这两项特权操作任意次。<br>小易想知道在他射击的时候最多可以同时消灭多少只怪物,请你帮帮小易。</p>
-<p>如样例所示:</p>
-<p><img src="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/pasted-2.png" alt=""></p>
-<p>所有点对于坐标原点(0,0)顺时针或者逆时针旋转45°,可以让所有点都在坐标轴上,所以5个怪物都可以消灭。</p>
-<p>输入描述:</p>
-<blockquote>
-<p>输入包括三行。<br>第一行中有一个正整数n(1 ≤ n ≤ 50),表示平面内的怪物数量。<br>第二行包括n个整数x<a href="-1,000,000 ≤ x[i] ≤ 1,000,000">i</a>,表示每只怪物所在坐标的横坐标,以空格分割。<br>第二行包括n个整数y<a href="-1,000,000 ≤ y[i] ≤ 1,000,000">i</a>,表示每只怪物所在坐标的纵坐标,以空格分割。</p>
-</blockquote>
-<p>输出描述:</p>
-<blockquote>
-<p>输出一个整数表示小易最多能消灭多少只怪物。</p>
-</blockquote>
-<p>输入例子1:</p>
-<blockquote>
-<p>5<br>0 -1 1 1 -1<br>0 -1 -1 1 1</p>
-</blockquote>
-<p>输出例子1:</p>
-<blockquote>
-<p>5</p>
-</blockquote>
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>题目其实就是求两条垂直的直线上最多可以有多少个点。<br>两个for，两个点<code>A</code>，<code>B</code>确定一条直线，第三个for，第三个点<code>C</code>通过另一条直线，第四个for，对于剩下 的n-3个点，如果在<code>AB</code>确定的直线上或者与<code>C</code>点构成的直线与AB垂直均可以。第四个for结束后，更新一次最大值。<br>最后输出最大值即可。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">double</span> eps=<span class="number">1e-9</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sgn</span><span class="params">(<span class="keyword">double</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x&lt;-eps) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(x&gt;eps) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">cross</span><span class="params">(<span class="keyword">int</span> x1,<span class="keyword">int</span> y1,<span class="keyword">int</span> x2,<span class="keyword">int</span> y2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x1*y2-x2*y1;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">dot</span><span class="params">(<span class="keyword">int</span> x1,<span class="keyword">int</span> y1,<span class="keyword">int</span> x2,<span class="keyword">int</span> y2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x1*x2+y1*y2;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">point_on_segment</span><span class="params">(<span class="keyword">int</span> x1,<span class="keyword">int</span> y1,<span class="keyword">int</span> x2,<span class="keyword">int</span> y2,<span class="keyword">int</span> px,<span class="keyword">int</span> py)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sgn(cross(x1-px,y1-py,x2-px,y2-py))==<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isVertical</span><span class="params">(<span class="keyword">int</span> x1,<span class="keyword">int</span> y1,<span class="keyword">int</span> x2,<span class="keyword">int</span> y2,<span class="keyword">int</span> x3,<span class="keyword">int</span> y3,<span class="keyword">int</span> x4,<span class="keyword">int</span> y4)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sgn(dot(x1-x2,y1-y2,x3-x4,y3-y4))==<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; x(n),y(n);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;x[i];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;y[i];</span><br><span class="line">    <span class="keyword">int</span> mmax = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(n&lt;<span class="number">4</span>) mmax = n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>; j&lt;n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> p=<span class="number">0</span>; p&lt;n; p++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(p==i||p==j) <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">int</span> ans = <span class="number">3</span>;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> q=<span class="number">0</span>; q&lt;n; q++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span>(q==i||q==j||q==p) <span class="keyword">continue</span>;</span><br><span class="line">                    <span class="keyword">if</span>(point_on_segment(x[i],y[i],x[j],y[j],x[q],y[q])||</span><br><span class="line">                       isVertical(x[i],y[i],x[j],y[j],x[p],y[p],x[q],y[q]))</span><br><span class="line">                        ans++;</span><br><span class="line">                &#125;</span><br><span class="line">                mmax= max(mmax,ans);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;mmax&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/网易校招-合唱/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/20/网易校招-合唱/" itemprop="url">
-                  [网易校招]合唱
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-09-20 16:08:31" itemprop="dateCreated datePublished" datetime="2017-09-20T16:08:31+00:00">2017-09-20</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><a href="https://www.nowcoder.com/questionTerminal/fddf64d5757e41ec93f3ef0c0a10b891" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/fddf64d5757e41ec93f3ef0c0a10b891</a></p>
-<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>小Q和牛博士合唱一首歌曲,这首歌曲由n个音调组成,每个音调由一个正整数表示。<br>对于每个音调要么由小Q演唱要么由牛博士演唱,对于一系列音调演唱的难度等于所有相邻音调变化幅度之和, 例如一个音调序列是8, 8, 13, 12, 那么它的难度等于|8 - 8| + |13 - 8| + |12 - 13| = 6(其中||表示绝对值)。<br>现在要对把这n个音调分配给小Q或牛博士,让他们演唱的难度之和最小,请你算算最小的难度和是多少。<br>如样例所示: 小Q选择演唱{5, 6}难度为1, 牛博士选择演唱{1, 2, 1}难度为2,难度之和为3,这一个是最小难度和的方案了。<br>输入描述:<br>输入包括两行,第一行一个正整数n(1 ≤ n ≤ 2000) 第二行n个整数v<a href="1 ≤ v[i] ≤ 10^6">i</a>, 表示每个音调。</p>
-<p>输出描述:</p>
-<blockquote>
-<p>输出一个整数,表示小Q和牛博士演唱最小的难度和是多少。</p>
-</blockquote>
-<p>输入例子1:</p>
-<blockquote>
-<p>5<br>1 5 6 2 1</p>
-</blockquote>
-<p>输出例子1:</p>
-<blockquote>
-<p>3</p>
-</blockquote>
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>设<code>DP[i][j]（j&gt;i）</code>为两个人最近唱的音调分别为第<code>i</code>个和第<code>j</code>个。<br>状态转移：<br>如果<code>i==j-1</code>,也就是换人演唱的时候，<code>DP[i][j]</code>也就是<code>DP[j-1][j]</code>的值应该为<code>DP[k][j-1]+abs(v[k][j])</code>,k为这个人上次演唱的音调位置。<br>如果<code>i&lt;j-1</code>,也就是最近演唱的人继续演唱当前字符，<code>DP[i][j]</code>的值应该为<code>DP[i][j-1]+abs(v[j]-v[j-1])</code>。<br>最后结果应该<code>DP[i][n],1&lt;=i&lt;n</code>中的最小值。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v(n+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;v[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">vector</span>&lt; <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; dp(n+<span class="number">1</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(n+<span class="number">1</span>));</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&gt;<span class="number">2</span>) dp[i<span class="number">-1</span>][i] = dp[i<span class="number">-2</span>][i<span class="number">-1</span>] + <span class="built_in">abs</span>(v[i<span class="number">-1</span>]-v[i<span class="number">-2</span>]);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//    for(int i=0;i&lt;=n;i++)&#123;</span></span><br><span class="line"><span class="comment">//        for(int j=0;j&lt;=n;j++)&#123;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;dp[i][j]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        cout&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;j<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            dp[i][j]=dp[i][j<span class="number">-1</span>]+<span class="built_in">abs</span>(v[j]-v[j<span class="number">-1</span>]);</span><br><span class="line">            dp[j<span class="number">-1</span>][j]=min(dp[j<span class="number">-1</span>][j],dp[i][j<span class="number">-1</span>]+<span class="built_in">abs</span>(v[i]-v[j]));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> ans = INT_MAX;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;n;i++)&#123;</span><br><span class="line">        ans=min(ans,dp[i][n]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;ans&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1988,7 +1990,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-count">49</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

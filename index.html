@@ -301,7 +301,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/webpack-配置antd/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Keaper">
@@ -320,8 +320,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/06/hello-world/" itemprop="url">
-                  Hello World
+                <a class="post-title-link" href="/2018/02/23/webpack-配置antd/" itemprop="url">
+                  webpack 配置antd
                 </a>
               
             
@@ -347,9 +347,25 @@
                 
               
 
-              <time title="创建时间：2018-08-06 14:03:21" itemprop="dateCreated datePublished" datetime="2018-08-06T14:03:21+00:00">2018-08-06</time>
+              <time title="创建时间：2018-02-23 23:09:26" itemprop="dateCreated datePublished" datetime="2018-02-23T23:09:26+00:00">2018-02-23</time>
             
 
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
             
           </span>
 
@@ -383,15 +399,1506 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+            <h2 id="webpack配置antd"><a href="#webpack配置antd" class="headerlink" title="webpack配置antd"></a>webpack配置antd</h2><p>webpack配置文件 wepack.config.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//省略</span></span><br><span class="line"><span class="built_in">module</span>:&#123;</span><br><span class="line">        rules: [&#123;</span><br><span class="line">            test: <span class="regexp">/\.js[x]?$/</span>,</span><br><span class="line">            use:[<span class="string">'babel-loader?cacheDirectory=true'</span>],</span><br><span class="line">            include:path.join(__dirname,<span class="string">'./src/'</span>)</span><br><span class="line">        &#125;,&#123;</span><br><span class="line">            test: <span class="regexp">/\.css$/</span>,</span><br><span class="line">            use: [</span><br><span class="line">                &#123;</span><br><span class="line">                    loader: <span class="string">"style-loader"</span></span><br><span class="line">                &#125;, &#123;</span><br><span class="line">                    loader: <span class="string">"css-loader"</span></span><br><span class="line">                &#125;,</span><br><span class="line">            ]</span><br><span class="line">        &#125;,]</span><br><span class="line">    &#125;,</span><br><span class="line"><span class="comment">//省略</span></span><br></pre></td></tr></table></figure></p>
+<p>bable配置文件 .bablerc：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"presets"</span>: [</span><br><span class="line">    <span class="string">"es2015"</span>,</span><br><span class="line">    <span class="string">"react"</span>,</span><br><span class="line">    <span class="string">"stage-0"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">"plugins"</span>: [[</span><br><span class="line">    <span class="string">"import"</span>, &#123;</span><br><span class="line">      <span class="string">"libraryName"</span>: <span class="string">"antd"</span>,</span><br><span class="line">      <span class="string">"style"</span>: <span class="string">"css"</span></span><br><span class="line">    &#125;]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>babel-plugin-import 插件用法：<a href="https://github.com/ant-design/babel-plugin-import#usage" target="_blank" rel="noopener">https://github.com/ant-design/babel-plugin-import#usage</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/21/JAVA-相关问题记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/21/JAVA-相关问题记录/" itemprop="url">
+                  JAVA 相关问题记录
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-01-21 01:34:08" itemprop="dateCreated datePublished" datetime="2018-01-21T01:34:08+00:00">2018-01-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="IDEA-Tomcat启动项目报错"><a href="#IDEA-Tomcat启动项目报错" class="headerlink" title="IDEA Tomcat启动项目报错"></a>IDEA Tomcat启动项目报错</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.ClassNotFoundException:org.springframework.web.context.ContextLoaderListener</span><br></pre></td></tr></table></figure>
+<p>maven项目配置web项目，配置spring时启动报错，发现找不到ContextLoaderListener，查看输出路径WEB-INF/目录下没有lib目录，所以找不到类</p>
+<p>解决方案：<br>这是由于pom.xml中下载的jar包未被部署。我们先ctrl+shift+alt+s打开Project Structure窗口，选择Artifacts，选择要打包部署的项目，在Output Layout –&gt; Web-INF查看是否有lib目录，如果右边Available Elements窗口还显示有jar包，说明这些jar包未添加，则应右击选择Put into Output Root，这样就OK啦~</p>
+<p>参考链接：<a href="https://www.jianshu.com/p/18d068f47b09" target="_blank" rel="noopener">https://www.jianshu.com/p/18d068f47b09</a></p>
+<h4 id="IDEA问题集锦"><a href="#IDEA问题集锦" class="headerlink" title="IDEA问题集锦"></a>IDEA问题集锦</h4><p><a href="https://blog.gmem.cc/intellij-idea-faq" target="_blank" rel="noopener">https://blog.gmem.cc/intellij-idea-faq</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/17/浏览器输入网址发生了什么？/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/17/浏览器输入网址发生了什么？/" itemprop="url">
+                  浏览器输入网址发生了什么？
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-10-17 21:16:52" itemprop="dateCreated datePublished" datetime="2017-10-17T21:16:52+00:00">2017-10-17</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>浏览器输入网址后发生了什么？<br>这是一道很经典的 面试题目。</p>
+<ol>
+<li>浏览器解析URL，生成HTTP请求报文。</li>
+<li><p>如果输入的是域名，则需要根据域名向DNS服务器查询IP地址。<br>调用sockt库中的获取域名函数（<code>gethostbyname()</code>）解析输入的域名。解析过程如下：</p>
+<pre><code>- 委托操作系统内部协议栈发送UDP报文，包含请求消息
+- ...
+- 中间包含IP层和数据链路层的封装，解封，以及路由寻址等（下面会提到）
+- ...
+- 操作系统内部协议栈接受UDP报文，包含响应消息
+- 函数返回
+</code></pre></li>
+<li><p>知道了IP 地址之后，就可以委托操作系统内部的协议栈向这个目标IP地址发送消息。<br>通过socket库与服务器通信。socket通信过程如下：</p>
+</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/socket.jpg" alt=""></p>
+<ol start="4">
+<li><p>socket会调用 TCP协议模块 去建立连接（三次握手），收发数据，断开连接（四次挥手）。TCP模块会在原始数据上加上TCP控制信息，例如端口信息等。<br><img src="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/tcp-socket.gif" alt=""></p>
+</li>
+<li><p>TCP在执行连接，收发，断开等各个阶段操作时都需要委托 IP协议模块 封装数据包发送通信对象。IP协议模块接受TCP协议模块的委托负责包的收发，他会生成IP头部（包括发送方和接收方的IP地址等）附加在TCP头部前面。</p>
+</li>
+<li><p>通过路由表确定下一跳路由器地址。</p>
+</li>
+<li><p>为了到达目标路由器，还需要知道目标路由器的MAC地址，MAC地址通过ARP协议获得。网卡将IP报文封装成以太网帧（添加MAC地址等信息），然后转换成物理信号发送到链路上。</p>
+</li>
+<li><p>中间经过路由，交换，数据到达web服务器。</p>
+</li>
+<li><p>服务器端接受数据。</p>
+<pre><code>- 网卡将接受到的信号转化为数字信息
+- IP协议模块接受数据，去掉IP头部，交给TCP模块
+- TCP模块连接，收发数据，断开操作，将数据返回给socket库
+- socket库交给应用程序，通常是WEB服务器软件，如Tomcat，IIS，Apache等
+</code></pre></li>
+<li><p>WEB 服务器解析请求并作出响应，生成HTTP响应报文，返回给客户端。</p>
+</li>
+<li><p>响应报文发送到客户端的过程与客户端到服务器端的过程基本相同。</p>
+</li>
+<li>客户端收到响应报文，并显示内容在浏览器上。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/15/6中排序算法总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/15/6中排序算法总结/" itemprop="url">
+                  6种排序算法总结
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-10-15 21:29:58" itemprop="dateCreated datePublished" datetime="2017-10-15T21:29:58+00:00">2017-10-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>整理一下各种排序算法。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sort</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">//冒泡排序,O(N*N)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">bubbo_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;arr.size()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=arr.size()<span class="number">-1</span>;j&gt;i;j--)&#123;</span><br><span class="line">               <span class="keyword">if</span>(arr[j]&lt;arr[j<span class="number">-1</span>]) swap(arr[j],arr[j<span class="number">-1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//直接插入排序,O(N*N)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt; arr.size();i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> key = arr[i];</span><br><span class="line">            <span class="keyword">int</span> j = i;</span><br><span class="line">            <span class="keyword">while</span>(j&gt;<span class="number">0</span>&amp;&amp;arr[j<span class="number">-1</span>]&gt;key)&#123;</span><br><span class="line">                arr[j] = arr[j<span class="number">-1</span>];</span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            arr[j] = key;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//选择排序,O(N*N)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">select_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;arr.size();i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> minVal = arr[i];</span><br><span class="line">            <span class="keyword">int</span> minPos = i;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>;j&lt;arr.size();j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(minVal&gt;arr[j])&#123;</span><br><span class="line">                    minVal = arr[j];</span><br><span class="line">                    minPos = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            swap(arr[i],arr[minPos]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//快速排序,O(N*LogN)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">quick_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp; arr,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(l&gt;=r) <span class="keyword">return</span> ;</span><br><span class="line">        <span class="keyword">int</span> i = l,j = r,key = arr[l];</span><br><span class="line">        <span class="keyword">while</span>(i&lt;j)&#123;</span><br><span class="line">            <span class="keyword">while</span>(i &lt; j &amp;&amp; arr[j] &gt; key) j--;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; j) arr[i++] = arr[j];</span><br><span class="line">            <span class="keyword">while</span>(i &lt; j &amp;&amp; arr[i] &lt; key) i++;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; j) arr[j--] = arr[i];</span><br><span class="line">        &#125;</span><br><span class="line">        arr[i] = key;</span><br><span class="line">        quick_sort(arr,l,i<span class="number">-1</span>);</span><br><span class="line">        quick_sort(arr,i+<span class="number">1</span>,r);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//归并排序,O(N*LogN)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">merge_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; tmp(r-l+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span>(l&gt;=r) <span class="keyword">return</span> ;</span><br><span class="line">        <span class="keyword">int</span> mid = (l+r) / <span class="number">2</span>;</span><br><span class="line">        merge_sort(arr,l,mid);</span><br><span class="line">        merge_sort(arr,mid+<span class="number">1</span>,r);</span><br><span class="line">        <span class="keyword">int</span> i = l,j = mid+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=mid&amp;&amp;j&lt;=r)&#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[i]&lt;arr[j])</span><br><span class="line">                tmp[k++] = arr[i++];</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                tmp[k++] = arr[j++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=mid)&#123;</span><br><span class="line">            tmp[k++] = arr[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(j&lt;=r)&#123;</span><br><span class="line">            tmp[k++] = arr[j++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=r-l;i++)&#123;</span><br><span class="line">            arr[l+i] = tmp[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">shiftDown</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr,<span class="keyword">int</span> index,<span class="keyword">int</span> heapSize)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> key = arr[index];</span><br><span class="line">        <span class="keyword">int</span> father = index,child;</span><br><span class="line">        <span class="keyword">while</span>((child=father*<span class="number">2</span>+<span class="number">1</span>)&lt;heapSize)&#123;</span><br><span class="line">            <span class="keyword">if</span>(child+<span class="number">1</span>&lt;heapSize &amp;&amp; arr[child] &lt; arr[child+<span class="number">1</span>]) child++;</span><br><span class="line">            <span class="keyword">if</span>(key &gt; arr[child]) <span class="keyword">break</span>;</span><br><span class="line">            arr[father] = arr[child];</span><br><span class="line">            father = child;</span><br><span class="line">        &#125;</span><br><span class="line">        arr[father] = key;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//堆排序,O(N*LogN)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">heap_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span>&#123;</span><br><span class="line">        <span class="comment">//construct max heap</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=arr.size()/<span class="number">2</span><span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">            shiftDown(arr,i,arr.size());</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//        for(int i=0;i&lt;arr.size();i++)&#123;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;arr[i]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=arr.size()<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">            swap(arr[<span class="number">0</span>],arr[i]);</span><br><span class="line">            shiftDown(arr,<span class="number">0</span>,i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/15/链家校招笔试-音乐/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/15/链家校招笔试-音乐/" itemprop="url">
+                  [链家校招笔试]音乐
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-10-15 19:21:07" itemprop="dateCreated datePublished" datetime="2017-10-15T19:21:07+00:00">2017-10-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>迈克喜欢在火车旅行的时候用手机听音乐，他有N首歌在手机里，在整个火车途中，他可以听P首歌，所以他想产生一个播放表产生P首歌曲，这个播放表的规则是： </p>
+<ul>
+<li>每首歌都要至少被播放一次 </li>
+<li>在两首一样的歌中间，至少有M首其他的歌 </li>
+</ul>
+<p>迈克在想有多少种不同的播放表可以产生，那么给你N,M,P，你来算一下，输出结果取1000000007的余数。</p>
+<p>输入:</p>
+<blockquote>
+<p>输入N,M,P<br>N范围在1到100<br>M范围在0到N<br>P范围在N到100</p>
+</blockquote>
+<p>输出 :</p>
+<blockquote>
+<p>输出结果mod 1000000007的余数<br>样例输入<br><code>1 0 3</code><br>样例输出<br><code>1</code><br>提示<br>其他样例<br><code>1 1 3</code><br><code>0</code></p>
+<p><code>2 0 3</code><br><code>6</code></p>
+<p><code>50 5 100</code><br><code>222288991</code></p>
+</blockquote>
+<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>DP[i][j]表示前 i 首歌共使用了 j 首<strong>不同</strong>的歌。<br>考虑第i首歌，如果取前面已经用过的歌，那么可选的歌有（j-m）首歌，如果选用前面没用过的歌，那么可选的歌有（n-j+1）首歌可选。所以</p>
+<p>dp[i][j] = dp[i-1][j] * (j-m) + dp[i-1][j-1] * (n-j+1)</p>
+<p>，注意int会超出范围。</p>
+<p>代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> LL;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX = <span class="number">105</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MOD = <span class="number">1e9</span>+<span class="number">7</span>;</span><br><span class="line">LL dp[MAX][MAX];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,m,p;</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m&gt;&gt;p)&#123;</span><br><span class="line">        <span class="built_in">memset</span>(dp,<span class="number">0</span>,<span class="keyword">sizeof</span>(dp));</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=p;i++)&#123;</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">            dp[<span class="number">0</span>][j] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=p;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">                dp[i][j] = (dp[i<span class="number">-1</span>][j<span class="number">-1</span>]*(n-j+<span class="number">1</span>))%MOD;</span><br><span class="line">                <span class="keyword">if</span>(j&gt;m) dp[i][j] = (dp[i][j] + (dp[i<span class="number">-1</span>][j]*(j-m))%MOD)%MOD;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//        for(int i=0;i&lt;=p;i++)&#123;</span></span><br><span class="line"><span class="comment">//            for(int j=0;j&lt;=n;j++)&#123;</span></span><br><span class="line"><span class="comment">//                cout&lt;&lt;dp[i][j]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;dp[p][n]&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/12/滴滴校招笔试-化简字符串/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/12/滴滴校招笔试-化简字符串/" itemprop="url">
+                  [滴滴校招笔试]化简字符串
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-10-12 00:24:00" itemprop="dateCreated datePublished" datetime="2017-10-12T00:24:00+00:00">2017-10-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>滴滴笔试的题目，暂时没挂到牛客上。</p>
+<h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>给出一个字符串，要求化简字符串，<br>如: ‘bcabcabc’ 这样的字符串会被化简为 ‘3[abc]’，<br>但是如果化简后的字符串比原串长度要长，则不化简。<br>化简可以嵌套，<br>比如：’abcdabcdeabcdabcdexyabcabcabcds’可以化简为’2[2[abcd]e]xy2[abc]ds’。<br>输出化简后的长度。</p>
+<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>枚举每个子串，求出每个子串后面连续相同的个数，然后替换成相应的简化形式。<br>一个字符串不一定只化简一次，所以加一层循环直到不能化简为止，取最短长度即可。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">intToStr</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;</span><br><span class="line">    <span class="built_in">string</span> ans =<span class="string">""</span>;</span><br><span class="line">    <span class="keyword">while</span>(num)&#123;</span><br><span class="line">        ans += num%<span class="number">10</span>+<span class="string">'0'</span>;</span><br><span class="line">        num /= <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    reverse(ans.begin(),ans.end());</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">getSimple</span><span class="params">(<span class="built_in">string</span> str)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(str.size() &lt; <span class="number">5</span>) <span class="keyword">return</span> str;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;str.size();i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>;j&lt;str.size();j++)&#123;</span><br><span class="line">            <span class="built_in">string</span> sub = str.substr(i,j-i);</span><br><span class="line">            <span class="keyword">int</span> start = j , reCount = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span>(str.find(sub,start)==start)&#123;</span><br><span class="line">                reCount++;</span><br><span class="line">                start += j-i;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(reCount==<span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="built_in">string</span> countStr = intToStr(reCount+<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span>(reCount*(j-i)&lt;countStr.size()+<span class="number">2</span>) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="built_in">string</span> res = str.substr(<span class="number">0</span>,i);</span><br><span class="line">            res+=countStr;</span><br><span class="line">            res+=<span class="string">'['</span>;</span><br><span class="line">            <span class="built_in">string</span> next = getSimple(sub);</span><br><span class="line">            res+=next;</span><br><span class="line">            res+=<span class="string">']'</span>;</span><br><span class="line">            res+= str.substr(j+reCount*(j-i),str.size()-j+reCount*(j-i));</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">string</span> str;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;str;</span><br><span class="line">    <span class="keyword">int</span> mixLen = str.size();</span><br><span class="line">    <span class="built_in">string</span> preStr = str;</span><br><span class="line">    <span class="built_in">string</span> ansStr = str;</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="built_in">string</span> ret = getSimple(preStr);</span><br><span class="line"><span class="comment">//        cout&lt;&lt;ret&lt;&lt;endl;</span></span><br><span class="line">        <span class="keyword">if</span>(ret == preStr) <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">else</span> preStr = ret;</span><br><span class="line">        <span class="keyword">if</span>(mixLen &gt; ret.size())&#123;</span><br><span class="line">            mixLen = ret.size();</span><br><span class="line">            ansStr = ret;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;ansStr&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;mixLen&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/28/C-常量指针和指针常量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/28/C-常量指针和指针常量/" itemprop="url">
+                  C++ 常量指针和指针常量
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-09-28 21:31:04" itemprop="dateCreated datePublished" datetime="2017-09-28T21:31:04+00:00">2017-09-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>原文链接：<br><a href="http://www.cnblogs.com/beanmoon/archive/2012/09/23/2698987.html" target="_blank" rel="noopener">http://www.cnblogs.com/beanmoon/archive/2012/09/23/2698987.html</a><br>先看一段代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> greeting[] = “Hello”;  </span><br><span class="line"><span class="keyword">char</span>* p = greeting; <span class="comment">//non-const pointer,non-const data  </span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* p = greeting; <span class="comment">//non-const pointer,const data;  </span></span><br><span class="line"><span class="keyword">char</span>* <span class="keyword">const</span> p = greeting;<span class="comment">//const pointer,non-const data;  </span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="keyword">const</span> p = greeting; <span class="comment">//const pointer,const data;</span></span><br></pre></td></tr></table></figure></p>
+<p>关于定义的阅读，一直以为这段解释很不错了已经，即以<em>和const的相对位置来判断：<br>const语法虽然变化多端，但并不莫测高深。如果关键字const出现在</em>左边，表示被指物是常量；如果出现在<em>右边，表示指针自身是常量；如果出现在</em>两边，表示被指物和指针两者都是常量。<br>如果被指物是常量，有些程序员会将关键字const写在类型之前，有些人会把它写在类型之后、*之前。两种写法的意义相同，所以下列两个定义相同：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span>* w;  </span><br><span class="line"><span class="keyword">int</span> <span class="keyword">const</span>* w;</span><br></pre></td></tr></table></figure></p>
+<p>后来在百度知道上看到另一段挺有意思的解释：<br>其实很简单，const和*的优先级相同<br>且是从右相左读的，即“右左法则”<br>其实const只是限定某个地址存储的内容不可修改<br>比如:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;         <span class="comment">//读作p为指针，指向int，所以p为指向int的指针</span></span><br><span class="line"><span class="keyword">int</span> *<span class="keyword">const</span> p;   <span class="comment">//读作p为常量，是指针，指向int，所以p为指向int的常量指针， p不可修改</span></span><br><span class="line"><span class="keyword">int</span> <span class="keyword">const</span> *p;   <span class="comment">//p为指针，指向常量，为int，所以p为指向int常量的指针， *p不可修改</span></span><br><span class="line"><span class="keyword">int</span> ** <span class="keyword">const</span> p; <span class="comment">//p为常量，指向指针，指针指向int，所以p为指向int型指针的常量指针，p不可修改</span></span><br><span class="line"><span class="keyword">int</span> <span class="keyword">const</span>**p;   <span class="comment">//p为指针，指向指针，指针指向常量int，所以p为指针，指向一个指向int常量的指针， **p为int，不可修改</span></span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> *p; <span class="comment">//p为指针，指向常量，该常量为指针，指向int，所以p为指针，指向一个常量指针，*p为指针，不可修改</span></span><br><span class="line"><span class="keyword">int</span> ** <span class="keyword">const</span> *p;<span class="comment">//p为指针，指向常量，常量为指向指针的指针，p为指针，指向常量型指针的指针，*p为指向指针的指针，不可修改</span></span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> **p;<span class="comment">//p为指针，指向一个指针1，指针1指向一个常量，常量为指向int的指针，即p为指针，指向一个指向常量指针的指针， **p为指向一个int的指针，不可修改</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/24/9-24/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/24/9-24/" itemprop="url">
+                  9.24 胡思乱想
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-09-24 20:48:00" itemprop="dateCreated datePublished" datetime="2017-09-24T20:48:00+00:00">2017-09-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/随便写写/" itemprop="url" rel="index"><span itemprop="name">随便写写</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近把以前买的《30天自制操作系统》拾起来看，但是遇到了很多问题故有此文。</p>
+<p>以前一直想自己去实现一个操作系统，实现一个编译器，实现一个SQL数据库等等，感觉很酷，一直没有去动手。暑假的时候在B站看到有大神在做《从零开始编写操作系统》系列教程，所以又把我写操作系统的兴趣勾了起来。回到学校，忙完上个课设，所以周末把以前买的《30天自制操作系统》拾起来，跟着书开始写，今天写到Day4的代码，准备搁置一边，因为其中遇到不少问题，感觉这本书不太适合。这本书其实面向的人群是比较广的，涉猎面较窄，有很多东西作者为了简单，都省略了，有的地方也是语焉不详，大致看了下目录，发现其中的大部分内容还是图形化的东西，并没有涉及过多内核的东西，比如进程调度，内存管理，文件系统等等， 更像是为了好玩而写的一本书，而且书中的工具大都是作者自己编写的，没有文档可以参考，出了问题也没法调试，只能去和源代码对比，十分难受，所以准备先搁置。</p>
+<p>然后又去网上查，<a href="https://www.zhihu.com/question/25628124" target="_blank" rel="noopener">如何从零开始写一个简单的操作系统？</a>，才发现自己离实现操作系统还差很十万八千里，连一个内核都没读过的人，何谈自己实现一个出来。。。<br>最近也在忙着找工作，做课设，感慨时间不够用，要是时间倒退到两三年多好，这种事情如果放在大一大二的时候去做多好，时间充足又有激情有干劲，现在才后悔许多事情没来得及做。以前总是把想做的事加到清单，却从来没有把他将清单中划去。哎。。。</p>
+<p>想来大学四年马上就结束了，四年虽然说没有完全荒废过去，但也浪费了许多好光阴，错过了不少东西。大一的时候想着参加书画社，把字练好，结果就去了一次就再没去过，到现在字还跟shi一样。还想着好好学学打篮球，结果体育都挂了。培养自己的要业余兴趣，现在却还是一个不会。说是把大部分时间都花在训练上，却也没拿到什么成绩，连个拿得出手的奖都没有，现在要找工作，奖项也没有，项目经验也没有，为自己的前途担忧啊。真羡慕别人啊。。。</p>
+<p>牢骚发完了，该干啥还是要干嘛。<br>罗列下要做的List：</p>
+<ol>
+<li>课设，国庆中间开始做。</li>
+<li>JAVA，《JAVA核心技术》，《深入理解JAVA虚拟机》，《重构》，《设计模式》师傅推荐的书，开始看。有时间把投票系统完善一下，可以写到简历上。实习不知道能不能留下，先把基本功打扎实吧，一步一步来。</li>
+<li>笔试面试，操作系统，计算机网络，数据结构，算法，题目。<br><a href="http://wdxtub.com/interview/14520596959731.html" target="_blank" rel="noopener">小土刀的面试刷题笔记</a><br><a href="https://hit-alibaba.github.io/interview/" target="_blank" rel="noopener">笔试面试知识整理</a></li>
+<li>六级，别再捐了，再没机会考了。这个优先级低一点，可以实习的时候再复习。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/网易校招-射击游戏/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/20/网易校招-射击游戏/" itemprop="url">
+                  [网易校招]射击游戏
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-09-20 16:26:08" itemprop="dateCreated datePublished" datetime="2017-09-20T16:26:08+00:00">2017-09-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><a href="https://www.nowcoder.com/questionTerminal/d3f26db0325444078717cc802e0056d8" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/d3f26db0325444078717cc802e0056d8</a></p>
+<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>小易正在玩一款新出的射击游戏,这个射击游戏在一个二维平面进行,小易在坐标原点(0,0),平面上有n只怪物,每个怪物有所在的坐标(x[i], y[i])。小易进行一次射击会把x轴和y轴上(包含坐标原点)的怪物一次性消灭。<br>小易是这个游戏的VIP玩家,他拥有两项特权操作:<br>1、让平面内的所有怪物同时向任意同一方向移动任意同一距离<br>2、让平面内的所有怪物同时对于小易(0,0)旋转任意同一角度<br>小易要进行一次射击。小易在进行射击前,可以使用这两项特权操作任意次。<br>小易想知道在他射击的时候最多可以同时消灭多少只怪物,请你帮帮小易。</p>
+<p>如样例所示:</p>
+<p><img src="https://raw.githubusercontent.com/J-keaper/J-keaper.github.io/master/images/pasted-2.png" alt=""></p>
+<p>所有点对于坐标原点(0,0)顺时针或者逆时针旋转45°,可以让所有点都在坐标轴上,所以5个怪物都可以消灭。</p>
+<p>输入描述:</p>
+<blockquote>
+<p>输入包括三行。<br>第一行中有一个正整数n(1 ≤ n ≤ 50),表示平面内的怪物数量。<br>第二行包括n个整数x<a href="-1,000,000 ≤ x[i] ≤ 1,000,000">i</a>,表示每只怪物所在坐标的横坐标,以空格分割。<br>第二行包括n个整数y<a href="-1,000,000 ≤ y[i] ≤ 1,000,000">i</a>,表示每只怪物所在坐标的纵坐标,以空格分割。</p>
+</blockquote>
+<p>输出描述:</p>
+<blockquote>
+<p>输出一个整数表示小易最多能消灭多少只怪物。</p>
+</blockquote>
+<p>输入例子1:</p>
+<blockquote>
+<p>5<br>0 -1 1 1 -1<br>0 -1 -1 1 1</p>
+</blockquote>
+<p>输出例子1:</p>
+<blockquote>
+<p>5</p>
+</blockquote>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>题目其实就是求两条垂直的直线上最多可以有多少个点。<br>两个for，两个点<code>A</code>，<code>B</code>确定一条直线，第三个for，第三个点<code>C</code>通过另一条直线，第四个for，对于剩下 的n-3个点，如果在<code>AB</code>确定的直线上或者与<code>C</code>点构成的直线与AB垂直均可以。第四个for结束后，更新一次最大值。<br>最后输出最大值即可。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">double</span> eps=<span class="number">1e-9</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sgn</span><span class="params">(<span class="keyword">double</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x&lt;-eps) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(x&gt;eps) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">cross</span><span class="params">(<span class="keyword">int</span> x1,<span class="keyword">int</span> y1,<span class="keyword">int</span> x2,<span class="keyword">int</span> y2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x1*y2-x2*y1;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">dot</span><span class="params">(<span class="keyword">int</span> x1,<span class="keyword">int</span> y1,<span class="keyword">int</span> x2,<span class="keyword">int</span> y2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x1*x2+y1*y2;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">point_on_segment</span><span class="params">(<span class="keyword">int</span> x1,<span class="keyword">int</span> y1,<span class="keyword">int</span> x2,<span class="keyword">int</span> y2,<span class="keyword">int</span> px,<span class="keyword">int</span> py)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sgn(cross(x1-px,y1-py,x2-px,y2-py))==<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isVertical</span><span class="params">(<span class="keyword">int</span> x1,<span class="keyword">int</span> y1,<span class="keyword">int</span> x2,<span class="keyword">int</span> y2,<span class="keyword">int</span> x3,<span class="keyword">int</span> y3,<span class="keyword">int</span> x4,<span class="keyword">int</span> y4)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sgn(dot(x1-x2,y1-y2,x3-x4,y3-y4))==<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; x(n),y(n);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;x[i];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;y[i];</span><br><span class="line">    <span class="keyword">int</span> mmax = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(n&lt;<span class="number">4</span>) mmax = n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>; j&lt;n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> p=<span class="number">0</span>; p&lt;n; p++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(p==i||p==j) <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">int</span> ans = <span class="number">3</span>;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> q=<span class="number">0</span>; q&lt;n; q++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span>(q==i||q==j||q==p) <span class="keyword">continue</span>;</span><br><span class="line">                    <span class="keyword">if</span>(point_on_segment(x[i],y[i],x[j],y[j],x[q],y[q])||</span><br><span class="line">                       isVertical(x[i],y[i],x[j],y[j],x[p],y[p],x[q],y[q]))</span><br><span class="line">                        ans++;</span><br><span class="line">                &#125;</span><br><span class="line">                mmax= max(mmax,ans);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;mmax&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/网易校招-合唱/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/20/网易校招-合唱/" itemprop="url">
+                  [网易校招]合唱
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-09-20 16:08:31" itemprop="dateCreated datePublished" datetime="2017-09-20T16:08:31+00:00">2017-09-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-07 01:25:49" itemprop="dateModified" datetime="2018-08-07T01:25:49+00:00">2018-08-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><a href="https://www.nowcoder.com/questionTerminal/fddf64d5757e41ec93f3ef0c0a10b891" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/fddf64d5757e41ec93f3ef0c0a10b891</a></p>
+<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>小Q和牛博士合唱一首歌曲,这首歌曲由n个音调组成,每个音调由一个正整数表示。<br>对于每个音调要么由小Q演唱要么由牛博士演唱,对于一系列音调演唱的难度等于所有相邻音调变化幅度之和, 例如一个音调序列是8, 8, 13, 12, 那么它的难度等于|8 - 8| + |13 - 8| + |12 - 13| = 6(其中||表示绝对值)。<br>现在要对把这n个音调分配给小Q或牛博士,让他们演唱的难度之和最小,请你算算最小的难度和是多少。<br>如样例所示: 小Q选择演唱{5, 6}难度为1, 牛博士选择演唱{1, 2, 1}难度为2,难度之和为3,这一个是最小难度和的方案了。<br>输入描述:<br>输入包括两行,第一行一个正整数n(1 ≤ n ≤ 2000) 第二行n个整数v<a href="1 ≤ v[i] ≤ 10^6">i</a>, 表示每个音调。</p>
+<p>输出描述:</p>
+<blockquote>
+<p>输出一个整数,表示小Q和牛博士演唱最小的难度和是多少。</p>
+</blockquote>
+<p>输入例子1:</p>
+<blockquote>
+<p>5<br>1 5 6 2 1</p>
+</blockquote>
+<p>输出例子1:</p>
+<blockquote>
+<p>3</p>
+</blockquote>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>设<code>DP[i][j]（j&gt;i）</code>为两个人最近唱的音调分别为第<code>i</code>个和第<code>j</code>个。<br>状态转移：<br>如果<code>i==j-1</code>,也就是换人演唱的时候，<code>DP[i][j]</code>也就是<code>DP[j-1][j]</code>的值应该为<code>DP[k][j-1]+abs(v[k][j])</code>,k为这个人上次演唱的音调位置。<br>如果<code>i&lt;j-1</code>,也就是最近演唱的人继续演唱当前字符，<code>DP[i][j]</code>的值应该为<code>DP[i][j-1]+abs(v[j]-v[j-1])</code>。<br>最后结果应该<code>DP[i][n],1&lt;=i&lt;n</code>中的最小值。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v(n+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;v[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">vector</span>&lt; <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; dp(n+<span class="number">1</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(n+<span class="number">1</span>));</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&gt;<span class="number">2</span>) dp[i<span class="number">-1</span>][i] = dp[i<span class="number">-2</span>][i<span class="number">-1</span>] + <span class="built_in">abs</span>(v[i<span class="number">-1</span>]-v[i<span class="number">-2</span>]);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//    for(int i=0;i&lt;=n;i++)&#123;</span></span><br><span class="line"><span class="comment">//        for(int j=0;j&lt;=n;j++)&#123;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;dp[i][j]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        cout&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;j<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            dp[i][j]=dp[i][j<span class="number">-1</span>]+<span class="built_in">abs</span>(v[j]-v[j<span class="number">-1</span>]);</span><br><span class="line">            dp[j<span class="number">-1</span>][j]=min(dp[j<span class="number">-1</span>][j],dp[i][j<span class="number">-1</span>]+<span class="built_in">abs</span>(v[i]-v[j]));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> ans = INT_MAX;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;n;i++)&#123;</span><br><span class="line">        ans=min(ans,dp[i][n]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;ans&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
           
         
@@ -433,6 +1940,10 @@
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
 
 
           </div>
@@ -477,14 +1988,46 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-count">47</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
 
               
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
 
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
               
             </nav>
           

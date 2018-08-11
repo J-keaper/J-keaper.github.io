@@ -301,6 +301,885 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/12/第六章-接口、lambda-表达式与内部类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/12/第六章-接口、lambda-表达式与内部类/" itemprop="url">
+                  第六章 接口、lambda 表达式与内部类
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-12 00:37:00" itemprop="dateCreated datePublished" datetime="2018-08-12T00:37:00+00:00">2018-08-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/《Java核心技术-卷I：基础知识》/" itemprop="url" rel="index"><span itemprop="name">《Java核心技术 卷I：基础知识》</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h4><ol>
+<li>接口中的方法默认属于<code>public</code>，声明接口时，不必提供<code>public</code>关键字，但是实现接口时必须指定<code>public</code>关键字。</li>
+<li>接口中不能包含成员变量，但是可以包含常量，接口中的域自动为<code>public static final</code>,不必指定关键字。</li>
+<li>接口不是类，尤其不能使用<code>new</code>运算符实例化一个接口，尽管不能构造接口的对象，却能声明接口的变量，接口变量必须引用实现了该接口的对象。可以使用<code>instanceof</code>检查一个对象是否实现了某个接口。</li>
+<li>一个类可以实现多个接口，但只能继承一个类。JAVA不可以多重继承。</li>
+<li>java 8 中允许在接口中增加静态方法，还可以为接口提供一个默认实现，用<code>default</code>修饰符标记方法即可。</li>
+<li>默认方法冲突。如果先在一个接口中将一个方法定义为默认方法 , 然后又在子类或另一个接口中定义了同样的方法, 会发生什么情况?<ul>
+<li>超类优先原则。如果子接口中定义了与父接口中同名且参数类型相同的默认方法，那么父接口中的默认方法会被忽略。</li>
+<li>接口冲突。如果一个接口提供了一个默认方法 , 另一个接口提供了一个同名而且参数类型 ( 不论是否是默认参数 ) 相同的方法，而一个类同时实现这两个接口，那么这个类必须覆盖这个方法。<strong>注意这里只要有一个方法是默认方法，就会存在冲突，如果两个都不是默认方法，则不存在冲突。</strong></li>
+</ul>
+</li>
+<li>一个类继承了一个父类,同时实现了一个接口 , 并从父类和接口继承了相同的方法。这种情况遵循“类优先”原则，接口中的默认方法会被忽略。</li>
+</ol>
+<h4 id="对象克隆、Cloneable接口"><a href="#对象克隆、Cloneable接口" class="headerlink" title="对象克隆、Cloneable接口"></a>对象克隆、Cloneable接口</h4><ol>
+<li>Java默认的克隆操作时浅拷贝，它并没有克隆包含在对象中的内部对象。</li>
+<li><code>Cloneable</code>是一个标记接口，接口中不包含方法，使用它的唯一目的是可以用<code>instanceof</code>进行类型检查。<code>clone()</code>方法是从<code>Object</code>中继承而来的，并不是<code>Cloneable</code>接口的方法。</li>
+<li><p>所有数组类型都有一个<code>public</code>的<code>clone</code>方法，可以用这个方法建立一个新数组,包含原数组所有元素的副本。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> [] num = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> [] clone = num.clone();</span><br><span class="line">clone[<span class="number">3</span>] = <span class="number">5</span>;</span><br><span class="line">System.out.println(num[<span class="number">3</span>]); <span class="comment">// output:4</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果一个类想要实现深拷贝，需要实现<code>Cloneable</code>接口并重新定义<code>clone</code>方法，并指定public访问修饰符。指定<code>public</code>修饰符的原因是<code>Object</code>类中的<code>clone()</code>是<code>protected</code>的，只有子类才可以调用，所以必须重新定义<code>clone()</code>为<code>public</code>才能允许所有方法克隆对象。</p>
+</li>
+</ol>
+<h4 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h4><ol>
+<li><p>lambda表达式语法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String [] ss = <span class="keyword">new</span> String []&#123;<span class="string">"54321"</span>,<span class="string">"9876"</span>,<span class="string">"123"</span>&#125;;</span><br><span class="line">Arrays.sort(ss,(a,b) -&gt; a.length() - b.length());</span><br><span class="line">System.out.println(Arrays.toString(ss));<span class="comment">//output：[123, 9876, 54321]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果lambda 表达式没有参数， 仍然要提供空括号。</p>
+</li>
+<li><p>如果可以推导出一个lambda表达式的参数类型，则可以忽略其类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Comparator&lt;String&gt; comp = (first, second) <span class="comment">// Same as (String first, String second)</span></span><br><span class="line">        -&gt; first.length() - second.length();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果方法只有一参数，而且这个参数的类型可以推导得出，那么甚至还可以省略小括号。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ActionListener listener =  event -&gt;</span><br><span class="line">System.out.println(<span class="string">"The time is "</span> + <span class="keyword">new</span> Date());</span><br><span class="line"><span class="comment">// Instead of (event) -&gt; . . . or (ActionEvent event) -&gt; . . .</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对于只有一个抽象方法的接口，需要这种接口的对象时就可以提供一个lambda表达式。这种接口称为函数式接口(functional interface)。</p>
+</li>
+<li>Java中,lambda表达式可以转换为函数式接口，需要函数式接口的地方就可以用lambda表达式。</li>
+<li>方法引用。主要有三种情况：</li>
+</ol>
+<blockquote>
+<p>object::instance Method<br>Class::static Method<br>Class::instance Method  </p>
+</blockquote>
+<pre><code>在前2 种情况中,方法引用等价于提供方法参数的lambda表达式。
+
+`System.out::println`等价于`x -&gt;System.out.println(x)`。 
+
+`Math::pow`等价于`(x，y) -&gt;Math.pow(x, y)`。
+
+对于第3 种情况，第1个参数会成为方法的目标。
+`String::compareToIgnoreCase` 等同于`(x, y) -&gt; x.compareToIgnoreCase(y)`
+</code></pre><ol start="8">
+<li>构造器引用。构造器引用与方法引用很类似，只不过方法名为new。</li>
+<li><p>lambda 表达式有3个部分：</p>
+<ul>
+<li>一个代码块；</li>
+<li>参数;</li>
+<li>自由变量的值，这是指非参数而且不在代码中定义的变量。</li>
+</ul>
+</li>
+<li><p>lambda 表达式中捕获的变量必须实际上是<code>final</code>变量(<code>effectively final</code>),意思是这个变量初始化之后就不会再为它赋新值。</p>
+</li>
+<li>lambda 表达式的代码块与嵌套块有相同的作用域。</li>
+</ol>
+<h4 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h4><ol>
+<li>内部类既可以访问自身的数据域，也可以访问创建它的外围类对象的数据域.</li>
+<li>内部类的对象总有一个隐式引用，它指向了创建它的外部类对象。</li>
+<li>内部类中声明的所有静态域都必须是<code>final</code>。原因很简单。我们希望一个静态域只有一个实例，不过对于每个外部对象， 会分别有一个单独的内部类实例。如果这个域不是final , 它可能就不是唯一的。</li>
+<li>内部类不能有<code>static</code>方法。</li>
+<li>编译器将会把内部类翻译成用$分隔外部类名与内部类名的常规类文件。</li>
+<li>可以在方法汇中定义局部内部类，作用域仅限于声明这个局部类的中，对外部不可见，同时也不可以用<code>public</code>或者<code>private</code>修饰。</li>
+<li>局部内部类不仅可以访问外围类的变量，还可以访问局部变量。不过，那些局部变量必须事实上为final。事实上为<code>final</code>的意思与上面lambda表达式访问捕获的变量意思相同。</li>
+<li>匿名内部类。语法格式为<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> SuperType(construction parameters)</span><br><span class="line">&#123;</span><br><span class="line">inner <span class="class"><span class="keyword">class</span> <span class="title">methods</span> <span class="title">and</span> <span class="title">data</span></span></span><br><span class="line"><span class="class">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><code>SuperType</code>可以是<code>ActionListener</code>这样的接口，内部类就要实现这个接口。<code>SuperType</code>也可以是一个类，内部类就要扩展它。</p>
+<ol start="9">
+<li><p>匿名内部类不能有构造器。而是要将构造方法传递给父类构造器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Person queen = new Person(&quot;Mary&quot;) ;</span><br><span class="line">// 一个Person对象</span><br><span class="line">Person count = new Person(&quot;Dracula&quot;) &#123; . . .</span><br><span class="line">// 一个继承自Person的匿名内部类</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>双括号初始化实际是内部类语法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">invite(new ArrayList&lt;String&gt;0 &#123;&#123; add(&quot;Harry&quot;) ; add(&quot;Tony&quot;) ; &#125;&#125;) ;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>外层括号建立了<code>ArrayList</code>的一个匿名子类。内层括号则是一个对象构造块。</p>
+<ol start="11">
+<li>使用内部类只是为了把一个类隐藏在另外一个类的内部，并不需要内部类引用外围类对象。为此，可以将内部类声明为<code>static</code>,以便取消产生的引用。静态内部类的对象除了没有对生成它的外围类对象的引用特权外，与其他所冇内部类完全一样。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/11/第五章-继承/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/11/第五章-继承/" itemprop="url">
+                  第五章 继承
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-11 15:30:00 / 修改时间：16:52:21" itemprop="dateCreated datePublished" datetime="2018-08-11T15:30:00+00:00">2018-08-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/《Java核心技术-卷I：基础知识》/" itemprop="url" rel="index"><span itemprop="name">《Java核心技术 卷I：基础知识》</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="1-JAVA中所有继承都是公有继承。"><a href="#1-JAVA中所有继承都是公有继承。" class="headerlink" title="1. JAVA中所有继承都是公有继承。"></a>1. JAVA中所有继承都是公有继承。</h5><p>子类会继承父类的每一个域和方法（存疑），但是父类中域的访问控制修饰符会决定子类中可不可以直接访问父类的域。例如，子类中不能直接访问父类的私有域，只能通过公有的get方法访问。同样方法的访问权限也是由父类中访问控制修饰符决定的。<br>关于继承会不会继承私有的域和方法，<a href="http://www.cnblogs.com/aademeng/articles/6191691.html" target="_blank" rel="noopener">http://www.cnblogs.com/aademeng/articles/6191691.html</a></p>
+<h5 id="2-super与this"><a href="#2-super与this" class="headerlink" title="2. super与this"></a>2. super与this</h5><p>this关键字有两个用途：</p>
+<ol>
+<li>引用隐式参数，this为指向本对象的引用。</li>
+<li>调用该类的其他构造器。<br>super关键字有两个用途：</li>
+<li>调用超类的方法以及访问超类的域（访问权限由超类访问控制修饰符决定）。</li>
+<li>调用超类的构造器。</li>
+</ol>
+<blockquote>
+<p>注意调用构造器语句只能作为另一构造器的第一条语句。<br>this是一个引用，可以将其赋值给另一对象变量。而super只是关键字，不能将其赋值给对象变量。</p>
+</blockquote>
+<h5 id="3-上转型对象。"><a href="#3-上转型对象。" class="headerlink" title="3. 上转型对象。"></a>3. 上转型对象。</h5><p>将子类对象的引用赋值给父类对象时，这个父类对象称为上转型对象。</p>
+<ol>
+<li>上转型对象不能访问的子类对象新增的域和方法。</li>
+<li>上转型对象可以操作子类继承或隐藏的域，也可以使用子类继承的或重写的方法。</li>
+<li>如果子类中有与父类中同名的域，那么访问的是父类中未被重写的域。</li>
+<li>如果子类中有重写的方法，那么访问的是子类中重写的方法，并且该方法访问可以子类中新增的域和方法。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">        Person person = <span class="keyword">new</span> Student(<span class="string">"super"</span>,<span class="number">21</span>,<span class="string">"1407084125"</span>,<span class="string">"sub"</span>);</span><br><span class="line">        System.out.println(person.name);</span><br><span class="line">        System.out.println(person.getName());</span><br><span class="line">        person.printInfo();</span><br><span class="line"></span><br><span class="line">        Thread.sleep(<span class="number">1000</span>*<span class="number">60</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Person.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printInfo</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Person&#123;"</span> +</span><br><span class="line">                <span class="string">"name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">", age="</span> + age +</span><br><span class="line">                <span class="string">'&#125;'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Student.java</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String studentNum;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String superName, <span class="keyword">int</span> age, String studentNum, String subName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(subName, age);</span><br><span class="line">        <span class="keyword">this</span>.studentNum = studentNum;</span><br><span class="line">        <span class="keyword">this</span>.name = subName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getStudentNum</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> studentNum;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStudentNum</span><span class="params">(String studentNum)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.studentNum = studentNum;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printInfo</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Student&#123;"</span> +</span><br><span class="line">                <span class="string">"studentNum='"</span> + getStudentNum() + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">", name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">'&#125;'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h5 id="4-方法调用过程"><a href="#4-方法调用过程" class="headerlink" title="4. 方法调用过程"></a>4. 方法调用过程</h5><blockquote>
+<ol>
+<li>编译器查看对象的声明类型和方法名，假设调用x.f(param)，且x声明为C类的对象。编译器将会 一 一列举所有C类中名为f的方法和其超类中<strong>可访问</strong>且名为f的方法。需要注意的是：有可能存在多个名为f，但参数类型不一样的方法。至此，编译器已获得所有可能被调用的候选方法。</li>
+<li>编译器将查看调用方法时的参数类型。在之前获取到的候选方法列表中存在与调用方法参数完全匹配，那么就调用这个方法。这个过程被称为重载解析（overloading resolution）。 至此，编译器获取到了需要调用的方法名称和参数类型。（方法名称和参数类型被称为方法签名。） </li>
+<li>如果是<strong>private方法</strong>、<strong>static方法</strong>、<strong>final方法</strong> 或者<strong>构造器</strong>，那么编译器将可以准确地知道应该调用哪个方法，我们将这种调用方式称为<strong>静态绑定</strong> (static binding)。于此对应的是，调用的方法依赖于隐式参数的实际类型，并且在运行时实现动态绑定(dynamic binding)。</li>
+<li>当程序运行，并且采用动态绑定调用方法时，虚拟机一定调用与x所引用对象的实际类型最合适的那个类的方法。假设x的实际类型是D，它是C类的子类。如果D类定义了方法f(String)，就直接调用它；否则，将在D类的超类中寻找f(String)，以此类推。</li>
+</ol>
+</blockquote>
+<p>其实这个地方不是理解的很透彻，等看完《深入理解JAVA虚拟机》再琢磨。还有动态绑定和静态绑定。先留一片文章<a href="http://www.cnblogs.com/chenyangyao/p/5305352.html" target="_blank" rel="noopener">图解JVM执行引擎之方法调用 - 陈洋Cy - 博客园</a></p>
+<h5 id="5-final类的方法自动成为final方法，但不包括域。final类和final方法的主要目的是不在子类中改变语义。"><a href="#5-final类的方法自动成为final方法，但不包括域。final类和final方法的主要目的是不在子类中改变语义。" class="headerlink" title="5. final类的方法自动成为final方法，但不包括域。final类和final方法的主要目的是不在子类中改变语义。"></a>5. final类的方法自动成为final方法，但不包括域。final类和final方法的主要目的是不在子类中改变语义。</h5><h5 id="6-instanceof"><a href="#6-instanceof" class="headerlink" title="6. instanceof"></a>6. instanceof</h5><p>instanceof通过返回一个布尔值来指出，这个对象是否是这个特定类或者是它的子类的一个实例。</p>
+<h5 id="7-抽象类"><a href="#7-抽象类" class="headerlink" title="7. 抽象类"></a>7. 抽象类</h5><ol>
+<li>包含一个或者多个抽象方法的类必须声明为抽象类，但是还可以包含具体的数据和方法。</li>
+<li>即使不含有抽象方法，也可以声明为抽象类。</li>
+<li>抽象类不能被实例化，但是可以定义一个抽象类的对象变量，但是他只能引用非抽象子类的对象。</li>
+<li>子类可以部分实现抽象方法或者不实现，只要仍然含有抽象方法就必须声明为抽象的。</li>
+</ol>
+<h5 id="8-ArrayList类"><a href="#8-ArrayList类" class="headerlink" title="8. ArrayList类"></a>8. ArrayList类</h5><p>ArrayList是一个泛型类。</p>
+<ol>
+<li>add() 添加元素.</li>
+<li>remove() 删除元素</li>
+<li>set() 设置元素，注意不能超过size()的大小。</li>
+<li>get() 访问元素</li>
+</ol>
+<h5 id="9-对象包装器"><a href="#9-对象包装器" class="headerlink" title="9. 对象包装器"></a>9. 对象包装器</h5><ol>
+<li>有时候需要将基本类型转换为对象。所有的基本类型都有与之对应的包装类。这些类均为<strong>不可变类</strong>。</li>
+<li>编译器能够自动装箱和自动拆箱。编译器会在编译时自动插入必要的方法调用。 </li>
+</ol>
+<h5 id="10-可变参数方法"><a href="#10-可变参数方法" class="headerlink" title="10. 可变参数方法"></a>10. 可变参数方法</h5><p>main()方法中的Sring[] args参数便是一个可变参数的例子，同样可以将main方法定义为<br><code>public static void main(String ... args) {}</code><br>效果是一样的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> ... nums)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> mmax = Integer.MIN_VALUE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            mmax = Integer.max(mmax,i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mmax;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String ... args)</span> </span>&#123;</span><br><span class="line">	   System.out.println(max(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="11-枚举类"><a href="#11-枚举类" class="headerlink" title="11. 枚举类"></a>11. 枚举类</h5><ol>
+<li>最基本的枚举类：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Size &#123;</span><br><span class="line">    SMALL,</span><br><span class="line">    MEDIA,</span><br><span class="line">    LARGE</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>枚举默认有两个域，name和ordinal，name即为上面定义中的<code>SMALL</code>、<code>MEDIA</code>、<code>LARGE</code>，而orinal为枚举常量的 位置（下标），从零开始计数。</p>
+<ol start="2">
+<li><p>如果需要，可以在枚举类型中添加构造器域和方法。构造器会在构造枚举常量的时候用到。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Sex &#123;</span><br><span class="line">    MALE(<span class="string">"男"</span>),</span><br><span class="line">    FEMALE(<span class="string">"女"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String value;</span><br><span class="line"></span><br><span class="line">    Sex(String value) &#123;</span><br><span class="line">        <span class="keyword">this</span>.value = value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(String value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.value = value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Sex&#123;"</span> +</span><br><span class="line">                <span class="string">"value='"</span> + value + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>默认toString()返回name值，可以重载，例如上面的代码。</p>
+</li>
+<li>valueOf(Class enumClass , String name)返回指定类型指定名字的枚举类。</li>
+<li>每个枚举类型都有一个静态的values()方法，返回包含所有枚举值的数组。</li>
+</ol>
+<h5 id="11-异常"><a href="#11-异常" class="headerlink" title="11. 异常"></a>11. 异常</h5><p><a href="http://blog.csdn.net/hguisu/article/details/6155636" target="_blank" rel="noopener">http://blog.csdn.net/hguisu/article/details/6155636</a></p>
+<p>异常有两种类型：已检查异常（checked exception，又称编译时异常）和未检查异常（unchecked exception，又称运行时异常）。</p>
+<ol>
+<li>已检查异常<br>除了运行时异常以外的所有异常都被称作已检查异常，编译器会在编译期间去检查程序是否处理了它们。如果这些异常没有 被处理，将会出现编译错误。<br>已检查异常的例子：</li>
+</ol>
+<ul>
+<li>ClassNotFoundException</li>
+<li>IllegalAccessException</li>
+<li>NoSuchFieldException</li>
+<li>EOFException</li>
+</ul>
+<ol start="2">
+<li>未检查异常<br>运行时异常也被称作为未检查异常。编译器并不会检查是否有程序员处理这些异常，但程序员有处理这些异常的责任，并程序提供一个安全的退出。<br>未检查异常的例子：</li>
+</ol>
+<ul>
+<li>ArithmeticException</li>
+<li>ArrayIndexOutOfBoundsException</li>
+<li>NullPointerException</li>
+<li>NegativeArraySizeException</li>
+</ul>
+<ol start="3">
+<li>异常的层次结构<br><img src="./java04-1.png" alt="Alt text"><br>检查异常：除了RuntimeException及其子类以外，其他的Exception类及其子类都属于检查异常。<br>未检查异常 ：包括运行时异常（RuntimeException与其子类）和错误（Error）。</li>
+<li>异常的处理方式</li>
+</ol>
+<ul>
+<li>try-catch捕获异常</li>
+<li>throws,throw抛出异常</li>
+</ul>
+<h5 id="12-Class类"><a href="#12-Class类" class="headerlink" title="12. Class类"></a>12. Class类</h5><ol>
+<li>Object类的getClass()方法可以返回一个Class类的实例</li>
+<li>Class类getName() 方法返回类的名字，如果在一个包里，则包名作为类名的一部分</li>
+<li>Class类的静态方法forName(String className) 获得类名对应的Class对象。</li>
+<li>一个Class类对象表示的是一个类型，而这个类型未必一定是一种类。如int不是类，但int.class 是一个Class类的对象。</li>
+<li>Class类的newInstance()可以创建一个该类的实例化对象，调用默认构造函数，如果没有默认构造函数，抛出异常。</li>
+</ol>
+<h5 id="13-利用反射检查类的结构。"><a href="#13-利用反射检查类的结构。" class="headerlink" title="13. 利用反射检查类的结构。"></a>13. 利用反射检查类的结构。</h5><p>在java.lang.reflect包中有三个类Field、Method和Constructor分别描述类的域、方法和构造器。这三个类都有一个叫getName的方法，用来返回项目的名称。Field类有一个getType方法，用来返回描述域所属的Class对象。Method和Constructor类有能够报告参数类型的方法，Method还有一个可以报告返回类型的方法。这三个类有一个getModifiers的方法，它将返回一个整数值，用不同的位开关描述public和static这样的修饰符的使用状况，还可以利用Modifier.toString方法将修饰符打印出来。</p>
+<p>Class类的getFields、getMethods和getCostructors方法可以获得类提供的public域（<code>Returns an array containing Field objects reflecting all the accessible public fields of the class or interface represented by this Class object.</code>）、方法（<code>including those declared by the class or interface and those inherited from superclasses and superinterfaces</code>）和构造器数组（<code>Returns an array containing  Constructor objects reflecting all the public constructors of the class represented by this Class object.</code>），其中包括从超类继承的公有成员。Class类的getDeclatedFields、getDeclatedMethods和getDeclaredConstructors方法可以获得类中声明的全部域、方法和构造器，其中包括私有和受保护的成员，但不包括超类的成员。</p>
+<h5 id="14-运行时利用反射分析类。"><a href="#14-运行时利用反射分析类。" class="headerlink" title="14. 运行时利用反射分析类。"></a>14. 运行时利用反射分析类。</h5><p>利用反射机制可以查看在编译时还不清楚的对象域。<br>查看对象域的关键方法是Field类中的get方法。如果f是一个Field类型的对象，obj是某个包含f域的类的对象，f.get(obj)将返回一个对象，其值为obj与的当前值。<br>既然能够得到域的值，那么也就能设置域的值。可以使用Field类中的set方法设置域的值，用法为f.set(obj,value)，obj是包含f域的对象，value是要设置的值。<br>还要注意，如果f是一个私有域，那么直接使用get方法会抛出一个IllegalAccessException异常。除非拥有访问权限，否则Java安全机制只允许查看任意对象有哪些域而不允许得去域的值。<br>反射机制的默认行为受限于Java的访问控制。然而，如果一个Java程序没有受到安全管理器的控制，就可以覆盖访问控制。可以调用Field、Method或Constructor类中的setAccessible方法达到这个目的：<br><code>f.setAccessible(true);</code><br><code>setAccessible</code>方法是AccessibleObject类中的一个方法，它是Field、Method和Constructor类的超类。</p>
+<h5 id="15-反射泛型数组"><a href="#15-反射泛型数组" class="headerlink" title="15. 反射泛型数组"></a>15. 反射泛型数组</h5><p>暂时不看。</p>
+<h5 id="16-调用任意方法"><a href="#16-调用任意方法" class="headerlink" title="16. 调用任意方法"></a>16. 调用任意方法</h5><p>在C和C++中，可以从函数指针执行任意函数。虽然Java没有提供函数指针，但反射机制允许调用任意方法。<br>和Field中的get方法类似，Method类中有个invoke方法，它允许调用包装在当前Method对象中的方法。invoke方法的签名是：<br><code>Object invoke(Object obj,Object... args);</code><br>如果是静态方法，第一个参数会被忽略，可以将其设置为null。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/11/第四章-对象与类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/11/第四章-对象与类/" itemprop="url">
+                  第四章 对象与类
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-11 15:28:00 / 修改时间：16:52:21" itemprop="dateCreated datePublished" datetime="2018-08-11T15:28:00+00:00">2018-08-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/《Java核心技术-卷I：基础知识》/" itemprop="url" rel="index"><span itemprop="name">《Java核心技术 卷I：基础知识》</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="1-一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c-中对象指针。"><a href="#1-一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c-中对象指针。" class="headerlink" title="1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。"></a>1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。</h5><h5 id="2-C-通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。"><a href="#2-C-通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。" class="headerlink" title="2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。"></a>2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。</h5><h5 id="3-不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone-。"><a href="#3-不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone-。" class="headerlink" title="3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。"></a>3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。</h5><h5 id="4-方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。"><a href="#4-方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。" class="headerlink" title="4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。"></a>4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//可以不调用getAge()方法，直接通过user.age访问。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accessOther</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        System.out.println(user.age);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="5-final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。"><a href="#5-final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。" class="headerlink" title="5. final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。"></a>5. final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。</h5><h5 id="6-可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。"><a href="#6-可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。" class="headerlink" title="6. 可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。"></a>6. 可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。</h5><h5 id="7-每个类都可以有main-方法。根据运行时的主类来确定执行那个main方法。"><a href="#7-每个类都可以有main-方法。根据运行时的主类来确定执行那个main方法。" class="headerlink" title="7. 每个类都可以有main()方法。根据运行时的主类来确定执行那个main方法。"></a>7. 每个类都可以有main()方法。根据运行时的主类来确定执行那个main方法。</h5><h5 id="8-JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。"><a href="#8-JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。" class="headerlink" title="8. JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。"></a>8. JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。</h5><h5 id="9-成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。"><a href="#9-成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。" class="headerlink" title="9. 成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。"></a>9. 成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。</h5><h5 id="10-C-中一个构造器不能调用另一个构造器，JAVA可以。"><a href="#10-C-中一个构造器不能调用另一个构造器，JAVA可以。" class="headerlink" title="10. C++中一个构造器不能调用另一个构造器，JAVA可以。"></a>10. C++中一个构造器不能调用另一个构造器，JAVA可以。</h5><h5 id="11-静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤"><a href="#11-静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤" class="headerlink" title="11. 静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤:"></a>11. 静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤:</h5><blockquote>
+<ol>
+<li>所有数据被初始化为默认值。</li>
+<li>按照类声明中出现的次序依次执行所有的域初始化语句和初始化块。</li>
+<li>执行构造器主体。如果调用其他构造器，则执行其他构造器。</li>
+</ol>
+</blockquote>
+<h5 id="12-finalize-方法会在垃圾回收器清除对象之前调用。"><a href="#12-finalize-方法会在垃圾回收器清除对象之前调用。" class="headerlink" title="12. finalize()方法会在垃圾回收器清除对象之前调用。"></a>12. finalize()方法会在垃圾回收器清除对象之前调用。</h5><h5 id="14-子包和父包没有关系，使用-可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。"><a href="#14-子包和父包没有关系，使用-可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。" class="headerlink" title="14. 子包和父包没有关系，使用 * 可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。"></a>14. 子包和父包没有关系，使用 * 可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。</h5><h5 id="15-JAVA访问修饰符。"><a href="#15-JAVA访问修饰符。" class="headerlink" title="15. JAVA访问修饰符。"></a>15. JAVA访问修饰符。</h5><ol>
+<li>private — 只有本类中可以访问。</li>
+<li>default（默认，不写）— 本包中的类可以访问。</li>
+<li>protected — 本包中的类及其子类（包外也可以）可以访问。</li>
+<li>public — 所有的类均可访问。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/11/第三章-JAVA的基本程序设计结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/11/第三章-JAVA的基本程序设计结构/" itemprop="url">
+                  第三章 JAVA的基本程序设计结构
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-11 15:26:00 / 修改时间：16:52:21" itemprop="dateCreated datePublished" datetime="2018-08-11T15:26:00+00:00">2018-08-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/《Java核心技术-卷I：基础知识》/" itemprop="url" rel="index"><span itemprop="name">《Java核心技术 卷I：基础知识》</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="1-字面值常量"><a href="#1-字面值常量" class="headerlink" title="1.字面值常量"></a>1.字面值常量</h5><blockquote>
+<p><a href="http://www.cnblogs.com/hwaggLee/p/4507968.html" target="_blank" rel="noopener">http://www.cnblogs.com/hwaggLee/p/4507968.html</a><br>字面值大体上可以分为整型字面值、浮点字面值、字符和字符串字面值、特殊字面值。</p>
+<ol>
+<li>整形字面值<br>一般情况下，字面值创建的是int类型，但是int字面值可以赋值给byte short char long int，只要字面值在目标范围以内，Java会自动完成转换，如果试图将超出范围的字面值赋给某一类型（比如把128赋给byte类型），编译通不过。而如果想创建一个int类型无法表示的long类型，则需要在字面值最后面加上L或者l。通常建议使用容易区分的L。所以整型字面值包括int字面值和long字面值两种。</li>
+<li>浮点字面值<br>分为float字面值和double字面值，如果在小数后面加上F或者f，则表示这是个float字面值，如11.8F。如果小数后面不加F（f），如10.4。或者小数后面加上D（d），则表示这是个double字面值。</li>
+<li>字符及字符串字面值<br>Java中字符字面值用单引号括起来，如‘@’‘1’。<br>字符串字面值则使用双引号，字符串字面值中同样可以包含字符字面值中的转义字符序列。</li>
+</ol>
+</blockquote>
+<h5 id="2-char类型大小"><a href="#2-char类型大小" class="headerlink" title="2. char类型大小"></a>2. char类型大小</h5><p>16bit，两个字节。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The number of bits used to represent a &lt;tt&gt;char&lt;/tt&gt; value in unsigned</span></span><br><span class="line"><span class="comment">     * binary form, constant &#123;<span class="doctag">@code</span> 16&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 1.5</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIZE = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The number of bytes used to represent a &#123;<span class="doctag">@code</span> char&#125; value in unsigned</span></span><br><span class="line"><span class="comment">     * binary form.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> BYTES = SIZE / Byte.SIZE;</span><br></pre></td></tr></table></figure></p>
+<h5 id="3-变量使用之前一定要初始化。"><a href="#3-变量使用之前一定要初始化。" class="headerlink" title="3. 变量使用之前一定要初始化。"></a>3. 变量使用之前一定要初始化。</h5><p>可以不在定义是初始化，但一定要在使用之前初始化</p>
+<h5 id="4-amp-和-用于布尔值"><a href="#4-amp-和-用于布尔值" class="headerlink" title="4. &amp;和|用于布尔值"></a>4. &amp;和|用于布尔值</h5><p>&amp;&amp;，|| 和&amp;，| 用于boolean的差别在于，前者有短路特性，后者没有。<br>用于整数。<br>而在C++中&amp;和|都是按照整数处理的。</p>
+<h5 id="5-gt-gt-和-gt-gt-，C-中的右移位"><a href="#5-gt-gt-和-gt-gt-，C-中的右移位" class="headerlink" title="5. >&gt;&gt;和&gt;&gt;，C++中的右移位"></a>5. >&gt;&gt;和&gt;&gt;，C++中的右移位</h5><p>>&gt;&gt;表示算术移位，&gt;&gt;表示逻辑移位。<br>C++中，无符号数逻辑右移，有符号数算术右移。</p>
+<h5 id="6-char如何转换int"><a href="#6-char如何转换int" class="headerlink" title="6. char如何转换int"></a>6. char如何转换int</h5><p>char转换int返回code point。</p>
+<h5 id="7-类型转换"><a href="#7-类型转换" class="headerlink" title="7. 类型转换"></a>7. 类型转换</h5><p>int转换float，int转换double，long转换double都会有精度丢失。但是可以进行自动转换，无需强制转换。<br>两个数值类型进行计算时，如果类型不匹配，会将”低类型””转化为”高类型”，然后在进行计算。</p>
+<blockquote>
+<p>如果有一个为double，转换另一个为double<br>否则，如果有一个为float，转换另一个为float<br>否则，如果有一个为long，转换另一个为long<br>否则，都转换为int。</p>
+</blockquote>
+<p><strong>不要使用Boolean转换类型</strong></p>
+<h5 id="8-string类对象不可变字符串"><a href="#8-string类对象不可变字符串" class="headerlink" title="8. string类对象不可变字符串"></a>8. string类对象不可变字符串</h5><p>String对象创建的时候，</p>
+<ol>
+<li>如果直接用字符创字面值常量创建，如：<code>String s = &quot;abc&quot;</code>，如果string literal pool（常量池）中不存在”abc”这个对象，那么会创建<strong>一个</strong>对象，如果存在，则不会创建；</li>
+<li>如果new String()，那么总共会创建两个对象，一个对象为字面值常量本身，另一个为单独的字符串对象。<br>参考：<a href="http://www.cnblogs.com/javaminer/p/3923484.html" target="_blank" rel="noopener">http://www.cnblogs.com/javaminer/p/3923484.html</a></li>
+</ol>
+<h5 id="9-code-point-和-code-unit"><a href="#9-code-point-和-code-unit" class="headerlink" title="9. code point 和 code unit"></a>9. code point 和 code unit</h5><p>String length()返回的是code unit的数量。<br>codePointCount()可以返回code point 的数量。<br>charAt(n)返回位置为n的code unit。<br>codePointAt(n) 返回位置为n的code point。<br>这种差别会在一些字符上表现出来，<a href="https://en.wikipedia.org/wiki/UTF-16" target="_blank" rel="noopener">UTF-16 - Wikipedia</a>上可以找到两个字符，’𐐷’和’𤭢’都是由两个code unit来表示的。</p>
+<h5 id="10-StringBuilder和SttingBuffer"><a href="#10-StringBuilder和SttingBuffer" class="headerlink" title="10. StringBuilder和SttingBuffer"></a>10. StringBuilder和SttingBuffer</h5><p>这两个类的对象是可以被修改的，与String不同。两个类 的API相同。<br>由于 StringBuilder 相较于 StringBuffer 有速度优势，所以多数情况下建议使用 StringBuilder 类。然而在应用程序要求线程安全的情况下，则必须使用 StringBuffer 类。</p>
+<h5 id="11-Console类"><a href="#11-Console类" class="headerlink" title="11. Console类"></a>11. Console类</h5><p>Console类可以用来从控制台读取密码，输入不可见。<br><a href="https://docs.oracle.com/javase/7/docs/api/java/io/Console.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/7/docs/api/java/io/Console.html</a></p>
+<h5 id="12-printf对日期处理，参数下标"><a href="#12-printf对日期处理，参数下标" class="headerlink" title="12. printf对日期处理，参数下标"></a>12. printf对日期处理，参数下标</h5><p>JAVA 中增加了printf对日期的格式化。<br>支持参数下标，实现一个参数多次使用。<br>这两种方式输出是相同的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">System.out.printf(<span class="string">"%1$s %2$tB %2$te, %2$tY"</span>,<span class="string">"date:"</span>,<span class="keyword">new</span> Date());</span><br><span class="line"></span><br><span class="line">System.out.printf(<span class="string">"%s %tB %&lt;te, %&lt;tY"</span>,<span class="string">"date:"</span>,<span class="keyword">new</span> Date());</span><br></pre></td></tr></table></figure></p>
+<h5 id="13-Scanner读文件PrintWriter写文件"><a href="#13-Scanner读文件PrintWriter写文件" class="headerlink" title="13. Scanner读文件PrintWriter写文件"></a>13. Scanner读文件PrintWriter写文件</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Scanner scanner = <span class="keyword">new</span> Scanner(Paths.get(<span class="string">"a.txt"</span>));</span><br><span class="line"></span><br><span class="line">PrintWriter out = <span class="keyword">new</span> PrintWriter(<span class="string">"a.txt"</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="14-不能在嵌套的块中定义同名变量"><a href="#14-不能在嵌套的块中定义同名变量" class="headerlink" title="14. 不能在嵌套的块中定义同名变量"></a>14. 不能在嵌套的块中定义同名变量</h5><p>与 C++ 不同，C++ 中定义的同名变量外层会被内层覆盖，而JAVA是不允许的。</p>
+<h5 id="15-带标签的break，continue"><a href="#15-带标签的break，continue" class="headerlink" title="15. 带标签的break，continue"></a>15. 带标签的break，continue</h5><p>JAVA中为了支持goto，break可以带标签，该语句会跳到标签定义处，可以实现跳到外层循环。<br>continue也可以跳到标签指定处。</p>
+<h5 id="16-命令行参数第一个参数"><a href="#16-命令行参数第一个参数" class="headerlink" title="16. 命令行参数第一个参数"></a>16. 命令行参数第一个参数</h5><p>C++中命令行参数的第一个参数为文件名，而JAVA是不会将文件名计算在参数内的。</p>
+<h5 id="17-数组"><a href="#17-数组" class="headerlink" title="17. 数组"></a>17. 数组</h5><ol>
+<li>数组也是会存放在常量池中的，所以用 = 赋值个另一个数组变量时，两者指向同一个引用。修改一个另一个也会变化。如果想要拷贝一个新的数组，可以用<code>Arrays.copy()</code>。</li>
+<li>for each 不能自动处理多维数组</li>
+<li>deepToString()快速打印多维数组。</li>
+<li>JAVA多维数组长度可以不相等，多维数组中，每个元素存的都是另一个数组的引用。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/JAVA-WEB相关问题记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,7 +1243,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
               
             
           </span>
@@ -553,7 +1432,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
               
             
           </span>
@@ -706,7 +1585,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
               
             
           </span>
@@ -861,7 +1740,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
               
             
           </span>
@@ -951,7 +1830,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/21/JAVA-相关问题记录/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/21/IDEA Tomcat启动项目报错/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Keaper">
@@ -970,7 +1849,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/01/21/JAVA-相关问题记录/" itemprop="url">
+                <a class="post-title-link" href="/2018/01/21/IDEA Tomcat启动项目报错/" itemprop="url">
                   IDEA Tomcat启动项目报错 java.lang.ClassNotFoundException:org.springframework.web.context.ContextLoaderListener
                 </a>
               
@@ -1014,7 +1893,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
               
             
           </span>
@@ -1170,7 +2049,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
+                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
               
             
           </span>
@@ -1281,679 +2160,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/15/6中排序算法总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/15/6中排序算法总结/" itemprop="url">
-                  6种排序算法总结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-10-15 21:29:00" itemprop="dateCreated datePublished" datetime="2017-10-15T21:29:00+00:00">2017-10-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>整理一下各种排序算法。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sort</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">//冒泡排序,O(N*N)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">bubbo_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;arr.size()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=arr.size()<span class="number">-1</span>;j&gt;i;j--)&#123;</span><br><span class="line">               <span class="keyword">if</span>(arr[j]&lt;arr[j<span class="number">-1</span>]) swap(arr[j],arr[j<span class="number">-1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//直接插入排序,O(N*N)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt; arr.size();i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> key = arr[i];</span><br><span class="line">            <span class="keyword">int</span> j = i;</span><br><span class="line">            <span class="keyword">while</span>(j&gt;<span class="number">0</span>&amp;&amp;arr[j<span class="number">-1</span>]&gt;key)&#123;</span><br><span class="line">                arr[j] = arr[j<span class="number">-1</span>];</span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            arr[j] = key;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//选择排序,O(N*N)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">select_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;arr.size();i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> minVal = arr[i];</span><br><span class="line">            <span class="keyword">int</span> minPos = i;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>;j&lt;arr.size();j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(minVal&gt;arr[j])&#123;</span><br><span class="line">                    minVal = arr[j];</span><br><span class="line">                    minPos = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            swap(arr[i],arr[minPos]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//快速排序,O(N*LogN)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">quick_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp; arr,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(l&gt;=r) <span class="keyword">return</span> ;</span><br><span class="line">        <span class="keyword">int</span> i = l,j = r,key = arr[l];</span><br><span class="line">        <span class="keyword">while</span>(i&lt;j)&#123;</span><br><span class="line">            <span class="keyword">while</span>(i &lt; j &amp;&amp; arr[j] &gt; key) j--;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; j) arr[i++] = arr[j];</span><br><span class="line">            <span class="keyword">while</span>(i &lt; j &amp;&amp; arr[i] &lt; key) i++;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; j) arr[j--] = arr[i];</span><br><span class="line">        &#125;</span><br><span class="line">        arr[i] = key;</span><br><span class="line">        quick_sort(arr,l,i<span class="number">-1</span>);</span><br><span class="line">        quick_sort(arr,i+<span class="number">1</span>,r);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//归并排序,O(N*LogN)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">merge_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; tmp(r-l+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span>(l&gt;=r) <span class="keyword">return</span> ;</span><br><span class="line">        <span class="keyword">int</span> mid = (l+r) / <span class="number">2</span>;</span><br><span class="line">        merge_sort(arr,l,mid);</span><br><span class="line">        merge_sort(arr,mid+<span class="number">1</span>,r);</span><br><span class="line">        <span class="keyword">int</span> i = l,j = mid+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=mid&amp;&amp;j&lt;=r)&#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[i]&lt;arr[j])</span><br><span class="line">                tmp[k++] = arr[i++];</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                tmp[k++] = arr[j++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=mid)&#123;</span><br><span class="line">            tmp[k++] = arr[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(j&lt;=r)&#123;</span><br><span class="line">            tmp[k++] = arr[j++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=r-l;i++)&#123;</span><br><span class="line">            arr[l+i] = tmp[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">shiftDown</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr,<span class="keyword">int</span> index,<span class="keyword">int</span> heapSize)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> key = arr[index];</span><br><span class="line">        <span class="keyword">int</span> father = index,child;</span><br><span class="line">        <span class="keyword">while</span>((child=father*<span class="number">2</span>+<span class="number">1</span>)&lt;heapSize)&#123;</span><br><span class="line">            <span class="keyword">if</span>(child+<span class="number">1</span>&lt;heapSize &amp;&amp; arr[child] &lt; arr[child+<span class="number">1</span>]) child++;</span><br><span class="line">            <span class="keyword">if</span>(key &gt; arr[child]) <span class="keyword">break</span>;</span><br><span class="line">            arr[father] = arr[child];</span><br><span class="line">            father = child;</span><br><span class="line">        &#125;</span><br><span class="line">        arr[father] = key;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//堆排序,O(N*LogN)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">heap_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span>&#123;</span><br><span class="line">        <span class="comment">//construct max heap</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=arr.size()/<span class="number">2</span><span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">            shiftDown(arr,i,arr.size());</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//        for(int i=0;i&lt;arr.size();i++)&#123;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;arr[i]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=arr.size()<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">            swap(arr[<span class="number">0</span>],arr[i]);</span><br><span class="line">            shiftDown(arr,<span class="number">0</span>,i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/15/链家校招笔试-音乐/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/15/链家校招笔试-音乐/" itemprop="url">
-                  音乐
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-10-15 19:21:00" itemprop="dateCreated datePublished" datetime="2017-10-15T19:21:00+00:00">2017-10-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔试/" itemprop="url" rel="index"><span itemprop="name">笔试</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>迈克喜欢在火车旅行的时候用手机听音乐，他有N首歌在手机里，在整个火车途中，他可以听P首歌，所以他想产生一个播放表产生P首歌曲，这个播放表的规则是： </p>
-<ul>
-<li>每首歌都要至少被播放一次 </li>
-<li>在两首一样的歌中间，至少有M首其他的歌 </li>
-</ul>
-<p>迈克在想有多少种不同的播放表可以产生，那么给你N,M,P，你来算一下，输出结果取1000000007的余数。</p>
-<p>输入:</p>
-<blockquote>
-<p>输入N,M,P<br>N范围在1到100<br>M范围在0到N<br>P范围在N到100</p>
-</blockquote>
-<p>输出 :</p>
-<blockquote>
-<p>输出结果mod 1000000007的余数<br>样例输入<br><code>1 0 3</code><br>样例输出<br><code>1</code><br>提示<br>其他样例<br><code>1 1 3</code><br><code>0</code></p>
-<p><code>2 0 3</code><br><code>6</code></p>
-<p><code>50 5 100</code><br><code>222288991</code></p>
-</blockquote>
-<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>DP[i][j]表示前 i 首歌共使用了 j 首<strong>不同</strong>的歌。<br>考虑第i首歌，如果取前面已经用过的歌，那么可选的歌有（j-m）首歌，如果选用前面没用过的歌，那么可选的歌有（n-j+1）首歌可选。所以</p>
-<p>dp[i][j] = dp[i-1][j] * (j-m) + dp[i-1][j-1] * (n-j+1)</p>
-<p>，注意int会超出范围。</p>
-<p>代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> LL;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX = <span class="number">105</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MOD = <span class="number">1e9</span>+<span class="number">7</span>;</span><br><span class="line">LL dp[MAX][MAX];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,m,p;</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m&gt;&gt;p)&#123;</span><br><span class="line">        <span class="built_in">memset</span>(dp,<span class="number">0</span>,<span class="keyword">sizeof</span>(dp));</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=p;i++)&#123;</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">            dp[<span class="number">0</span>][j] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=p;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">                dp[i][j] = (dp[i<span class="number">-1</span>][j<span class="number">-1</span>]*(n-j+<span class="number">1</span>))%MOD;</span><br><span class="line">                <span class="keyword">if</span>(j&gt;m) dp[i][j] = (dp[i][j] + (dp[i<span class="number">-1</span>][j]*(j-m))%MOD)%MOD;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//        for(int i=0;i&lt;=p;i++)&#123;</span></span><br><span class="line"><span class="comment">//            for(int j=0;j&lt;=n;j++)&#123;</span></span><br><span class="line"><span class="comment">//                cout&lt;&lt;dp[i][j]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;dp[p][n]&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/12/滴滴校招笔试-化简字符串/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/12/滴滴校招笔试-化简字符串/" itemprop="url">
-                  化简字符串
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-10-12 00:24:00" itemprop="dateCreated datePublished" datetime="2017-10-12T00:24:00+00:00">2017-10-12</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔试/" itemprop="url" rel="index"><span itemprop="name">笔试</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>滴滴笔试的题目，暂时没挂到牛客上。</p>
-<h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>给出一个字符串，要求化简字符串，<br>如: ‘bcabcabc’ 这样的字符串会被化简为 ‘3[abc]’，<br>但是如果化简后的字符串比原串长度要长，则不化简。<br>化简可以嵌套，<br>比如：’abcdabcdeabcdabcdexyabcabcabcds’可以化简为’2[2[abcd]e]xy2[abc]ds’。<br>输出化简后的长度。</p>
-<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>枚举每个子串，求出每个子串后面连续相同的个数，然后替换成相应的简化形式。<br>一个字符串不一定只化简一次，所以加一层循环直到不能化简为止，取最短长度即可。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">intToStr</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;</span><br><span class="line">    <span class="built_in">string</span> ans =<span class="string">""</span>;</span><br><span class="line">    <span class="keyword">while</span>(num)&#123;</span><br><span class="line">        ans += num%<span class="number">10</span>+<span class="string">'0'</span>;</span><br><span class="line">        num /= <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    reverse(ans.begin(),ans.end());</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">getSimple</span><span class="params">(<span class="built_in">string</span> str)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(str.size() &lt; <span class="number">5</span>) <span class="keyword">return</span> str;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;str.size();i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>;j&lt;str.size();j++)&#123;</span><br><span class="line">            <span class="built_in">string</span> sub = str.substr(i,j-i);</span><br><span class="line">            <span class="keyword">int</span> start = j , reCount = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span>(str.find(sub,start)==start)&#123;</span><br><span class="line">                reCount++;</span><br><span class="line">                start += j-i;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(reCount==<span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="built_in">string</span> countStr = intToStr(reCount+<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span>(reCount*(j-i)&lt;countStr.size()+<span class="number">2</span>) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="built_in">string</span> res = str.substr(<span class="number">0</span>,i);</span><br><span class="line">            res+=countStr;</span><br><span class="line">            res+=<span class="string">'['</span>;</span><br><span class="line">            <span class="built_in">string</span> next = getSimple(sub);</span><br><span class="line">            res+=next;</span><br><span class="line">            res+=<span class="string">']'</span>;</span><br><span class="line">            res+= str.substr(j+reCount*(j-i),str.size()-j+reCount*(j-i));</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">string</span> str;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;str;</span><br><span class="line">    <span class="keyword">int</span> mixLen = str.size();</span><br><span class="line">    <span class="built_in">string</span> preStr = str;</span><br><span class="line">    <span class="built_in">string</span> ansStr = str;</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="built_in">string</span> ret = getSimple(preStr);</span><br><span class="line"><span class="comment">//        cout&lt;&lt;ret&lt;&lt;endl;</span></span><br><span class="line">        <span class="keyword">if</span>(ret == preStr) <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">else</span> preStr = ret;</span><br><span class="line">        <span class="keyword">if</span>(mixLen &gt; ret.size())&#123;</span><br><span class="line">            mixLen = ret.size();</span><br><span class="line">            ansStr = ret;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;ansStr&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;mixLen&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/28/C-常量指针和指针常量/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/28/C-常量指针和指针常量/" itemprop="url">
-                  C++ 常量指针和指针常量
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-09-28 21:31:00" itemprop="dateCreated datePublished" datetime="2017-09-28T21:31:00+00:00">2017-09-28</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-08-07 16:01:59" itemprop="dateModified" datetime="2018-08-07T16:01:59+00:00">2018-08-07</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>原文链接：<br><a href="http://www.cnblogs.com/beanmoon/archive/2012/09/23/2698987.html" target="_blank" rel="noopener">http://www.cnblogs.com/beanmoon/archive/2012/09/23/2698987.html</a><br>先看一段代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> greeting[] = “Hello”;  </span><br><span class="line"><span class="keyword">char</span>* p = greeting; <span class="comment">//non-const pointer,non-const data  </span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* p = greeting; <span class="comment">//non-const pointer,const data;  </span></span><br><span class="line"><span class="keyword">char</span>* <span class="keyword">const</span> p = greeting;<span class="comment">//const pointer,non-const data;  </span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="keyword">const</span> p = greeting; <span class="comment">//const pointer,const data;</span></span><br></pre></td></tr></table></figure></p>
-<p>关于定义的阅读，一直以为这段解释很不错了已经，即以<em>和const的相对位置来判断：<br>const语法虽然变化多端，但并不莫测高深。如果关键字const出现在</em>左边，表示被指物是常量；如果出现在<em>右边，表示指针自身是常量；如果出现在</em>两边，表示被指物和指针两者都是常量。<br>如果被指物是常量，有些程序员会将关键字const写在类型之前，有些人会把它写在类型之后、*之前。两种写法的意义相同，所以下列两个定义相同：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span>* w;  </span><br><span class="line"><span class="keyword">int</span> <span class="keyword">const</span>* w;</span><br></pre></td></tr></table></figure></p>
-<p>后来在百度知道上看到另一段挺有意思的解释：<br>其实很简单，const和*的优先级相同<br>且是从右相左读的，即“右左法则”<br>其实const只是限定某个地址存储的内容不可修改<br>比如:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;         <span class="comment">//读作p为指针，指向int，所以p为指向int的指针</span></span><br><span class="line"><span class="keyword">int</span> *<span class="keyword">const</span> p;   <span class="comment">//读作p为常量，是指针，指向int，所以p为指向int的常量指针， p不可修改</span></span><br><span class="line"><span class="keyword">int</span> <span class="keyword">const</span> *p;   <span class="comment">//p为指针，指向常量，为int，所以p为指向int常量的指针， *p不可修改</span></span><br><span class="line"><span class="keyword">int</span> ** <span class="keyword">const</span> p; <span class="comment">//p为常量，指向指针，指针指向int，所以p为指向int型指针的常量指针，p不可修改</span></span><br><span class="line"><span class="keyword">int</span> <span class="keyword">const</span>**p;   <span class="comment">//p为指针，指向指针，指针指向常量int，所以p为指针，指向一个指向int常量的指针， **p为int，不可修改</span></span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> *p; <span class="comment">//p为指针，指向常量，该常量为指针，指向int，所以p为指针，指向一个常量指针，*p为指针，不可修改</span></span><br><span class="line"><span class="keyword">int</span> ** <span class="keyword">const</span> *p;<span class="comment">//p为指针，指向常量，常量为指向指针的指针，p为指针，指向常量型指针的指针，*p为指向指针的指针，不可修改</span></span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> **p;<span class="comment">//p为指针，指向一个指针1，指针1指向一个常量，常量为指向int的指针，即p为指针，指向一个指向常量指针的指针， **p为指向一个int的指针，不可修改</span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2000,7 +2211,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">49</span>
+                    <span class="site-state-item-count">53</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2021,7 +2232,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>

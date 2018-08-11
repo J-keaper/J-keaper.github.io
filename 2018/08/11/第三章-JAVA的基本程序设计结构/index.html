@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32×32.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16×16.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1.字面值常量 http://www.cnblogs.com/hwaggLee/p/4507968.html字面值大体上可以分为整型字面值、浮点字面值、字符和字符串字面值、特殊字面值。  整形字面值一般情况下，字面值创建的是int类型，但是int字面值可以赋值给byte short char long int，只要字面值在目标范围以内，Java会自动完成转换，如果试图将超出范围的字面值赋给某一类型">
+<meta name="keywords" content="JAVA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第三章 JAVA的基本程序设计结构">
+<meta property="og:url" content="http://yoursite.com/2018/08/11/第三章-JAVA的基本程序设计结构/index.html">
+<meta property="og:site_name" content="Keaper&#39;s Blog">
+<meta property="og:description" content="1.字面值常量 http://www.cnblogs.com/hwaggLee/p/4507968.html字面值大体上可以分为整型字面值、浮点字面值、字符和字符串字面值、特殊字面值。  整形字面值一般情况下，字面值创建的是int类型，但是int字面值可以赋值给byte short char long int，只要字面值在目标范围以内，Java会自动完成转换，如果试图将超出范围的字面值赋给某一类型">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-11T16:52:21.784Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第三章 JAVA的基本程序设计结构">
+<meta name="twitter:description" content="1.字面值常量 http://www.cnblogs.com/hwaggLee/p/4507968.html字面值大体上可以分为整型字面值、浮点字面值、字符和字符串字面值、特殊字面值。  整形字面值一般情况下，字面值创建的是int类型，但是int字面值可以赋值给byte short char long int，只要字面值在目标范围以内，Java会自动完成转换，如果试图将超出范围的字面值赋给某一类型">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/11/第三章-JAVA的基本程序设计结构/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>第三章 JAVA的基本程序设计结构 | Keaper's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keaper's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/11/第三章-JAVA的基本程序设计结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第三章 JAVA的基本程序设计结构
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-11 15:26:00 / 修改时间：16:52:21" itemprop="dateCreated datePublished" datetime="2018-08-11T15:26:00+00:00">2018-08-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/《Java核心技术-卷I：基础知识》/" itemprop="url" rel="index"><span itemprop="name">《Java核心技术 卷I：基础知识》</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h5 id="1-字面值常量"><a href="#1-字面值常量" class="headerlink" title="1.字面值常量"></a>1.字面值常量</h5><blockquote>
+<p><a href="http://www.cnblogs.com/hwaggLee/p/4507968.html" target="_blank" rel="noopener">http://www.cnblogs.com/hwaggLee/p/4507968.html</a><br>字面值大体上可以分为整型字面值、浮点字面值、字符和字符串字面值、特殊字面值。</p>
+<ol>
+<li>整形字面值<br>一般情况下，字面值创建的是int类型，但是int字面值可以赋值给byte short char long int，只要字面值在目标范围以内，Java会自动完成转换，如果试图将超出范围的字面值赋给某一类型（比如把128赋给byte类型），编译通不过。而如果想创建一个int类型无法表示的long类型，则需要在字面值最后面加上L或者l。通常建议使用容易区分的L。所以整型字面值包括int字面值和long字面值两种。</li>
+<li>浮点字面值<br>分为float字面值和double字面值，如果在小数后面加上F或者f，则表示这是个float字面值，如11.8F。如果小数后面不加F（f），如10.4。或者小数后面加上D（d），则表示这是个double字面值。</li>
+<li>字符及字符串字面值<br>Java中字符字面值用单引号括起来，如‘@’‘1’。<br>字符串字面值则使用双引号，字符串字面值中同样可以包含字符字面值中的转义字符序列。</li>
+</ol>
+</blockquote>
+<h5 id="2-char类型大小"><a href="#2-char类型大小" class="headerlink" title="2. char类型大小"></a>2. char类型大小</h5><p>16bit，两个字节。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The number of bits used to represent a &lt;tt&gt;char&lt;/tt&gt; value in unsigned</span></span><br><span class="line"><span class="comment">     * binary form, constant &#123;<span class="doctag">@code</span> 16&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 1.5</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIZE = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The number of bytes used to represent a &#123;<span class="doctag">@code</span> char&#125; value in unsigned</span></span><br><span class="line"><span class="comment">     * binary form.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> BYTES = SIZE / Byte.SIZE;</span><br></pre></td></tr></table></figure></p>
+<h5 id="3-变量使用之前一定要初始化。"><a href="#3-变量使用之前一定要初始化。" class="headerlink" title="3. 变量使用之前一定要初始化。"></a>3. 变量使用之前一定要初始化。</h5><p>可以不在定义是初始化，但一定要在使用之前初始化</p>
+<h5 id="4-amp-和-用于布尔值"><a href="#4-amp-和-用于布尔值" class="headerlink" title="4. &amp;和|用于布尔值"></a>4. &amp;和|用于布尔值</h5><p>&amp;&amp;，|| 和&amp;，| 用于boolean的差别在于，前者有短路特性，后者没有。<br>用于整数。<br>而在C++中&amp;和|都是按照整数处理的。</p>
+<h5 id="5-gt-gt-和-gt-gt-，C-中的右移位"><a href="#5-gt-gt-和-gt-gt-，C-中的右移位" class="headerlink" title="5. >&gt;&gt;和&gt;&gt;，C++中的右移位"></a>5. >&gt;&gt;和&gt;&gt;，C++中的右移位</h5><p>>&gt;&gt;表示算术移位，&gt;&gt;表示逻辑移位。<br>C++中，无符号数逻辑右移，有符号数算术右移。</p>
+<h5 id="6-char如何转换int"><a href="#6-char如何转换int" class="headerlink" title="6. char如何转换int"></a>6. char如何转换int</h5><p>char转换int返回code point。</p>
+<h5 id="7-类型转换"><a href="#7-类型转换" class="headerlink" title="7. 类型转换"></a>7. 类型转换</h5><p>int转换float，int转换double，long转换double都会有精度丢失。但是可以进行自动转换，无需强制转换。<br>两个数值类型进行计算时，如果类型不匹配，会将”低类型””转化为”高类型”，然后在进行计算。</p>
+<blockquote>
+<p>如果有一个为double，转换另一个为double<br>否则，如果有一个为float，转换另一个为float<br>否则，如果有一个为long，转换另一个为long<br>否则，都转换为int。</p>
+</blockquote>
+<p><strong>不要使用Boolean转换类型</strong></p>
+<h5 id="8-string类对象不可变字符串"><a href="#8-string类对象不可变字符串" class="headerlink" title="8. string类对象不可变字符串"></a>8. string类对象不可变字符串</h5><p>String对象创建的时候，</p>
+<ol>
+<li>如果直接用字符创字面值常量创建，如：<code>String s = &quot;abc&quot;</code>，如果string literal pool（常量池）中不存在”abc”这个对象，那么会创建<strong>一个</strong>对象，如果存在，则不会创建；</li>
+<li>如果new String()，那么总共会创建两个对象，一个对象为字面值常量本身，另一个为单独的字符串对象。<br>参考：<a href="http://www.cnblogs.com/javaminer/p/3923484.html" target="_blank" rel="noopener">http://www.cnblogs.com/javaminer/p/3923484.html</a></li>
+</ol>
+<h5 id="9-code-point-和-code-unit"><a href="#9-code-point-和-code-unit" class="headerlink" title="9. code point 和 code unit"></a>9. code point 和 code unit</h5><p>String length()返回的是code unit的数量。<br>codePointCount()可以返回code point 的数量。<br>charAt(n)返回位置为n的code unit。<br>codePointAt(n) 返回位置为n的code point。<br>这种差别会在一些字符上表现出来，<a href="https://en.wikipedia.org/wiki/UTF-16" target="_blank" rel="noopener">UTF-16 - Wikipedia</a>上可以找到两个字符，’𐐷’和’𤭢’都是由两个code unit来表示的。</p>
+<h5 id="10-StringBuilder和SttingBuffer"><a href="#10-StringBuilder和SttingBuffer" class="headerlink" title="10. StringBuilder和SttingBuffer"></a>10. StringBuilder和SttingBuffer</h5><p>这两个类的对象是可以被修改的，与String不同。两个类 的API相同。<br>由于 StringBuilder 相较于 StringBuffer 有速度优势，所以多数情况下建议使用 StringBuilder 类。然而在应用程序要求线程安全的情况下，则必须使用 StringBuffer 类。</p>
+<h5 id="11-Console类"><a href="#11-Console类" class="headerlink" title="11. Console类"></a>11. Console类</h5><p>Console类可以用来从控制台读取密码，输入不可见。<br><a href="https://docs.oracle.com/javase/7/docs/api/java/io/Console.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/7/docs/api/java/io/Console.html</a></p>
+<h5 id="12-printf对日期处理，参数下标"><a href="#12-printf对日期处理，参数下标" class="headerlink" title="12. printf对日期处理，参数下标"></a>12. printf对日期处理，参数下标</h5><p>JAVA 中增加了printf对日期的格式化。<br>支持参数下标，实现一个参数多次使用。<br>这两种方式输出是相同的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">System.out.printf(<span class="string">"%1$s %2$tB %2$te, %2$tY"</span>,<span class="string">"date:"</span>,<span class="keyword">new</span> Date());</span><br><span class="line"></span><br><span class="line">System.out.printf(<span class="string">"%s %tB %&lt;te, %&lt;tY"</span>,<span class="string">"date:"</span>,<span class="keyword">new</span> Date());</span><br></pre></td></tr></table></figure></p>
+<h5 id="13-Scanner读文件PrintWriter写文件"><a href="#13-Scanner读文件PrintWriter写文件" class="headerlink" title="13. Scanner读文件PrintWriter写文件"></a>13. Scanner读文件PrintWriter写文件</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Scanner scanner = <span class="keyword">new</span> Scanner(Paths.get(<span class="string">"a.txt"</span>));</span><br><span class="line"></span><br><span class="line">PrintWriter out = <span class="keyword">new</span> PrintWriter(<span class="string">"a.txt"</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="14-不能在嵌套的块中定义同名变量"><a href="#14-不能在嵌套的块中定义同名变量" class="headerlink" title="14. 不能在嵌套的块中定义同名变量"></a>14. 不能在嵌套的块中定义同名变量</h5><p>与 C++ 不同，C++ 中定义的同名变量外层会被内层覆盖，而JAVA是不允许的。</p>
+<h5 id="15-带标签的break，continue"><a href="#15-带标签的break，continue" class="headerlink" title="15. 带标签的break，continue"></a>15. 带标签的break，continue</h5><p>JAVA中为了支持goto，break可以带标签，该语句会跳到标签定义处，可以实现跳到外层循环。<br>continue也可以跳到标签指定处。</p>
+<h5 id="16-命令行参数第一个参数"><a href="#16-命令行参数第一个参数" class="headerlink" title="16. 命令行参数第一个参数"></a>16. 命令行参数第一个参数</h5><p>C++中命令行参数的第一个参数为文件名，而JAVA是不会将文件名计算在参数内的。</p>
+<h5 id="17-数组"><a href="#17-数组" class="headerlink" title="17. 数组"></a>17. 数组</h5><ol>
+<li>数组也是会存放在常量池中的，所以用 = 赋值个另一个数组变量时，两者指向同一个引用。修改一个另一个也会变化。如果想要拷贝一个新的数组，可以用<code>Arrays.copy()</code>。</li>
+<li>for each 不能自动处理多维数组</li>
+<li>deepToString()快速打印多维数组。</li>
+<li>JAVA多维数组长度可以不相等，多维数组中，每个元素存的都是另一个数组的引用。</li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/15/JAVA-WEB相关问题记录/" rel="next" title="JAVA WEB相关问题记录">
+                <i class="fa fa-chevron-left"></i> JAVA WEB相关问题记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/11/第四章-对象与类/" rel="prev" title="第四章 对象与类">
+                第四章 对象与类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Keaper" />
+            
+              <p class="site-author-name" itemprop="name">Keaper</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">53</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/J-keaper" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-字面值常量"><span class="nav-number">1.</span> <span class="nav-text">1.字面值常量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-char类型大小"><span class="nav-number">2.</span> <span class="nav-text">2. char类型大小</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-变量使用之前一定要初始化。"><span class="nav-number">3.</span> <span class="nav-text">3. 变量使用之前一定要初始化。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-amp-和-用于布尔值"><span class="nav-number">4.</span> <span class="nav-text">4. &amp;和|用于布尔值</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-gt-gt-和-gt-gt-，C-中的右移位"><span class="nav-number">5.</span> <span class="nav-text">5. &gt;&gt;&gt;和&gt;&gt;，C++中的右移位</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-char如何转换int"><span class="nav-number">6.</span> <span class="nav-text">6. char如何转换int</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-类型转换"><span class="nav-number">7.</span> <span class="nav-text">7. 类型转换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-string类对象不可变字符串"><span class="nav-number">8.</span> <span class="nav-text">8. string类对象不可变字符串</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-code-point-和-code-unit"><span class="nav-number">9.</span> <span class="nav-text">9. code point 和 code unit</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-StringBuilder和SttingBuffer"><span class="nav-number">10.</span> <span class="nav-text">10. StringBuilder和SttingBuffer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#11-Console类"><span class="nav-number">11.</span> <span class="nav-text">11. Console类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#12-printf对日期处理，参数下标"><span class="nav-number">12.</span> <span class="nav-text">12. printf对日期处理，参数下标</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#13-Scanner读文件PrintWriter写文件"><span class="nav-number">13.</span> <span class="nav-text">13. Scanner读文件PrintWriter写文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-不能在嵌套的块中定义同名变量"><span class="nav-number">14.</span> <span class="nav-text">14. 不能在嵌套的块中定义同名变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#15-带标签的break，continue"><span class="nav-number">15.</span> <span class="nav-text">15. 带标签的break，continue</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#16-命令行参数第一个参数"><span class="nav-number">16.</span> <span class="nav-text">16. 命令行参数第一个参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#17-数组"><span class="nav-number">17.</span> <span class="nav-text">17. 数组</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Keaper</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

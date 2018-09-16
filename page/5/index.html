@@ -301,6 +301,178 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/12/13. 机器人的运动范围/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/12/13. 机器人的运动范围/" itemprop="url">
+                  13. 机器人的运动范围
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-08-12 13:39:00" itemprop="dateCreated datePublished" datetime="2017-08-12T13:39:00+00:00">2017-08-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/剑指offer/" itemprop="url" rel="index"><span itemprop="name">剑指offer</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p><a href="https://www.nowcoder.com/questionTerminal/6e5207314b5241fb83f2329e89fdecc8" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/6e5207314b5241fb83f2329e89fdecc8</a></p>
+<h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>地上有一个m行和n列的方格。一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格，但是不能进入行坐标和列坐标的数位之和大于k的格子。 例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。但是，它不能进入方格（35,38），因为3+5+3+8 = 19。请问该机器人能够达到多少个格子？</p>
+<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>同样是DFS。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> dirx[<span class="number">4</span>]=&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">-1</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> diry[<span class="number">4</span>]=&#123;<span class="number">1</span>,<span class="number">0</span>,<span class="number">-1</span>,<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="built_in">vector</span>&lt; <span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt; &gt; vis;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">movingCount</span><span class="params">(<span class="keyword">int</span> threshold, <span class="keyword">int</span> rows, <span class="keyword">int</span> cols)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        vis.resize(rows,<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt;(cols));</span><br><span class="line">        <span class="keyword">return</span> dfs(rows,cols,threshold,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> rows,<span class="keyword">int</span> cols,<span class="keyword">int</span> k,<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(getCount(x)+getCount(y)&gt;k) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">1</span>;</span><br><span class="line">        vis[x][y]=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> nx = x+ dirx[i];</span><br><span class="line">            <span class="keyword">int</span> ny = y+ diry[i];</span><br><span class="line">            <span class="keyword">if</span>(judgeIn(rows,cols,nx,ny)&amp;&amp;!vis[nx][ny])</span><br><span class="line">                ans+=dfs(rows,cols,k,nx,ny);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(n)&#123;</span><br><span class="line">            ans+=n%<span class="number">10</span>;</span><br><span class="line">            n/=<span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">judgeIn</span><span class="params">(<span class="keyword">int</span> rows,<span class="keyword">int</span> cols,<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>&lt;=x&amp;&amp;x&lt;rows&amp;&amp;<span class="number">0</span>&lt;=y&amp;&amp;y&lt;cols;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/12/12. 矩阵中的路径/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,7 +536,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
               
             
           </span>
@@ -537,7 +709,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
               
             
           </span>
@@ -709,7 +881,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
               
             
           </span>
@@ -891,7 +1063,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
               
             
           </span>
@@ -1065,7 +1237,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
               
             
           </span>
@@ -1237,7 +1409,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
               
             
           </span>
@@ -1410,7 +1582,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
               
             
           </span>
@@ -1583,7 +1755,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
               
             
           </span>
@@ -1756,7 +1928,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
+                <time title="修改时间：2018-09-16 10:36:28" itemprop="dateModified" datetime="2018-09-16T10:36:28+00:00">2018-09-16</time>
               
             
           </span>
@@ -1850,195 +2022,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/06/3. 数组中重复的数字/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/06/3. 数组中重复的数字/" itemprop="url">
-                  3. 数组中重复的数字
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-08-06 23:00:00" itemprop="dateCreated datePublished" datetime="2017-08-06T23:00:00+00:00">2017-08-06</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-08-11 16:52:21" itemprop="dateModified" datetime="2018-08-11T16:52:21+00:00">2018-08-11</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/剑指offer/" itemprop="url" rel="index"><span itemprop="name">剑指offer</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p><a href="https://www.nowcoder.com/questionTerminal/623a5ac0ea5b4e5f95552655361ae0a8" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/623a5ac0ea5b4e5f95552655361ae0a8</a></p>
-<h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>在一个长度为n的数组里的所有数字都在0到n-1的范围内。数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是2或3。</p>
-<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><ul>
-<li><p>解法一：排序判断相邻的数字是否相等。时间复杂度O(NLogN)，空间复杂度O(1)。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// Parameters:</span></span><br><span class="line">    <span class="comment">//        numbers:     an array of integers</span></span><br><span class="line">    <span class="comment">//        length:      the length of array numbers</span></span><br><span class="line">    <span class="comment">//        duplication: (Output) the duplicated number in the array number</span></span><br><span class="line">    <span class="comment">// Return value:       true if the input is valid, and there are some duplications in the array number</span></span><br><span class="line">    <span class="comment">//                     otherwise false</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">duplicate</span><span class="params">(<span class="keyword">int</span> numbers[], <span class="keyword">int</span> length, <span class="keyword">int</span>* duplication)</span> </span>&#123;</span><br><span class="line">        sort(numbers,numbers+length);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;length;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(numbers[i]==numbers[i<span class="number">-1</span>])&#123;</span><br><span class="line">                duplication[<span class="number">0</span>]=numbers[i];</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>解法二：用hash表存每个数字出现的次数，当一个数字出现的次数大于1时，返回结果。时间复杂度O(N)，空间复杂度O(N)。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// Parameters:</span></span><br><span class="line">    <span class="comment">//        numbers:     an array of integers</span></span><br><span class="line">    <span class="comment">//        length:      the length of array numbers</span></span><br><span class="line">    <span class="comment">//        duplication: (Output) the duplicated number in the array number</span></span><br><span class="line">    <span class="comment">// Return value:       true if the input is valid, and there are some duplications in the array number</span></span><br><span class="line">    <span class="comment">//                     otherwise false</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">duplicate</span><span class="params">(<span class="keyword">int</span> numbers[], <span class="keyword">int</span> length, <span class="keyword">int</span>* duplication)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">unordered_map</span>&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt; cnt;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">            cnt[numbers[i]]++;</span><br><span class="line">            <span class="keyword">if</span>(cnt[numbers[i]]&gt;<span class="number">1</span>)&#123;</span><br><span class="line">                duplication[<span class="number">0</span>] = numbers[i];</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>解法三：给出的数都是1~N之间的数，所以如果我们将数组重排是的每个数都回到自己的位置上，即 i=numbers[i] ,如果有重复数字，则必定有数字在多个位置出现。<br>重排数组对每个数字numbers[i]，如果i=numbers[i]，则表示已经满足条件，继续下一个，如果不等于比较numbers[ numbers[i] ]和numbers[i] ，如果相等，则找到重复的数字，如果不相等，则交换numbers[i]和numbers[ numbers[i] ]，此时numbers[i] 位置上已经归位，继续比较交换过来的数字，直到找到重复数字或者i=numbers[i]。<br>时间复杂度：O(N)，虽然是两层循环，但是，每个数字最多交换两次就能回到自己的位置，时间复杂度O(1)。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// Parameters:</span></span><br><span class="line">    <span class="comment">//        numbers:     an array of integers</span></span><br><span class="line">    <span class="comment">//        length:      the length of array numbers</span></span><br><span class="line">    <span class="comment">//        duplication: (Output) the duplicated number in the array number</span></span><br><span class="line">    <span class="comment">// Return value:       true if the input is valid, and there are some duplications in the array number</span></span><br><span class="line">    <span class="comment">//                     otherwise false</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">duplicate</span><span class="params">(<span class="keyword">int</span> numbers[], <span class="keyword">int</span> length, <span class="keyword">int</span>* duplication)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">            <span class="keyword">while</span>(numbers[i]!=i)&#123;</span><br><span class="line">                <span class="keyword">if</span>(numbers[i]==numbers[numbers[i]])&#123;</span><br><span class="line">                    duplication[<span class="number">0</span>]=numbers[i];</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                swap(numbers[i],numbers[numbers[i]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="扩展题目"><a href="#扩展题目" class="headerlink" title="扩展题目"></a>扩展题目</h3><p>在一个长度为 n+1 的数组里的所有数字都在1到n的范围内。 所以数组中至少有一个数字是重复的，请找出数组中任意一个重复的数字，但不能修改输入的数组。</p>
-<h4 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h4><ul>
-<li>上述解法一仍然适用，只不过需要增加O(N)的空间复杂度用来存储辅助数组，存放原数组的副本。</li>
-<li>解法二也仍然适用。复杂度不变。</li>
-<li>解法三也可以，同样需要O(N)的辅助空间。实际上，由于不能原来的数组，可以直接在复制到辅助数组时，便将其放到对应的位置上，如果有发现该位置已经有数字，则找到重复数字。时间杂度O(N)，空间复杂度O(N)。</li>
-<li>如何能达到O(1)空间呢？不能用哈希表存数字出现的次数，我们只能计算每个数时，都对全数组扫描一遍，这样是O(N*N)时间复杂度+O(1)空间复杂度。还有优化余地吗？实际上我们可以发现，如果1~m之间的数的个数超过m，则必定有重复的数字（鸽巢原理），这样我们可以利用二分法，将范围不断缩小。直到范围为1。时间复杂度O(NLogN)，空间复杂度O(1)。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">duplicate</span><span class="params">(<span class="keyword">int</span> numbers[], <span class="keyword">int</span> length, <span class="keyword">int</span>* duplication)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">1</span>,right = length<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(left&lt;=right)&#123;</span><br><span class="line">            <span class="keyword">int</span> mid = (left+right)/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">int</span> count = getCount(numbers,length,left,mid);</span><br><span class="line">            <span class="keyword">if</span>(left==right)&#123;</span><br><span class="line">                <span class="keyword">if</span>(count&gt;<span class="number">1</span>)&#123;</span><br><span class="line">                    duplication[<span class="number">0</span>]=left;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(count&gt;(mid-left+<span class="number">1</span>))</span><br><span class="line">                right=mid;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                left=mid+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">(<span class="keyword">int</span> *numbers,<span class="keyword">int</span> length,<span class="keyword">int</span> left,<span class="keyword">int</span> end)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> count=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(numbers[i]&gt;=left&amp;&amp;numbers[i]&lt;=end)</span><br><span class="line">                count++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2090,7 +2073,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">53</span>
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

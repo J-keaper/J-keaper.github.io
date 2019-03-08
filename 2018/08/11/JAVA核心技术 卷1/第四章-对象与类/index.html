@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32×32.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16×16.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。12345678910111213141">
+<meta name="keywords" content="JAVA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第四章 对象与类">
+<meta property="og:url" content="http://yoursite.com/2018/08/11/JAVA核心技术 卷1/第四章-对象与类/index.html">
+<meta property="og:site_name" content="Keaper&#39;s Blog">
+<meta property="og:description" content="1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。12345678910111213141">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-08T14:12:36.076Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第四章 对象与类">
+<meta name="twitter:description" content="1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。12345678910111213141">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/11/JAVA核心技术 卷1/第四章-对象与类/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>第四章 对象与类 | Keaper's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keaper's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/11/JAVA核心技术 卷1/第四章-对象与类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第四章 对象与类
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-11 15:28:00" itemprop="dateCreated datePublished" datetime="2018-08-11T15:28:00+00:00">2018-08-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-03-08 14:12:36" itemprop="dateModified" datetime="2019-03-08T14:12:36+00:00">2019-03-08</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h5 id="1-一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c-中对象指针。"><a href="#1-一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c-中对象指针。" class="headerlink" title="1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。"></a>1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。</h5><h5 id="2-C-通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。"><a href="#2-C-通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。" class="headerlink" title="2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。"></a>2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。</h5><h5 id="3-不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone-。"><a href="#3-不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone-。" class="headerlink" title="3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。"></a>3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。</h5><h5 id="4-方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。"><a href="#4-方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。" class="headerlink" title="4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。"></a>4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//可以不调用getAge()方法，直接通过user.age访问。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accessOther</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        System.out.println(user.age);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="5-final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。"><a href="#5-final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。" class="headerlink" title="5. final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。"></a>5. final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。</h5><h5 id="6-可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。"><a href="#6-可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。" class="headerlink" title="6. 可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。"></a>6. 可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。</h5><h5 id="7-每个类都可以有main-方法。根据运行时的主类来确定执行那个main方法。"><a href="#7-每个类都可以有main-方法。根据运行时的主类来确定执行那个main方法。" class="headerlink" title="7. 每个类都可以有main()方法。根据运行时的主类来确定执行那个main方法。"></a>7. 每个类都可以有main()方法。根据运行时的主类来确定执行那个main方法。</h5><h5 id="8-JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。"><a href="#8-JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。" class="headerlink" title="8. JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。"></a>8. JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。</h5><h5 id="9-成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。"><a href="#9-成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。" class="headerlink" title="9. 成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。"></a>9. 成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。</h5><h5 id="10-C-中一个构造器不能调用另一个构造器，JAVA可以。"><a href="#10-C-中一个构造器不能调用另一个构造器，JAVA可以。" class="headerlink" title="10. C++中一个构造器不能调用另一个构造器，JAVA可以。"></a>10. C++中一个构造器不能调用另一个构造器，JAVA可以。</h5><h5 id="11-静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤"><a href="#11-静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤" class="headerlink" title="11. 静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤:"></a>11. 静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤:</h5><blockquote>
+<ol>
+<li>所有数据被初始化为默认值。</li>
+<li>按照类声明中出现的次序依次执行所有的域初始化语句和初始化块。</li>
+<li>执行构造器主体。如果调用其他构造器，则执行其他构造器。</li>
+</ol>
+</blockquote>
+<h5 id="12-finalize-方法会在垃圾回收器清除对象之前调用。"><a href="#12-finalize-方法会在垃圾回收器清除对象之前调用。" class="headerlink" title="12. finalize()方法会在垃圾回收器清除对象之前调用。"></a>12. finalize()方法会在垃圾回收器清除对象之前调用。</h5><h5 id="14-子包和父包没有关系，使用-可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。"><a href="#14-子包和父包没有关系，使用-可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。" class="headerlink" title="14. 子包和父包没有关系，使用 * 可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。"></a>14. 子包和父包没有关系，使用 * 可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。</h5><h5 id="15-JAVA访问修饰符。"><a href="#15-JAVA访问修饰符。" class="headerlink" title="15. JAVA访问修饰符。"></a>15. JAVA访问修饰符。</h5><ol>
+<li>private — 只有本类中可以访问。</li>
+<li>default（默认，不写）— 本包中的类可以访问。</li>
+<li>protected — 本包中的类及其子类（包外也可以）可以访问。</li>
+<li>public — 所有的类均可访问。</li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/11/JAVA核心技术 卷1/第三章-JAVA的基本程序设计结构/" rel="next" title="第三章 JAVA的基本程序设计结构">
+                <i class="fa fa-chevron-left"></i> 第三章 JAVA的基本程序设计结构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/11/JAVA核心技术 卷1/第五章-继承/" rel="prev" title="第五章 继承">
+                第五章 继承 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Keaper" />
+            
+              <p class="site-author-name" itemprop="name">Keaper</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/J-keaper" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c-中对象指针。"><span class="nav-number">1.</span> <span class="nav-text">1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-C-通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。"><span class="nav-number">2.</span> <span class="nav-text">2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone-。"><span class="nav-number">3.</span> <span class="nav-text">3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。"><span class="nav-number">4.</span> <span class="nav-text">4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。"><span class="nav-number">5.</span> <span class="nav-text">5. final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。"><span class="nav-number">6.</span> <span class="nav-text">6. 可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-每个类都可以有main-方法。根据运行时的主类来确定执行那个main方法。"><span class="nav-number">7.</span> <span class="nav-text">7. 每个类都可以有main()方法。根据运行时的主类来确定执行那个main方法。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。"><span class="nav-number">8.</span> <span class="nav-text">8. JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。"><span class="nav-number">9.</span> <span class="nav-text">9. 成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-C-中一个构造器不能调用另一个构造器，JAVA可以。"><span class="nav-number">10.</span> <span class="nav-text">10. C++中一个构造器不能调用另一个构造器，JAVA可以。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#11-静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤"><span class="nav-number">11.</span> <span class="nav-text">11. 静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#12-finalize-方法会在垃圾回收器清除对象之前调用。"><span class="nav-number">12.</span> <span class="nav-text">12. finalize()方法会在垃圾回收器清除对象之前调用。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-子包和父包没有关系，使用-可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。"><span class="nav-number">13.</span> <span class="nav-text">14. 子包和父包没有关系，使用 * 可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#15-JAVA访问修饰符。"><span class="nav-number">14.</span> <span class="nav-text">15. JAVA访问修饰符。</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Keaper</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -301,6 +301,203 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/06/Java-如何处理未捕获异常/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/06/Java-如何处理未捕获异常/" itemprop="url">
+                  Java 如何处理未捕获异常
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-06 17:13:00 / 修改时间：09:17:26" itemprop="dateCreated datePublished" datetime="2019-09-06T17:13:00+00:00">2019-09-06</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>如果代码中发生了异常，但我们没有用<code>try/catch</code>捕获，JVM会如何处理?<br>这是一段肯定会发生异常的代码，但我们没有处理异常，运行这个代码会发生什么？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="number">1</span> / <span class="number">0</span>);</span><br><span class="line">        System.out.println(<span class="string">"test"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>程序结束，并且控制台输出下面的内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.ArithmeticException: / by zero</span><br><span class="line">	at com.xiaomi.smartrip.web.Main.main(Main.java:6)</span><br></pre></td></tr></table></figure></p>
+<p>这是如何背后的逻辑是什么，为什么会输出这些内容呢？</p>
+<h1 id="JAVA异常体系"><a href="#JAVA异常体系" class="headerlink" title="JAVA异常体系"></a>JAVA异常体系</h1><p>首先来复习一下<code>JAVA</code>的异常体系。</p>
+<h2 id="异常分类"><a href="#异常分类" class="headerlink" title="异常分类"></a>异常分类</h2><p>异常继承结构大致如下：<br><img src="https://user-gold-cdn.xitu.io/2018/5/16/163684dec571c6a3?imageslim" alt=""></p>
+<p>JAVA中所有的异常都是继承自<code>Throwable</code>类。可以分为以下两类：</p>
+<ol>
+<li>非检查异常(<code>unchecked exceptions</code>)，包括以下两种：<ul>
+<li>错误(<code>Error</code>)，包括<code>Error</code>类及其子类。这种异常是在正常情况下，不大可能出现的情况，绝大部分的<code>Error</code>都会导致程序（比如JVM自身）处于非正常的、不可恢复状态。既然是非正常情况，所以不便于也不需要捕获，常见的比如<code>OutOfMemoryError</code>类。</li>
+<li>运行时异常(<code>RuntimeException</code>)，包括<code>RuntimeException</code>类及其子类。这种异常通常是可以通过编码避免的逻辑错误，具体根据需要来判断是否需要捕获，并不会在编译期强制要求。</li>
+</ul>
+</li>
+<li>受检查异常(<code>checked exception</code>)，除了上面两种（<code>Error</code>类及其子类，<code>RuntimeException</code>类及其子类），其他异常都属于受检查异常。这种异常通常是外部错误，不是代码逻辑的错误，编译器强制要求对这种异常进行处理，比如网络连接错误会抛出<code>IOException</code>,我们应该提前预料这种情况并对其进行处理(比如重试)。</li>
+</ol>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>JAVA中处理异常的方式有两种：</p>
+<ol>
+<li>使用<code>try/catch</code>捕获异常并进行处理。</li>
+<li>使用<code>throws</code>关键字，在方法上声明可能会抛出的异常，由外层调用者去处理这个异常。</li>
+</ol>
+<p>上面两种异常中，<strong>受检查异常</strong>必须被捕获，否则会编译失败，而<strong>非检查异常</strong>在编译期不强制要求被捕获。</p>
+<h1 id="未捕获异常"><a href="#未捕获异常" class="headerlink" title="未捕获异常"></a>未捕获异常</h1><p>如果一个<strong>非检查异常</strong>没有被捕获处理，那这就是未捕获异常。因为<strong>受检查异常</strong>都必须在代码中捕获进行处理，所以未捕获异常实际上都是在说<strong>非检查异常</strong>。</p>
+<p>在探究如何处理未捕获异常之前先来看一个接口，这个接口是处理未捕获异常的关键接口：</p>
+<h2 id="Thread-UncaughtExceptionHandler接口"><a href="#Thread-UncaughtExceptionHandler接口" class="headerlink" title="Thread.UncaughtExceptionHandler接口"></a>Thread.UncaughtExceptionHandler接口</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UncaughtExceptionHandler</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">uncaughtException</span><span class="params">(Thread t, Throwable e)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个接口很简单，只有一个方法，用来处理未捕获的异常，参数是线程信息，以及异常信息，</p>
+<p>下面从源码层面来看看如何处理未捕获异常。</p>
+<h2 id="未捕获异常处理流程"><a href="#未捕获异常处理流程" class="headerlink" title="未捕获异常处理流程"></a>未捕获异常处理流程</h2><p>Thread类中有一个<code>dispatchUncaughtException</code>方法,这个方法的作用是分发异常信息到正确的<code>UncaughtExceptionHandler</code>。当线程运行中出现了未捕获的异常，JVM会调用线程的这个方法，来寻找一个<code>UncaughtExceptionHandler</code>处理异常。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Dispatch an uncaught exception to the handler. This method is</span></span><br><span class="line"><span class="comment">* intended to be called only by the JVM.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dispatchUncaughtException</span><span class="params">(Throwable e)</span> </span>&#123;</span><br><span class="line">    getUncaughtExceptionHandler().uncaughtException(<span class="keyword">this</span>, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>getUncaughtExceptionHandler</code>的获取逻辑是，如果此线程的<code>uncaughtExceptionHandler</code>属性不为<code>null</code>,则分发异常到线程自己的<code>uncaughtExceptionHandler</code>，否则将异常分发给此线程所在的线程组。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Returns the handler invoked when this thread abruptly terminates</span></span><br><span class="line"><span class="comment">* due to an uncaught exception. If this thread has not had an</span></span><br><span class="line"><span class="comment">* uncaught exception handler explicitly set then this thread's</span></span><br><span class="line"><span class="comment">* &lt;tt&gt;ThreadGroup&lt;/tt&gt; object is returned, unless this thread</span></span><br><span class="line"><span class="comment">* has terminated, in which case &lt;tt&gt;null&lt;/tt&gt; is returned.</span></span><br><span class="line"><span class="comment">* <span class="doctag">@since</span> 1.5</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> the uncaught exception handler for this thread</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> UncaughtExceptionHandler <span class="title">getUncaughtExceptionHandler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> uncaughtExceptionHandler != <span class="keyword">null</span> ?</span><br><span class="line">        uncaughtExceptionHandler : group;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>分别来看下两种方式：</p>
+<h3 id="线程自己处理"><a href="#线程自己处理" class="headerlink" title="线程自己处理"></a>线程自己处理</h3><p><code>Thread</code>类有一个<code>uncaughtExceptionHandler</code>属性，表示这个线程当这个线程发生未捕获异常时的处理器，可以通过<code>Thread.setUncaughtExceptionHandler</code>方法来设置这个属性。如果没有显式调用此方法设置，那么<code>uncaughtExceptionHandler</code>属性默认为<code>null</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// null unless explicitly set</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> UncaughtExceptionHandler uncaughtExceptionHandler;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Set the handler invoked when this thread abruptly terminates</span></span><br><span class="line"><span class="comment">* due to an uncaught exception.</span></span><br><span class="line"><span class="comment">* &lt;p&gt;A thread can take full control of how it responds to uncaught</span></span><br><span class="line"><span class="comment">* exceptions by having its uncaught exception handler explicitly set.</span></span><br><span class="line"><span class="comment">* If no such handler is set then the thread's &lt;tt&gt;ThreadGroup&lt;/tt&gt;</span></span><br><span class="line"><span class="comment">* object acts as its handler.</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> eh the object to use as this thread's uncaught exception</span></span><br><span class="line"><span class="comment">* handler. If &lt;tt&gt;null&lt;/tt&gt; then this thread has no explicit handler.</span></span><br><span class="line"><span class="comment">* <span class="doctag">@throws</span>  SecurityException  if the current thread is not allowed to</span></span><br><span class="line"><span class="comment">*          modify this thread.</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> #setDefaultUncaughtExceptionHandler</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> ThreadGroup#uncaughtException</span></span><br><span class="line"><span class="comment">* <span class="doctag">@since</span> 1.5</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUncaughtExceptionHandler</span><span class="params">(UncaughtExceptionHandler eh)</span> </span>&#123;</span><br><span class="line">    checkAccess();</span><br><span class="line">    uncaughtExceptionHandler = eh;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="交给线程组处理"><a href="#交给线程组处理" class="headerlink" title="交给线程组处理"></a>交给线程组处理</h3><p>如果没有设置线程的<code>uncaughtExceptionHandler</code>属性或者为<code>null</code>，则会将异常信息分发给线程所在的线程组。上面代码可以将<code>group</code>作为结果返回是因为所有线程组的父类<code>ThreadGroup</code>类实现了<code>Thread.UncaughtExceptionHandler</code>接口。<br>如果当前线程的线程组重写了<code>uncaughtException</code>方法，会调用重写的<code>uncaughtException</code>方法，否则调用<code>ThreadGroup</code>类的<code>uncaughtException</code>方法。<br>下面是这个<code>ThreadGroup</code>类的<code>uncaughtException</code>方法的实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Called by the Java Virtual Machine when a thread in this</span></span><br><span class="line"><span class="comment">* thread group stops because of an uncaught exception, and the thread</span></span><br><span class="line"><span class="comment">* does not have a specific &#123;<span class="doctag">@link</span> Thread.UncaughtExceptionHandler&#125;</span></span><br><span class="line"><span class="comment">* installed.</span></span><br><span class="line"><span class="comment">* &lt;p&gt;</span></span><br><span class="line"><span class="comment">* The &lt;code&gt;uncaughtException&lt;/code&gt; method of</span></span><br><span class="line"><span class="comment">* &lt;code&gt;ThreadGroup&lt;/code&gt; does the following:</span></span><br><span class="line"><span class="comment">* &lt;ul&gt;</span></span><br><span class="line"><span class="comment">* &lt;li&gt;If this thread group has a parent thread group, the</span></span><br><span class="line"><span class="comment">*     &lt;code&gt;uncaughtException&lt;/code&gt; method of that parent is called</span></span><br><span class="line"><span class="comment">*     with the same two arguments.</span></span><br><span class="line"><span class="comment">* &lt;li&gt;Otherwise, this method checks to see if there is a</span></span><br><span class="line"><span class="comment">*     &#123;<span class="doctag">@linkplain</span> Thread#getDefaultUncaughtExceptionHandler default</span></span><br><span class="line"><span class="comment">*     uncaught exception handler&#125; installed, and if so, its</span></span><br><span class="line"><span class="comment">*     &lt;code&gt;uncaughtException&lt;/code&gt; method is called with the same</span></span><br><span class="line"><span class="comment">*     two arguments.</span></span><br><span class="line"><span class="comment">* &lt;li&gt;Otherwise, this method determines if the &lt;code&gt;Throwable&lt;/code&gt;</span></span><br><span class="line"><span class="comment">*     argument is an instance of &#123;<span class="doctag">@link</span> ThreadDeath&#125;. If so, nothing</span></span><br><span class="line"><span class="comment">*     special is done. Otherwise, a message containing the</span></span><br><span class="line"><span class="comment">*     thread's name, as returned from the thread's &#123;<span class="doctag">@link</span></span></span><br><span class="line"><span class="comment">*     Thread#getName getName&#125; method, and a stack backtrace,</span></span><br><span class="line"><span class="comment">*     using the &lt;code&gt;Throwable&lt;/code&gt;'s &#123;<span class="doctag">@link</span></span></span><br><span class="line"><span class="comment">*     Throwable#printStackTrace printStackTrace&#125; method, is</span></span><br><span class="line"><span class="comment">*     printed to the &#123;<span class="doctag">@linkplain</span> System#err standard error stream&#125;.</span></span><br><span class="line"><span class="comment">* &lt;/ul&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;</span></span><br><span class="line"><span class="comment">* Applications can override this method in subclasses of</span></span><br><span class="line"><span class="comment">* &lt;code&gt;ThreadGroup&lt;/code&gt; to provide alternative handling of</span></span><br><span class="line"><span class="comment">* uncaught exceptions.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span>   t   the thread that is about to exit.</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span>   e   the uncaught exception.</span></span><br><span class="line"><span class="comment">* <span class="doctag">@since</span>   JDK1.0</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">uncaughtException</span><span class="params">(Thread t, Throwable e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">        parent.uncaughtException(t, e);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Thread.UncaughtExceptionHandler ueh =</span><br><span class="line">            Thread.getDefaultUncaughtExceptionHandler();</span><br><span class="line">        <span class="keyword">if</span> (ueh != <span class="keyword">null</span>) &#123;</span><br><span class="line">            ueh.uncaughtException(t, e);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!(e <span class="keyword">instanceof</span> ThreadDeath)) &#123;</span><br><span class="line">            System.err.print(<span class="string">"Exception in thread \""</span></span><br><span class="line">                                + t.getName() + <span class="string">"\" "</span>);</span><br><span class="line">            e.printStackTrace(System.err);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>处理流程如下：</p>
+<ol>
+<li>首先，如果这个线程组有父线程组(<code>parent</code>属性)，将会调用父线程组的<code>uncaughtException</code>方法处理。</li>
+<li>否则，先调用<code>Thread.getDefaultUncaughtExceptionHandler()</code>检查是否有一个默认的<code>UncaughtExceptionHandler</code>,如果有，交给这个默认的<code>UncaughtExceptionHandler</code>来处理。</li>
+<li>否则，如果该异常是<code>ThreadDeath</code>的实例，那么直接退出，如果不是，会将线程名字以及异常栈打印至标准错误输出流（控制台）。这是我们没有设置任何处理器时的默认逻辑，开头那段代码就是这种情况，没有设置任何处理器，所以只是在控制台输出了线程名称和异常信息。</li>
+</ol>
+<h4 id="默认处理器"><a href="#默认处理器" class="headerlink" title="默认处理器"></a>默认处理器</h4><p>上面代码中第二个分支中<code>Thread.getDefaultUncaughtExceptionHandler()</code>是什么呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// null unless explicitly set</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> UncaughtExceptionHandler defaultUncaughtExceptionHandler;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Set the default handler invoked when a thread abruptly terminates</span></span><br><span class="line"><span class="comment">* due to an uncaught exception, and no other handler has been defined</span></span><br><span class="line"><span class="comment">* for that thread.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Uncaught exception handling is controlled first by the thread, then</span></span><br><span class="line"><span class="comment">* by the thread's &#123;<span class="doctag">@link</span> ThreadGroup&#125; object and finally by the default</span></span><br><span class="line"><span class="comment">* uncaught exception handler. If the thread does not have an explicit</span></span><br><span class="line"><span class="comment">* uncaught exception handler set, and the thread's thread group</span></span><br><span class="line"><span class="comment">* (including parent thread groups)  does not specialize its</span></span><br><span class="line"><span class="comment">* &lt;tt&gt;uncaughtException&lt;/tt&gt; method, then the default handler's</span></span><br><span class="line"><span class="comment">* &lt;tt&gt;uncaughtException&lt;/tt&gt; method will be invoked.</span></span><br><span class="line"><span class="comment">* &lt;p&gt;By setting the default uncaught exception handler, an application</span></span><br><span class="line"><span class="comment">* can change the way in which uncaught exceptions are handled (such as</span></span><br><span class="line"><span class="comment">* logging to a specific device, or file) for those threads that would</span></span><br><span class="line"><span class="comment">* already accept whatever &amp;quot;default&amp;quot; behavior the system</span></span><br><span class="line"><span class="comment">* provided.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Note that the default uncaught exception handler should not usually</span></span><br><span class="line"><span class="comment">* defer to the thread's &lt;tt&gt;ThreadGroup&lt;/tt&gt; object, as that could cause</span></span><br><span class="line"><span class="comment">* infinite recursion.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> eh the object to use as the default uncaught exception handler.</span></span><br><span class="line"><span class="comment">* If &lt;tt&gt;null&lt;/tt&gt; then there is no default handler.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@throws</span> SecurityException if a security manager is present and it</span></span><br><span class="line"><span class="comment">*         denies &lt;tt&gt;&#123;<span class="doctag">@link</span> RuntimePermission&#125;</span></span><br><span class="line"><span class="comment">*         (&amp;quot;setDefaultUncaughtExceptionHandler&amp;quot;)&lt;/tt&gt;</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> #setUncaughtExceptionHandler</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> #getUncaughtExceptionHandler</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> ThreadGroup#uncaughtException</span></span><br><span class="line"><span class="comment">* <span class="doctag">@since</span> 1.5</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setDefaultUncaughtExceptionHandler</span><span class="params">(UncaughtExceptionHandler eh)</span> </span>&#123;</span><br><span class="line">    SecurityManager sm = System.getSecurityManager();</span><br><span class="line">    <span class="keyword">if</span> (sm != <span class="keyword">null</span>) &#123;</span><br><span class="line">        sm.checkPermission(</span><br><span class="line">            <span class="keyword">new</span> RuntimePermission(<span class="string">"setDefaultUncaughtExceptionHandler"</span>)</span><br><span class="line">                );</span><br><span class="line">    &#125;</span><br><span class="line">    defaultUncaughtExceptionHandler = eh;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Returns the default handler invoked when a thread abruptly terminates</span></span><br><span class="line"><span class="comment">* due to an uncaught exception. If the returned value is &lt;tt&gt;null&lt;/tt&gt;,</span></span><br><span class="line"><span class="comment">* there is no default.</span></span><br><span class="line"><span class="comment">* <span class="doctag">@since</span> 1.5</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> #setDefaultUncaughtExceptionHandler</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> the default uncaught exception handler for all threads</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> UncaughtExceptionHandler <span class="title">getDefaultUncaughtExceptionHandler</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> defaultUncaughtExceptionHandler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到这个方法是一个<code>Thread</code>类的静态方法，<code>defaultUncaughtExceptionHandler</code>也是<code>Thread</code>类的静态属性,表示可以供所有线程使用的默认的<code>UncaughtExceptionHandler</code>。可以分别通过<code>setter</code>方法和<code>getter</code>方法设置和获取。</p>
+<h2 id="处理流程总览"><a href="#处理流程总览" class="headerlink" title="处理流程总览"></a>处理流程总览</h2><p><img src="https://blog-picture.nos-eastchina1.126.net/picture0013.png" alt="Uncaught Exception Process"></p>
+<blockquote>
+<p>注：上图中Handler指的是<code>UncaughtExceptionHandler</code></p>
+</blockquote>
+<h1 id="扩展知识"><a href="#扩展知识" class="headerlink" title="扩展知识"></a>扩展知识</h1><h2 id="ThreadGroup-线程组"><a href="#ThreadGroup-线程组" class="headerlink" title="ThreadGroup - 线程组"></a>ThreadGroup - 线程组</h2><ul>
+<li>线程组是一组线程的集合</li>
+<li>线程组中也可以包含其他线程组</li>
+<li>线程组的组织是一个树结构，除了初始线程组之外每个线程组都有父线程组</li>
+<li>线程组实现了<code>Thread.UncaughtExceptionHandler</code>接口</li>
+<li>初始线程组是<code>system</code>线程组，由系统创建，这个线程组没有父线程组，通过下面这个构造方法创建  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Creates an empty Thread group that is not in any Thread group.</span></span><br><span class="line"><span class="comment">* This method is used to create the system Thread group.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">ThreadGroup</span><span class="params">()</span> </span>&#123;     <span class="comment">// called from C code</span></span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">"system"</span>;</span><br><span class="line">    <span class="keyword">this</span>.maxPriority = Thread.MAX_PRIORITY;</span><br><span class="line">    <span class="keyword">this</span>.parent = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="ThreadDeath"><a href="#ThreadDeath" class="headerlink" title="ThreadDeath"></a>ThreadDeath</h2><p>我们还忽略了一个小细节，就是在<code>ThreadGroup</code>类的默认处理逻辑中，如果异常是<code>ThreadDeath</code>的实例，是不会进行处理的。<br><code>ThreadDeath</code>的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * An instance of &#123;<span class="doctag">@code</span> ThreadDeath&#125; is thrown in the victim thread</span></span><br><span class="line"><span class="comment"> * when the (deprecated) &#123;<span class="doctag">@link</span> Thread#stop()&#125; method is invoked.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;An application should catch instances of this class only if it</span></span><br><span class="line"><span class="comment"> * must clean up after being terminated asynchronously.  If</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> ThreadDeath&#125; is caught by a method, it is important that it</span></span><br><span class="line"><span class="comment"> * be rethrown so that the thread actually dies.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;The &#123;<span class="doctag">@linkplain</span> ThreadGroup#uncaughtException top-level error</span></span><br><span class="line"><span class="comment"> * handler&#125; does not print out a message if &#123;<span class="doctag">@code</span> ThreadDeath&#125; is</span></span><br><span class="line"><span class="comment"> * never caught.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;The class &#123;<span class="doctag">@code</span> ThreadDeath&#125; is specifically a subclass of</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> Error&#125; rather than &#123;<span class="doctag">@code</span> Exception&#125;, even though it is a</span></span><br><span class="line"><span class="comment"> * "normal occurrence", because many applications catch all</span></span><br><span class="line"><span class="comment"> * occurrences of &#123;<span class="doctag">@code</span> Exception&#125; and then discard the exception.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span>   JDK1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadDeath</span> <span class="keyword">extends</span> <span class="title">Error</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">4417128565033088268L</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当<code>Thread.stop()</code>方法被调用时，会抛出一个<code>ThreadDeath</code>类的实例。<br>应用程序只有必须在异步终止后进行清理时才应该捕获该类的实例。如果 ThreadDeath 被一个方法捕获，那么将它重新抛出非常重要，因为这样才能让该线程真正终止。<br>这就是为什么<code>ThreadGroup</code>的<code>uncaughtException</code>没有捕获<code>ThreadDeath</code>异常。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html" target="_blank" rel="noopener">Lesson: Exceptions (The Java™ Tutorials &gt; Essential Classes)</a></li>
+<li><a href="https://droidyue.com/blog/2019/01/06/how-java-handle-uncaught-exceptions/" target="_blank" rel="noopener">JVM 如何处理未捕获异常</a></li>
+<li><a href="https://www.javamex.com/tutorials/exceptions/exceptions_uncaught_handler.shtml" target="_blank" rel="noopener">How uncaught exceptions are handled</a></li>
+<li><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html" target="_blank" rel="noopener">Thread (Java Platform SE 8 )</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/15/JDK源码阅读/JDK源码阅读-Integer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -347,12 +544,24 @@
                 
               
 
-              <time title="创建时间：2019-06-15 18:22:00 / 修改时间：11:57:10" itemprop="dateCreated datePublished" datetime="2019-06-15T18:22:00+00:00">2019-06-15</time>
+              <time title="创建时间：2019-06-15 18:22:00" itemprop="dateCreated datePublished" datetime="2019-06-15T18:22:00+00:00">2019-06-15</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-06 09:17:26" itemprop="dateModified" datetime="2019-09-06T09:17:26+00:00">2019-09-06</time>
               
             
           </span>
@@ -627,12 +836,24 @@
                 
               
 
-              <time title="创建时间：2019-06-15 15:20:00 / 修改时间：11:57:10" itemprop="dateCreated datePublished" datetime="2019-06-15T15:20:00+00:00">2019-06-15</time>
+              <time title="创建时间：2019-06-15 15:20:00" itemprop="dateCreated datePublished" datetime="2019-06-15T15:20:00+00:00">2019-06-15</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-06 09:17:26" itemprop="dateModified" datetime="2019-09-06T09:17:26+00:00">2019-09-06</time>
               
             
           </span>
@@ -791,7 +1012,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-15 11:57:10" itemprop="dateModified" datetime="2019-06-15T11:57:10+00:00">2019-06-15</time>
+                <time title="修改时间：2019-09-06 09:17:26" itemprop="dateModified" datetime="2019-09-06T09:17:26+00:00">2019-09-06</time>
               
             
           </span>
@@ -1082,7 +1303,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-15 11:57:10" itemprop="dateModified" datetime="2019-06-15T11:57:10+00:00">2019-06-15</time>
+                <time title="修改时间：2019-09-06 09:17:26" itemprop="dateModified" datetime="2019-09-06T09:17:26+00:00">2019-09-06</time>
               
             
           </span>
@@ -1261,7 +1482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-15 11:57:10" itemprop="dateModified" datetime="2019-06-15T11:57:10+00:00">2019-06-15</time>
+                <time title="修改时间：2019-09-06 09:17:26" itemprop="dateModified" datetime="2019-09-06T09:17:26+00:00">2019-09-06</time>
               
             
           </span>
@@ -1499,7 +1720,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-15 11:57:10" itemprop="dateModified" datetime="2019-06-15T11:57:10+00:00">2019-06-15</time>
+                <time title="修改时间：2019-09-06 09:17:26" itemprop="dateModified" datetime="2019-09-06T09:17:26+00:00">2019-09-06</time>
               
             
           </span>
@@ -1751,7 +1972,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-15 11:57:10" itemprop="dateModified" datetime="2019-06-15T11:57:10+00:00">2019-06-15</time>
+                <time title="修改时间：2019-09-06 09:17:26" itemprop="dateModified" datetime="2019-09-06T09:17:26+00:00">2019-09-06</time>
               
             
           </span>
@@ -1916,7 +2137,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-15 11:57:10" itemprop="dateModified" datetime="2019-06-15T11:57:10+00:00">2019-06-15</time>
+                <time title="修改时间：2019-09-06 09:17:26" itemprop="dateModified" datetime="2019-09-06T09:17:26+00:00">2019-09-06</time>
               
             
           </span>
@@ -2104,7 +2325,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-15 11:57:10" itemprop="dateModified" datetime="2019-06-15T11:57:10+00:00">2019-06-15</time>
+                <time title="修改时间：2019-09-06 09:17:26" itemprop="dateModified" datetime="2019-09-06T09:17:26+00:00">2019-09-06</time>
               
             
           </span>
@@ -2143,159 +2364,6 @@
 <p>bable配置文件 .bablerc：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"presets"</span>: [</span><br><span class="line">    <span class="string">"es2015"</span>,</span><br><span class="line">    <span class="string">"react"</span>,</span><br><span class="line">    <span class="string">"stage-0"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">"plugins"</span>: [[</span><br><span class="line">    <span class="string">"import"</span>, &#123;</span><br><span class="line">      <span class="string">"libraryName"</span>: <span class="string">"antd"</span>,</span><br><span class="line">      <span class="string">"style"</span>: <span class="string">"css"</span></span><br><span class="line">    &#125;]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>babel-plugin-import 插件用法：<a href="https://github.com/ant-design/babel-plugin-import#usage" target="_blank" rel="noopener">https://github.com/ant-design/babel-plugin-import#usage</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/21/IDEA-问题集锦/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/21/IDEA-问题集锦/" itemprop="url">
-                  IntelliJ IDEA知识集锦
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-01-21 23:28:00" itemprop="dateCreated datePublished" datetime="2018-01-21T23:28:00+00:00">2018-01-21</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-06-15 11:57:10" itemprop="dateModified" datetime="2019-06-15T11:57:10+00:00">2019-06-15</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>非常完整的IDEA概念及常见问题：</p>
-<p><a href="https://blog.gmem.cc/intellij-idea-faq" target="_blank" rel="noopener">https://blog.gmem.cc/intellij-idea-faq</a></p>
 
           
         
@@ -2385,7 +2453,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">54</span>
+                    <span class="site-state-item-count">55</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

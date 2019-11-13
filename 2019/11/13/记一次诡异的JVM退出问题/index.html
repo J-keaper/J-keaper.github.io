@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32×32.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16×16.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="背景 项目基于Spring Boot，会与另外一个项目通过HTTP协议进行RPC通信，所以项目中启动了Netty作为HTTP Server。 项目使用Maven构建，使用appassembler-maven-plugin插件进行打包，使用打包后的脚本启动。  问题现象某次更改代码，本地测试通过，没有问题。部署测试环境，发现服务刚启动就会退出，重启还是退出，但是日志中没有找到任何任何报错异常信息。">
+<meta name="keywords" content="JAVA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次诡异的JVM退出问题">
+<meta property="og:url" content="http://yoursite.com/2019/11/13/记一次诡异的JVM退出问题/index.html">
+<meta property="og:site_name" content="Keaper&#39;s Blog">
+<meta property="og:description" content="背景 项目基于Spring Boot，会与另外一个项目通过HTTP协议进行RPC通信，所以项目中启动了Netty作为HTTP Server。 项目使用Maven构建，使用appassembler-maven-plugin插件进行打包，使用打包后的脚本启动。  问题现象某次更改代码，本地测试通过，没有问题。部署测试环境，发现服务刚启动就会退出，重启还是退出，但是日志中没有找到任何任何报错异常信息。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-13T13:29:56.147Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次诡异的JVM退出问题">
+<meta name="twitter:description" content="背景 项目基于Spring Boot，会与另外一个项目通过HTTP协议进行RPC通信，所以项目中启动了Netty作为HTTP Server。 项目使用Maven构建，使用appassembler-maven-plugin插件进行打包，使用打包后的脚本启动。  问题现象某次更改代码，本地测试通过，没有问题。部署测试环境，发现服务刚启动就会退出，重启还是退出，但是日志中没有找到任何任何报错异常信息。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/11/13/记一次诡异的JVM退出问题/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>记一次诡异的JVM退出问题 | Keaper's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keaper's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/13/记一次诡异的JVM退出问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">记一次诡异的JVM退出问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-13 21:17:00 / 修改时间：13:29:56" itemprop="dateCreated datePublished" datetime="2019-11-13T21:17:00+00:00">2019-11-13</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><ol>
+<li>项目基于<code>Spring Boot</code>，会与另外一个项目通过<code>HTTP</code>协议进行<code>RPC</code>通信，所以项目中启动了<code>Netty</code>作为<code>HTTP Server</code>。</li>
+<li>项目使用<code>Maven</code>构建，使用<code>appassembler-maven-plugin</code>插件进行打包，使用打包后的脚本启动。</li>
+</ol>
+<h1 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h1><p>某次更改代码，本地测试通过，没有问题。<br>部署测试环境，发现服务刚启动就会退出，重启还是退出，但是日志中没有找到任何任何报错异常信息。</p>
+<h1 id="问题复现"><a href="#问题复现" class="headerlink" title="问题复现"></a>问题复现</h1><p>开始在本地复现：</p>
+<ol>
+<li>使用IDEA启动主类运行程序，没有问题，一切正常。</li>
+<li>会不会是<code>appassembler</code>插件生成的启动脚本的问题？根据测试环境的配置打包，使用启动脚本运行程序，这次问题复现了。</li>
+<li>在另外一台电脑上使用启动脚本运行程序，没有问题，一切正常。</li>
+</ol>
+<p>问题并不能百分之百复现，与运行环境有着微妙的关系。</p>
+<h1 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h1><p>我们从头来思考下这个问题，我们能看到的现象是JAVA应用退出了，也就是JVM关闭了，那么导致JVM关闭的原因有那些呢？</p>
+<ol>
+<li>调用Runtim.exit方法或者Runtime.halt方法，并且 SecurityManager允许执行退出操作。</li>
+<li>所有的<strong>非守护</strong>线程结束,线程结束原因有两种：<ul>
+<li>run()方法正常返回</li>
+<li>线程中抛出了未捕获的异常</li>
+</ul>
+</li>
+</ol>
+<p>JVM退出原因翻译至JDK文档，原文如下：</p>
+<blockquote>
+<p>When a Java Virtual Machine starts up, there is usually a single non-daemon thread (which typically calls the method named main of some designated class). The Java Virtual Machine continues to execute threads until either of the following occurs:</p>
+<ul>
+<li>The exit method of class Runtime has been called and the security manager has permitted the exit operation to take place.</li>
+<li>All threads that are not daemon threads have died, either by returning from the call to the run method or by throwing an exception that propagates beyond the run method.</li>
+</ul>
+</blockquote>
+<p>项目是一个Web Server应用，代码中没有主动调用exit()方法，所以排除第一种情况，重点考虑的是第二种情况。<br>不管是项目中LogBack的日志还是JVM的日志，都没有发现异常信息。基本可排除发生了异常。<br>那就只有可能是程序真的就是没有任何”问题”，所有线程都正常运行结束。</p>
+<h2 id="猜想"><a href="#猜想" class="headerlink" title="猜想"></a>猜想</h2><p>因为项目并没有用到Spring Boot内嵌的Web容器（Netty Server是在另外一个依赖包中启动的），所以项目启动时指定了<code>web</code>选项为<code>NONE</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> SpringApplicationBuilder(XXXApplication.class).web(WebApplicationType.NONE).build().run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为我们指定了了<code>web</code>选项为<code>NONE</code>,所以<code>SpringBoot</code>不会去启动Tomcat等Web容器，有没有可能是线程启动顺序问题呢，我们需要的<code>Netty Server</code>相关的线程还未启动，<code>main</code>线程以及其他<strong>非守护</strong>线程都已经结束，所以程序退出了呢？</p>
+<h2 id="验证猜想"><a href="#验证猜想" class="headerlink" title="验证猜想"></a>验证猜想</h2><p>验证很简单，在主线程执行完毕退出前sleep一段时间:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> SpringApplicationBuilder(XXXApplication.class).web(WebApplicationType.NONE).build().run();</span><br><span class="line">    Thread.sleep(<span class="number">100</span>); <span class="comment">// sleep 100ms</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>打包编译运行，发现程序正常，没有退出。</p>
+<p>继续验证一下是不是因为所有的<strong>非守护线程</strong>都已经执行结束导致程序退出。在主线程执行完毕退出前打印出所有线程的信息：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> SpringApplicationBuilder(XXXApplication.class).web(WebApplicationType.NONE).build().run();</span><br><span class="line">    Thread.getAllStackTraces().keySet().forEach(t -&gt; System.out.println(t.getName() + <span class="string">","</span> + t.isDaemon()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">xxl-job, executor JobLogFileCleanThread,true</span><br><span class="line">Reference Handler,true</span><br><span class="line">ZkClient-EventThread-13-tjwqstaging.zk.hadoop.srv:2181,true</span><br><span class="line">xxl-job, executor TriggerCallbackThread,true</span><br><span class="line">main,false</span><br><span class="line">Finalizer,true</span><br><span class="line">Thread-6,true</span><br><span class="line">Signal Dispatcher,true</span><br><span class="line">main-EventThread,true</span><br><span class="line">Timer-0,true</span><br><span class="line">Thread-7,true</span><br><span class="line">main-SendThread(tj-hadoop-staging-zk05.kscn:2181),true</span><br></pre></td></tr></table></figure></p>
+<p>可以看到除了main线程之外的其他线程都是daemon线程，所以在main线程执行完后程序会退出。到这里说明我们起初的猜想是没有问题的。</p>
+<h2 id="溯源"><a href="#溯源" class="headerlink" title="溯源"></a>溯源</h2><p>那么我们想要的提供HTTP服务的相关线程为什么没有启动呢？我们Sleep 100ms之后再打印一下所有线程信息：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> SpringApplicationBuilder(XXXApplication.class).web(WebApplicationType.NONE).build().run();</span><br><span class="line">    Thread.sleep(<span class="number">100</span>);</span><br><span class="line">    Thread.getAllStackTraces().keySet().forEach(t -&gt; System.out.println(t.getName() + <span class="string">","</span> + t.isDaemon()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">xxl-job, executor JobLogFileCleanThread,true</span><br><span class="line">main,false</span><br><span class="line">Signal Dispatcher,true</span><br><span class="line">main-EventThread,true</span><br><span class="line">Timer-0,true</span><br><span class="line">Thread-7,true</span><br><span class="line">nioEventLoopGroup-2-1,false</span><br><span class="line">nioEventLoopGroup-4-1,false</span><br><span class="line">Reference Handler,true</span><br><span class="line">ZkClient-EventThread-13-tjwqstaging.zk.hadoop.srv:2181,true</span><br><span class="line">xxl-job, executor ExecutorRegistryThread,true</span><br><span class="line">xxl-job, executor TriggerCallbackThread,true</span><br><span class="line">Finalizer,true</span><br><span class="line">Thread-6,true</span><br><span class="line">main-SendThread(tj-hadoop-staging-zk03.kscn:2181),true</span><br></pre></td></tr></table></figure>
+<p>可以看到多出来的两个非守护线程是<code>nioEventLoopGroup-x-x</code>，这组线程正是<code>Netty</code>中用来处理HTTP请求的工作线程。为什么这组线程没有来得及创建呢？<br>我们找到创建它的地方，查看他启动Web Server的过程，看到这样一段代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">(<span class="keyword">final</span> XxlRpcProviderFactory xxlRpcProviderFactory)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">// param</span></span><br><span class="line">            <span class="keyword">final</span> ThreadPoolExecutor serverHandlerPool = ThreadPoolUtil.makeServerThreadPool(NettyHttpServer.class.getSimpleName());</span><br><span class="line">            EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">            EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// start server</span></span><br><span class="line">                ServerBootstrap bootstrap = <span class="keyword">new</span> ServerBootstrap();</span><br><span class="line">                bootstrap.group(bossGroup, workerGroup)</span><br><span class="line">                        .channel(NioServerSocketChannel.class)</span><br><span class="line">                        .childHandler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                            <span class="meta">@Override</span></span><br><span class="line">                            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                                <span class="comment">/*ch.pipeline().addLast(new HttpResponseEncoder());</span></span><br><span class="line"><span class="comment">                                ch.pipeline().addLast(new HttpRequestDecoder());*/</span></span><br><span class="line">                                <span class="comment">/*ch.pipeline().addLast(new ChunkedWriteHandler());*/</span></span><br><span class="line">                                ch.pipeline().addLast(<span class="keyword">new</span> HttpServerCodec());</span><br><span class="line">                                ch.pipeline().addLast(<span class="keyword">new</span> HttpObjectAggregator(<span class="number">5</span>*<span class="number">1024</span>*<span class="number">1024</span>));  <span class="comment">// merge request &amp; reponse to FULL</span></span><br><span class="line">                                ch.pipeline().addLast(<span class="keyword">new</span> NettyHttpServerHandler(xxlRpcProviderFactory, serverHandlerPool));</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;)</span><br><span class="line">                        .childOption(ChannelOption.SO_KEEPALIVE, <span class="keyword">true</span>);</span><br><span class="line">                <span class="comment">// ...</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                <span class="comment">// ...</span></span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                <span class="comment">// ...</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setDaemon(<span class="keyword">true</span>);	<span class="comment">// daemon, service jvm, user thread leave &gt;&gt;&gt; daemon leave &gt;&gt;&gt; jvm leave</span></span><br><span class="line">    thread.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到在这个方法中启动了一个线程来创建Web Server，但是这个线程是<code>daemon</code>的，所以如果<code>NioEventLoopGroup</code>线程还未启动，其他<strong>非守护线程</strong>(包括<code>main</code>线程)已经执行完的话，那么程序就会退出。<br>而在我们上面<code>sleep</code> 100ms 的这段时间，给了这组线程启动的机会，所以程序能够继续运行。</p>
+<p>至于有时能复现有时复现不了的原因猜测，应该是机器环境或者是JAVA启动参数不同导致线程启动先后顺序有微妙的差异。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>JVM退出的原因：<ul>
+<li>调用Runtim.exit方法或者Runtime.halt方法，并且 SecurityManager允许执行退出操作。</li>
+<li>所有的<strong>非守护</strong>线程结束,线程结束原因有两种：要么是run()方法正常返回，要么是线程中抛出了未捕获的异常</li>
+</ul>
+</li>
+</ol>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ol>
+<li><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html</a></li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/06/Java-如何处理未捕获异常/" rel="next" title="Java 如何处理未捕获异常">
+                <i class="fa fa-chevron-left"></i> Java 如何处理未捕获异常
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Keaper" />
+            
+              <p class="site-author-name" itemprop="name">Keaper</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">56</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/J-keaper" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题现象"><span class="nav-number">2.</span> <span class="nav-text">问题现象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题复现"><span class="nav-number">3.</span> <span class="nav-text">问题复现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题原因"><span class="nav-number">4.</span> <span class="nav-text">问题原因</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#猜想"><span class="nav-number">4.1.</span> <span class="nav-text">猜想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证猜想"><span class="nav-number">4.2.</span> <span class="nav-text">验证猜想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#溯源"><span class="nav-number">4.3.</span> <span class="nav-text">溯源</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">6.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Keaper</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

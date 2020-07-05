@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32%C3%9732.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16%C3%9716.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文主要介绍如何编译Redis项目并在JetBrains CLion（以下简称CLion）中运行&#x2F;调试。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用CLion调试Redis(Ubuntu 16.04 + MacOS 10.15)">
+<meta property="og:url" content="http://yoursite.com/2020/07/05/%E4%BD%BF%E7%94%A8CLion%E7%BC%96%E8%AF%91Redis/index.html">
+<meta property="og:site_name" content="Keaper&#39;s Blog">
+<meta property="og:description" content="本文主要介绍如何编译Redis项目并在JetBrains CLion（以下简称CLion）中运行&#x2F;调试。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200705183609.gif">
+<meta property="og:image" content="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200705183311.gif">
+<meta property="og:image" content="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200705183322.gif">
+<meta property="article:published_time" content="2020-07-05T10:13:56.000Z">
+<meta property="article:modified_time" content="2020-07-05T11:18:57.775Z">
+<meta property="article:author" content="Keaper">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200705183609.gif">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/07/05/使用CLion编译Redis/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>使用CLion调试Redis(Ubuntu 16.04 + MacOS 10.15) | Keaper's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keaper's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/05/%E4%BD%BF%E7%94%A8CLion%E7%BC%96%E8%AF%91Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用CLion调试Redis(Ubuntu 16.04 + MacOS 10.15)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-05 10:13:56 / 修改时间：11:18:57" itemprop="dateCreated datePublished" datetime="2020-07-05T10:13:56+00:00">2020-07-05</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要介绍如何编译<code>Redis</code>项目并在<code>JetBrains CLion</code>（以下简称<code>CLion</code>）中运行/调试。</p>
+<a id="more"></a>
+<h1 id="0-开始之前"><a href="#0-开始之前" class="headerlink" title="0. 开始之前"></a>0. 开始之前</h1><h2 id="JSON-Compilation-Database"><a href="#JSON-Compilation-Database" class="headerlink" title="JSON Compilation Database"></a>JSON Compilation Database</h2><p><code>CLion</code>默认支持<code>CMake</code>构建的项目，但<code>Redis</code>项目是基于<code>Make</code>构建的。对于使用<code>Make</code>构建的项目，<code>CLion</code>仍然可以通过<code>Compilation Database</code>来导入项目，而不用将其修改为<code>CMake</code>项目。同时也能通过<code>Compilation Database</code>实现代码的分析、跳转等功能，这对于我们进行代码调试很有帮助。</p>
+<p>有关于<code>Compilation Database</code>的介绍可以参考这几篇文章：</p>
+<ul>
+<li><code>Clang</code>官方的<code>Compilation Database</code>介绍页面：<a href="https://clang.llvm.org/docs/JSONCompilationDatabase.html" target="_blank" rel="noopener">JSON Compilation Database Format Specification — Clang 11 documentation</a> </li>
+<li>这篇文章介绍了在不同场景下生成<code>Compilation database</code>的各种工具：<a href="https://sarcasm.github.io/notes/dev/compilation-database.html" target="_blank" rel="noopener">Compilation database — Sarcasm notebook</a> </li>
+<li><code>CLion</code>的帮助页面简要介绍了<code>Compilation Database</code>，以及在<code>CLion</code>的使用：<a href="https://www.jetbrains.com/help/clion/compilation-database.html" target="_blank" rel="noopener">Compilation Database - Help | CLion</a></li>
+</ul>
+<p>对于基于<code>Make</code>构建的<code>Redis</code>项目来说，有一些工具可以生成<code>Compilation Database</code>，比如下面几个：</p>
+<ul>
+<li><a href="https://github.com/rizsotto/Bear" target="_blank" rel="noopener">https://github.com/rizsotto/Bear</a></li>
+<li><a href="https://github.com/rizsotto/scan-build" target="_blank" rel="noopener">https://github.com/rizsotto/scan-build</a></li>
+<li><a href="https://github.com/nickdiego/compiledb" target="_blank" rel="noopener">https://github.com/nickdiego/compiledb</a></li>
+</ul>
+<p>通常默认生成的<code>Compilation Database</code>是一个<code>compile_commands.json</code>文件。</p>
+<h1 id="1-下载Redis源码"><a href="#1-下载Redis源码" class="headerlink" title="1. 下载Redis源码"></a>1. 下载Redis源码</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:redis-io/redis.git</span><br><span class="line"><span class="built_in">cd</span> redis</span><br><span class="line"><span class="comment"># 可以切换至指定版本对应分支</span></span><br><span class="line">git checkout 5.0</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-编译构建Redis"><a href="#2-编译构建Redis" class="headerlink" title="2. 编译构建Redis"></a>2. 编译构建Redis</h1><p><code>Redis</code>基于<code>Make</code>构建，执行<code>make</code>命令即可完成构建。<code>Redis</code> 默认使用<code>-O2</code>级别优化，可以使用<code>make noopt</code>来编译以关闭优化，获得更多的调试信息。</p>
+<hr>
+<p>我们需要使用工具来生成<code>Compilation Database</code>，以便于导入<code>CLion</code>。在不同系统上各个工具安装情况可能略有不同，下面分别介绍<code>Ubuntu 16.04</code>和<code>MacOS 10.15</code>上编译<code>Redis</code>并生成<code>Compilation Database</code>的方法。</p>
+<h2 id="Ubuntu-16-04"><a href="#Ubuntu-16-04" class="headerlink" title="Ubuntu 16.04"></a>Ubuntu 16.04</h2><h3 id="使用Bear工具"><a href="#使用Bear工具" class="headerlink" title="使用Bear工具"></a>使用Bear工具</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载Bear工具</span></span><br><span class="line">sudo apt-get install bear</span><br><span class="line"><span class="comment"># 编译构建，并使用Bear工具生成 Compilation Database</span></span><br><span class="line">bear make noopt</span><br></pre></td></tr></table></figure>
+<h3 id="使用compiledb工具"><a href="#使用compiledb工具" class="headerlink" title="使用compiledb工具"></a>使用compiledb工具</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装pip</span></span><br><span class="line">sudo apt-get install python-pip</span><br><span class="line"><span class="comment"># pip安装 compiledb</span></span><br><span class="line">pip install compiledb</span><br><span class="line"><span class="comment"># 编译构建，并使用compiledb工具生成 Compilation Database</span></span><br><span class="line">compiledb make noopt</span><br></pre></td></tr></table></figure>
+
+<h2 id="MacOS-10-15"><a href="#MacOS-10-15" class="headerlink" title="MacOS 10.15"></a>MacOS 10.15</h2><h3 id="使用Bear工具-1"><a href="#使用Bear工具-1" class="headerlink" title="使用Bear工具"></a>使用Bear工具</h3><p>在<code>MacOS</code>上使用Bear工具需要关闭SIP，关闭方法是进入恢复模式执行<code>csrutil disable</code>命令，然后重启，详细操作方法请自行搜索。</p>
+<p>我们需要用到<code>Homebrew</code>来安装<code>Bear</code>，如果没有安装<code>Homebrew</code>需要先安装<code>Homebrew</code>，安装方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)</span>"</span></span><br></pre></td></tr></table></figure>
+<p>开始编译<code>Redis</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载Bear工具</span></span><br><span class="line">brew install bear</span><br><span class="line"><span class="comment"># 编译构建，并使用Bear工具生成 Compilation Database</span></span><br><span class="line">bear make noopt</span><br></pre></td></tr></table></figure>
+<p>如果遇到<code>adlist.c:32:10: fatal error: &#39;stdlib.h&#39; file not found</code>报错，可以先执行以下命令后重试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -uw /</span><br><span class="line">sudo cp -R /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include /usr</span><br></pre></td></tr></table></figure>
+<h3 id="使用compiledb工具-1"><a href="#使用compiledb工具-1" class="headerlink" title="使用compiledb工具"></a>使用compiledb工具</h3><p>我们需要使用<code>pip</code>来安装<code>compiledb</code>，如果没有安装<code>pip</code>需要先安装<code>pip</code>，安装方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</span><br><span class="line">python get-pip.py</span><br><span class="line"><span class="comment"># 安装pip之后可能还需要设置环境变量</span></span><br></pre></td></tr></table></figure>
+
+<p>开始编译<code>Redis</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pip安装 compiledb</span></span><br><span class="line">pip install compiledb</span><br><span class="line"><span class="comment"># 编译构建，并使用compiledb工具生成 Compilation Database</span></span><br><span class="line">compiledb make noopt</span><br></pre></td></tr></table></figure>
+<hr>
+<p>编译完成之后可以检验以下是否成功：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ .&#x2F;src&#x2F;redis-server --version</span><br><span class="line">Redis server v&#x3D;5.0.8 sha&#x3D;1f7d08b7:1 malloc&#x3D;libc bits&#x3D;64 build&#x3D;3530fd9b48a55c7f</span><br></pre></td></tr></table></figure>
+<p>同时根目录下应该会有一个不为空的<code>compile_commands.json</code>文件。</p>
+<h2 id="导入CLion并调试"><a href="#导入CLion并调试" class="headerlink" title="导入CLion并调试"></a>导入CLion并调试</h2><p>对于如何在<code>CLion</code>中管理基于<code>Make</code>构建的项目，<code>CLion</code>的官方帮助文档中有详细的介绍：<br><a href="https://www.jetbrains.com/help/clion/managing-makefile-projects.html" target="_blank" rel="noopener">Managing Makefile Projects</a>。参考上述文档，本小节简要介绍了如何在<code>CLion</code>中导入<code>Redis</code>项目并运行/调试的方法。</p>
+<ol>
+<li><p>下载安装<code>CLion</code>，并安装<code>Makefile Support</code>插件。建议使用最新版本，较老的版本是不支持<code>Make</code>构建的项目的。</p>
+</li>
+<li><p>导入项目。打开<code>CLion</code>，选择<code>Open Or Import</code>，选择项目目录中的<code>compile_commands.json</code>文件，弹出框选择<code>Open as Project</code>，等待文件索引完成。<br> <img src="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200705183609.gif" alt=""></p>
+</li>
+<li><p>创建自定义<code>Build Target</code>。点击<code>File</code>菜单栏，<code>Settings | Build, Execution, Deployment | Custom Build Targets</code>，点击<code>+</code>新建一个<code>Target</code>。</p>
+<ul>
+<li><code>Name</code>：<code>Target</code>的名字，之后在创建<code>Run/Debug</code>配置的时候会看到这个名字</li>
+<li>点击<code>Build</code>或者<code>Clean</code>右边的三点，弹出框中点击<code>+</code>新建两个<code>External Tool</code>配置如下：<br>  第一个配置如下，用来指定构建指令，Program 和 Arguments 共同构成了所要执行的命令 “make noopt”  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Name: make</span><br><span class="line">Program: make</span><br><span class="line">Arguments: noopt</span><br><span class="line">Working directory: <span class="variable">$ProjectFileDir</span>$</span><br></pre></td></tr></table></figure>
+  第二个配置如下，用来清理构建输出，Program 和 Arguments 共同构成了所要执行的命令 “make clean”  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">      Name: make clean</span><br><span class="line">Program: make</span><br><span class="line">Arguments: clean</span><br><span class="line">Working directory: <span class="variable">$ProjectFileDir</span>$</span><br></pre></td></tr></table></figure></li>
+<li><code>ToolChain</code>选择<code>Default</code>；<code>Build</code>选择<code>make</code>（上面创建的第一个<code>External Tool</code>）；<code>Clean</code>选择<code>make clean</code>（上面创建的第二个<code>External Tool</code>）<br><img src="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200705183311.gif" alt=""></li>
+</ul>
+</li>
+<li><p>创建自定义的<code>Run/Debug configuration</code>。点击<code>Run</code>菜单栏,<code>Edit Configurations</code>， 点击<code>+</code>，选择<code>Custom Build Application</code>，配置如下：</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Name：Configure 的名称</span></span><br><span class="line">   Name: redis</span><br><span class="line"><span class="comment"># Target：选择上一步创建的 “Custom Build Target”</span></span><br><span class="line">   Target: redis</span><br><span class="line"><span class="comment"># Executable：程序执行入口，也就是需要调试的程序</span></span><br><span class="line">Executable: 这里我们调试Redis Server，选择`&#123;source_root&#125;/src/redis-server`。</span><br><span class="line"><span class="comment"># Program arguments: 与 “Executable” 配合使用，指定其参数</span></span><br><span class="line">Program arguments: 这里我们选择<span class="string">"<span class="variable">$ProjectFileDir</span>$/redis.conf"</span>作为配置文件启动Redis服务器</span><br></pre></td></tr></table></figure>
+<p> <code>Executable</code>和<code>Program arguments</code>可以根据需要调试的信息自行设置。</p>
+<p> 如果不想每次运行/调试前都执行<code>Build</code>操作（在这里就是<code>Make</code>构建过程），可以在编辑页下方<code>Before launch</code>框中删除<code>Build</code>条目。<br> <img src="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200705183322.gif" alt=""></p>
+</li>
+<li><p>点击<code>Run</code>/<code>Debug</code>开始运行/调试。</p>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://redis.io/topics/debugging" target="_blank" rel="noopener">Redis debugging guide</a></li>
+<li><a href="https://github.com/nickdiego/compiledb" target="_blank" rel="noopener">nickdiego/compiledb: Tool for generating Clang’s JSON Compilation Database files for make-based build systems.</a></li>
+<li><a href="https://www.jetbrains.com/help/clion/managing-makefile-projects.html" target="_blank" rel="noopener">Managing Makefile Projects</a></li>
+<li><a href="https://blog.jetbrains.com/clion/2020/02/dealing-with-makefiles/" target="_blank" rel="noopener">Dealing with Makefile Projects in CLion: Status Update</a></li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/04/OpenJDK%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95%E6%8C%87%E5%8D%97/" rel="next" title="OpenJDK 编译调试指南(Ubuntu 16.04 + MacOS 10.15)">
+                <i class="fa fa-chevron-left"></i> OpenJDK 编译调试指南(Ubuntu 16.04 + MacOS 10.15)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Keaper" />
+            
+              <p class="site-author-name" itemprop="name">Keaper</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%20%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">58</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/J-keaper" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-开始之前"><span class="nav-number">1.</span> <span class="nav-text">0. 开始之前</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-Compilation-Database"><span class="nav-number">1.1.</span> <span class="nav-text">JSON Compilation Database</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-下载Redis源码"><span class="nav-number">2.</span> <span class="nav-text">1. 下载Redis源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-编译构建Redis"><span class="nav-number">3.</span> <span class="nav-text">2. 编译构建Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ubuntu-16-04"><span class="nav-number">3.1.</span> <span class="nav-text">Ubuntu 16.04</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Bear工具"><span class="nav-number">3.1.1.</span> <span class="nav-text">使用Bear工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用compiledb工具"><span class="nav-number">3.1.2.</span> <span class="nav-text">使用compiledb工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MacOS-10-15"><span class="nav-number">3.2.</span> <span class="nav-text">MacOS 10.15</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Bear工具-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">使用Bear工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用compiledb工具-1"><span class="nav-number">3.2.2.</span> <span class="nav-text">使用compiledb工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#导入CLion并调试"><span class="nav-number">3.3.</span> <span class="nav-text">导入CLion并调试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Keaper</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -301,6 +301,172 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/11/JAVA%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%20%E5%8D%B71/%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/11/JAVA%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%20%E5%8D%B71/%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB/" itemprop="url">
+                  第四章 对象与类
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-11 15:28:00" itemprop="dateCreated datePublished" datetime="2018-08-11T15:28:00+00:00">2018-08-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="1-一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c-中对象指针。"><a href="#1-一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c-中对象指针。" class="headerlink" title="1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。"></a>1. 一个对象变量并没有实际包含一个对象，而仅仅引用一个对象。类似c++中对象指针。</h5><h5 id="2-C-通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。"><a href="#2-C-通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。" class="headerlink" title="2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。"></a>2. C++通常在类外定义方法，定义在类内会生成内联方法（编译器也会干预），JAVA所有方法都定义在类内，由编译器决定是否内联。</h5><h5 id="3-不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone-。"><a href="#3-不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone-。" class="headerlink" title="3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。"></a>3. 不应该返回可变对象的引用。这样会破坏类的封装性，应该返回对象的clone()。</h5><h5 id="4-方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。"><a href="#4-方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。" class="headerlink" title="4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。"></a>4. 方法可以访问该类的任何一个对象的私有域，不仅仅是本对象的。</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//可以不调用getAge()方法，直接通过user.age访问。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accessOther</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        System.out.println(user.age);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="5-final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。"><a href="#5-final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。" class="headerlink" title="5. final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。"></a>5. final大都用于基本类型或者不可变类。用于可变类会给人造成误解，因为本质上只是这个引用变量不可变，而他所指向的对象仍然可以改变。</h5><h5 id="6-可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。"><a href="#6-可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。" class="headerlink" title="6. 可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。"></a>6. 可以使用对象调用静态方法（类方法），对象也可以访问公有的静态变量，但是实际访问的访问的都是类的方法和变量。并不建议使用。</h5><h5 id="7-每个类都可以有main-方法。根据运行时的主类来确定执行那个main方法。"><a href="#7-每个类都可以有main-方法。根据运行时的主类来确定执行那个main方法。" class="headerlink" title="7. 每个类都可以有main()方法。根据运行时的主类来确定执行那个main方法。"></a>7. 每个类都可以有main()方法。根据运行时的主类来确定执行那个main方法。</h5><h5 id="8-JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。"><a href="#8-JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。" class="headerlink" title="8. JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。"></a>8. JAVA参数只有值传递。对象参数传递的是引用，本质也是值传递。</h5><h5 id="9-成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。"><a href="#9-成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。" class="headerlink" title="9. 成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。"></a>9. 成员变量没有显式赋值的话，会被赋为默认值。而局部变量使用前必须初始化。</h5><h5 id="10-C-中一个构造器不能调用另一个构造器，JAVA可以。"><a href="#10-C-中一个构造器不能调用另一个构造器，JAVA可以。" class="headerlink" title="10. C++中一个构造器不能调用另一个构造器，JAVA可以。"></a>10. C++中一个构造器不能调用另一个构造器，JAVA可以。</h5><h5 id="11-静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤"><a href="#11-静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤" class="headerlink" title="11. 静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤:"></a>11. 静态初始化块会在类加载的时候执行，初始化块会在构造对象的时候执行。调用构造器的基本步骤:</h5><blockquote>
+<ol>
+<li>所有数据被初始化为默认值。</li>
+<li>按照类声明中出现的次序依次执行所有的域初始化语句和初始化块。</li>
+<li>执行构造器主体。如果调用其他构造器，则执行其他构造器。</li>
+</ol>
+</blockquote>
+<h5 id="12-finalize-方法会在垃圾回收器清除对象之前调用。"><a href="#12-finalize-方法会在垃圾回收器清除对象之前调用。" class="headerlink" title="12. finalize()方法会在垃圾回收器清除对象之前调用。"></a>12. finalize()方法会在垃圾回收器清除对象之前调用。</h5><h5 id="14-子包和父包没有关系，使用-可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。"><a href="#14-子包和父包没有关系，使用-可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。" class="headerlink" title="14. 子包和父包没有关系，使用 * 可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。"></a>14. 子包和父包没有关系，使用 * 可以导入本包所有的类，但是不能导入子包中的类，两者是独立的。</h5><h5 id="15-JAVA访问修饰符。"><a href="#15-JAVA访问修饰符。" class="headerlink" title="15. JAVA访问修饰符。"></a>15. JAVA访问修饰符。</h5><ol>
+<li>private — 只有本类中可以访问。</li>
+<li>default（默认，不写）— 本包中的类可以访问。</li>
+<li>protected — 本包中的类及其子类（包外也可以）可以访问。</li>
+<li>public — 所有的类均可访问。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/11/JAVA%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%20%E5%8D%B71/%E7%AC%AC%E4%B8%89%E7%AB%A0-JAVA%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%BB%93%E6%9E%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,7 +530,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -556,7 +722,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -714,7 +880,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -867,7 +1033,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1056,7 +1222,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1208,7 +1374,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1379,7 +1545,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1535,7 +1701,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1692,7 +1858,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1787,172 +1953,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E7%AC%94%E8%AF%95-%E5%90%88%E5%94%B1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/20/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E7%AC%94%E8%AF%95-%E5%90%88%E5%94%B1/" itemprop="url">
-                  笔试-合唱
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-09-20 16:08:00" itemprop="dateCreated datePublished" datetime="2017-09-20T16:08:00+00:00">2017-09-20</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><a href="https://www.nowcoder.com/questionTerminal/fddf64d5757e41ec93f3ef0c0a10b891" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/fddf64d5757e41ec93f3ef0c0a10b891</a></p>
-<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>小Q和牛博士合唱一首歌曲,这首歌曲由n个音调组成,每个音调由一个正整数表示。<br>对于每个音调要么由小Q演唱要么由牛博士演唱,对于一系列音调演唱的难度等于所有相邻音调变化幅度之和, 例如一个音调序列是8, 8, 13, 12, 那么它的难度等于|8 - 8| + |13 - 8| + |12 - 13| = 6(其中||表示绝对值)。<br>现在要对把这n个音调分配给小Q或牛博士,让他们演唱的难度之和最小,请你算算最小的难度和是多少。<br>如样例所示: 小Q选择演唱{5, 6}难度为1, 牛博士选择演唱{1, 2, 1}难度为2,难度之和为3,这一个是最小难度和的方案了。<br>输入描述:<br>输入包括两行,第一行一个正整数n(1 ≤ n ≤ 2000) 第二行n个整数v[i](1 ≤ v[i] ≤ 10^6), 表示每个音调。</p>
-<p>输出描述:</p>
-<blockquote>
-<p>输出一个整数,表示小Q和牛博士演唱最小的难度和是多少。</p>
-</blockquote>
-<p>输入例子1:</p>
-<blockquote>
-<p>5<br>1 5 6 2 1</p>
-</blockquote>
-<p>输出例子1:</p>
-<blockquote>
-<p>3</p>
-</blockquote>
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>设<code>DP[i][j]（j&gt;i）</code>为两个人最近唱的音调分别为第<code>i</code>个和第<code>j</code>个。<br>状态转移：<br>如果<code>i==j-1</code>,也就是换人演唱的时候，<code>DP[i][j]</code>也就是<code>DP[j-1][j]</code>的值应该为<code>DP[k][j-1]+abs(v[k][j])</code>,k为这个人上次演唱的音调位置。<br>如果<code>i&lt;j-1</code>,也就是最近演唱的人继续演唱当前字符，<code>DP[i][j]</code>的值应该为<code>DP[i][j-1]+abs(v[j]-v[j-1])</code>。<br>最后结果应该<code>DP[i][n],1&lt;=i&lt;n</code>中的最小值。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">v</span><span class="params">(n+<span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;v[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt; <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; <span class="title">dp</span><span class="params">(n+<span class="number">1</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(n+<span class="number">1</span>))</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&gt;<span class="number">2</span>) dp[i<span class="number">-1</span>][i] = dp[i<span class="number">-2</span>][i<span class="number">-1</span>] + <span class="built_in">abs</span>(v[i<span class="number">-1</span>]-v[i<span class="number">-2</span>]);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//    for(int i=0;i&lt;=n;i++)&#123;</span></span><br><span class="line"><span class="comment">//        for(int j=0;j&lt;=n;j++)&#123;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;dp[i][j]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        cout&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;j<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            dp[i][j]=dp[i][j<span class="number">-1</span>]+<span class="built_in">abs</span>(v[j]-v[j<span class="number">-1</span>]);</span><br><span class="line">            dp[j<span class="number">-1</span>][j]=min(dp[j<span class="number">-1</span>][j],dp[i][j<span class="number">-1</span>]+<span class="built_in">abs</span>(v[i]-v[j]));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> ans = INT_MAX;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;n;i++)&#123;</span><br><span class="line">        ans=min(ans,dp[i][n]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;ans&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2004,7 +2004,7 @@
                 
                   <a href="/archives/%20%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-count">58</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2037,7 +2037,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                      
+                    
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

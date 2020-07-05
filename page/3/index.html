@@ -301,6 +301,172 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E7%AC%94%E8%AF%95-%E5%90%88%E5%94%B1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/20/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E7%AC%94%E8%AF%95-%E5%90%88%E5%94%B1/" itemprop="url">
+                  笔试-合唱
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-09-20 16:08:00" itemprop="dateCreated datePublished" datetime="2017-09-20T16:08:00+00:00">2017-09-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><a href="https://www.nowcoder.com/questionTerminal/fddf64d5757e41ec93f3ef0c0a10b891" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/fddf64d5757e41ec93f3ef0c0a10b891</a></p>
+<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>小Q和牛博士合唱一首歌曲,这首歌曲由n个音调组成,每个音调由一个正整数表示。<br>对于每个音调要么由小Q演唱要么由牛博士演唱,对于一系列音调演唱的难度等于所有相邻音调变化幅度之和, 例如一个音调序列是8, 8, 13, 12, 那么它的难度等于|8 - 8| + |13 - 8| + |12 - 13| = 6(其中||表示绝对值)。<br>现在要对把这n个音调分配给小Q或牛博士,让他们演唱的难度之和最小,请你算算最小的难度和是多少。<br>如样例所示: 小Q选择演唱{5, 6}难度为1, 牛博士选择演唱{1, 2, 1}难度为2,难度之和为3,这一个是最小难度和的方案了。<br>输入描述:<br>输入包括两行,第一行一个正整数n(1 ≤ n ≤ 2000) 第二行n个整数v[i](1 ≤ v[i] ≤ 10^6), 表示每个音调。</p>
+<p>输出描述:</p>
+<blockquote>
+<p>输出一个整数,表示小Q和牛博士演唱最小的难度和是多少。</p>
+</blockquote>
+<p>输入例子1:</p>
+<blockquote>
+<p>5<br>1 5 6 2 1</p>
+</blockquote>
+<p>输出例子1:</p>
+<blockquote>
+<p>3</p>
+</blockquote>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>设<code>DP[i][j]（j&gt;i）</code>为两个人最近唱的音调分别为第<code>i</code>个和第<code>j</code>个。<br>状态转移：<br>如果<code>i==j-1</code>,也就是换人演唱的时候，<code>DP[i][j]</code>也就是<code>DP[j-1][j]</code>的值应该为<code>DP[k][j-1]+abs(v[k][j])</code>,k为这个人上次演唱的音调位置。<br>如果<code>i&lt;j-1</code>,也就是最近演唱的人继续演唱当前字符，<code>DP[i][j]</code>的值应该为<code>DP[i][j-1]+abs(v[j]-v[j-1])</code>。<br>最后结果应该<code>DP[i][n],1&lt;=i&lt;n</code>中的最小值。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">v</span><span class="params">(n+<span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="built_in">cin</span>&gt;&gt;v[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt; <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; <span class="title">dp</span><span class="params">(n+<span class="number">1</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(n+<span class="number">1</span>))</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&gt;<span class="number">2</span>) dp[i<span class="number">-1</span>][i] = dp[i<span class="number">-2</span>][i<span class="number">-1</span>] + <span class="built_in">abs</span>(v[i<span class="number">-1</span>]-v[i<span class="number">-2</span>]);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//    for(int i=0;i&lt;=n;i++)&#123;</span></span><br><span class="line"><span class="comment">//        for(int j=0;j&lt;=n;j++)&#123;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;dp[i][j]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        cout&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;j<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            dp[i][j]=dp[i][j<span class="number">-1</span>]+<span class="built_in">abs</span>(v[j]-v[j<span class="number">-1</span>]);</span><br><span class="line">            dp[j<span class="number">-1</span>][j]=min(dp[j<span class="number">-1</span>][j],dp[i][j<span class="number">-1</span>]+<span class="built_in">abs</span>(v[i]-v[j]));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> ans = INT_MAX;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;n;i++)&#123;</span><br><span class="line">        ans=min(ans,dp[i][n]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;ans&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E7%AC%94%E8%AF%95-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E6%8B%AC%E5%8F%B7%E5%BA%8F%E5%88%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,7 +530,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -541,7 +707,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -708,7 +874,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -881,7 +1047,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1039,7 +1205,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1193,7 +1359,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1347,7 +1513,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1501,7 +1667,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1655,7 +1821,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
+                <time title="修改时间：2020-07-05 11:18:57" itemprop="dateModified" datetime="2020-07-05T11:18:57+00:00">2020-07-05</time>
               
             
           </span>
@@ -1697,160 +1863,6 @@
 <p>顺便贴上建树的代码，建树是按照二叉树层次遍历的思想来建的。<br>例如树对应的序列为：<code>A B C D E F x x x G H x I</code><br>表示的树如下图：</p>
 <p><img src="https://blog-picture.nos-eastchina1.126.net/picture0002.png" alt=""></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">TreeNode * <span class="title">build</span><span class="params">(<span class="built_in">string</span> seq)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(seq==<span class="string">""</span>||seq[<span class="number">0</span>]==<span class="string">'#'</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">int</span> index = <span class="number">0</span>;</span><br><span class="line">    TreeNode * root  = <span class="keyword">new</span> TreeNode(seq[index++]-<span class="string">'0'</span>);</span><br><span class="line">    <span class="built_in">queue</span>&lt;TreeNode *&gt; que;</span><br><span class="line">    que.push(root);</span><br><span class="line">    <span class="keyword">while</span>(index&lt;seq.size())&#123;</span><br><span class="line">        TreeNode * top = que.front();</span><br><span class="line">        que.pop();</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">isdigit</span>(seq[index]))&#123;</span><br><span class="line">            top-&gt;left = <span class="keyword">new</span> TreeNode(seq[index++]-<span class="string">'0'</span>);</span><br><span class="line">            que.push(top-&gt;left);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(seq[index]==<span class="string">'#'</span>)&#123;</span><br><span class="line">            index++;</span><br><span class="line">            top-&gt;left = <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(index&gt;=seq.size()) <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">isdigit</span>(seq[index]))&#123;</span><br><span class="line">            top-&gt;right = <span class="keyword">new</span> TreeNode(seq[index++]-<span class="string">'0'</span>);</span><br><span class="line">            que.push(top-&gt;right);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(seq[index]==<span class="string">'#'</span>)&#123;</span><br><span class="line">            index++;</span><br><span class="line">            top-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/22/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/27.%20%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%95%9C%E5%83%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/22/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/27.%20%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%95%9C%E5%83%8F/" itemprop="url">
-                  剑指offer - 二叉树的镜像
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-08-22 21:49:00" itemprop="dateCreated datePublished" datetime="2017-08-22T21:49:00+00:00">2017-08-22</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-07-04 13:58:59" itemprop="dateModified" datetime="2020-07-04T13:58:59+00:00">2020-07-04</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p><a href="https://www.nowcoder.com/questionTerminal/564f4c26aa584921bc75623e48ca3011" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/564f4c26aa584921bc75623e48ca3011</a></p>
-<h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>操作给定的二叉树，将其变换为源二叉树的镜像。</p>
-<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>递归地将左右儿子交换即可。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> val;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span> *<span class="title">left</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span> *<span class="title">right</span>;</span></span><br><span class="line">	TreeNode(<span class="keyword">int</span> x) :</span><br><span class="line">			val(x), left(<span class="literal">NULL</span>), right(<span class="literal">NULL</span>) &#123;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Mirror</span><span class="params">(TreeNode *pRoot)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(pRoot==<span class="literal">NULL</span>) <span class="keyword">return</span> ;</span><br><span class="line">        swap(pRoot-&gt;left,pRoot-&gt;right);</span><br><span class="line">        Mirror(pRoot-&gt;left);</span><br><span class="line">        Mirror(pRoot-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
           
         
       
@@ -1939,7 +1951,7 @@
                 
                   <a href="/archives/%20%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-count">58</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1972,7 +1984,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                      
+                    
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

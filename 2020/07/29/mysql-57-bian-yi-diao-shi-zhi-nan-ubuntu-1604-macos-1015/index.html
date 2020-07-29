@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32%C3%9732.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16%C3%9716.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文主要介绍在MacOS 10.15和Ubuntu 16.04系统下编译构建MySQL 5.7.30并使用JetBrains CLion(以下简称CLion)进行运行调试的方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql-57-bian-yi-diao-shi-zhi-nan-ubuntu-1604-macos-1015">
+<meta property="og:url" content="http://yoursite.com/2020/07/29/mysql-57-bian-yi-diao-shi-zhi-nan-ubuntu-1604-macos-1015/index.html">
+<meta property="og:site_name" content="Keaper&#39;s Blog">
+<meta property="og:description" content="本文主要介绍在MacOS 10.15和Ubuntu 16.04系统下编译构建MySQL 5.7.30并使用JetBrains CLion(以下简称CLion)进行运行调试的方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200726235304.png">
+<meta property="article:published_time" content="2020-07-29T16:55:43.028Z">
+<meta property="article:modified_time" content="2020-07-29T16:55:43.028Z">
+<meta property="article:author" content="Keaper">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200726235304.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/07/29/mysql-57-bian-yi-diao-shi-zhi-nan-ubuntu-1604-macos-1015/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>mysql-57-bian-yi-diao-shi-zhi-nan-ubuntu-1604-macos-1015 | Keaper's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keaper's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/29/mysql-57-bian-yi-diao-shi-zhi-nan-ubuntu-1604-macos-1015/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mysql-57-bian-yi-diao-shi-zhi-nan-ubuntu-1604-macos-1015
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-29 16:55:43" itemprop="dateCreated datePublished" datetime="2020-07-29T16:55:43+00:00">2020-07-29</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要介绍在<code>MacOS 10.15</code>和<code>Ubuntu 16.04</code>系统下编译构建<code>MySQL 5.7.30</code>并使用<code>JetBrains CLion</code>(以下简称<code>CLion</code>)进行运行调试的方法。</p>
+<a id="more"></a>
+
+<h1 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h1><p>可以从两种方式下载<code>MySQL</code>源代码：</p>
+<h2 id="从官方代码库下载最新源代码"><a href="#从官方代码库下载最新源代码" class="headerlink" title="从官方代码库下载最新源代码"></a>从官方代码库下载最新源代码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># clone过程可能耗时比较长</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/mysql/mysql-server.git</span><br><span class="line"><span class="comment"># 可以切换至指定版本对应分支</span></span><br><span class="line">git checkout 5.7</span><br></pre></td></tr></table></figure>
+<h2 id="下载源代码分发包"><a href="#下载源代码分发包" class="headerlink" title="下载源代码分发包"></a>下载源代码分发包</h2><p><code>MySQL</code>提供了各个版本的源码分发包供下载。下载地址：<a href="https://downloads.mysql.com/archives/community/" target="_blank" rel="noopener">MySQL Product Archives</a>，选择指定版本下载解压即可。</p>
+<h1 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h1><p>对于各个依赖或者工具，安装前可以先验证一下是否已经安装，一些工具系统已经预装。</p>
+<h2 id="1-构建工具-CMake-make"><a href="#1-构建工具-CMake-make" class="headerlink" title="1. 构建工具 CMake + make"></a>1. 构建工具 CMake + make</h2><p>在<code>Ubuntu</code>上：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install cmake make</span><br></pre></td></tr></table></figure>
+<p>在<code>MacOS</code>上：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install cmake make</span><br></pre></td></tr></table></figure>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/source-installation-prerequisites.html" target="_blank" rel="noopener">MySQL 5.7 Reference Manual</a>建议的<code>make</code>为<code>GNU make 3.75</code>或者更高版本。</p>
+<h2 id="2-编译工具-GCC-Clang"><a href="#2-编译工具-GCC-Clang" class="headerlink" title="2. 编译工具 GCC/Clang"></a>2. 编译工具 GCC/Clang</h2><p>在<code>Ubuntu</code>上，<code>MySQL</code>可以使用<code>GCC</code>或者<code>Clang</code>来编译，这里我们使用<code>apt</code>来安装<code>GCC</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install gcc</span><br></pre></td></tr></table></figure>
+<p>在<code>MacOS</code>上，<code>MySQL</code>会使用<code>Clang</code>编译器来编译，一般<code>MacOS</code>系统已经安装好了<code>Clang</code>，如果没有的的话可以通过安装<code>Xcode</code>来方便地安装<code>Clang</code>。可以在<code>App Store</code>中下载完整<code>Xcode</code>，或者使用如下命令来安装<code>Xcode command line tools</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcode-select --install</span><br></pre></td></tr></table></figure>
+<p>根据<a href="https://dev.mysql.com/doc/refman/5.7/en/source-configuration-options.html#option_cmake_force_unsupported_compiler" target="_blank" rel="noopener">MySQL 5.7 Reference Manual</a>，对于<code>MySQL 5.7</code>，支持的<code>GCC</code>最低版本是<code>4.4</code>，支持的<code>Clang</code>最低版本是<code>3.3</code>。</p>
+<h2 id="3-OpenSSL"><a href="#3-OpenSSL" class="headerlink" title="3. OpenSSL"></a>3. OpenSSL</h2><p>在<code>Ubuntu</code>下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install openssl libssl-dev</span><br></pre></td></tr></table></figure>
+<p>在<code>MacOS</code>下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install openssl</span><br></pre></td></tr></table></figure>
+<p>根据<a href="https://dev.mysql.com/doc/refman/5.7/en/source-ssl-library-configuration.html" target="_blank" rel="noopener">MySQL 5.7 Reference Manual</a>，对于<code>MySQL 5.7</code>，支持的最小<code>OpenSSL</code>版本是<code>1.0.1</code>。</p>
+<h2 id="4-Boost"><a href="#4-Boost" class="headerlink" title="4. Boost"></a>4. Boost</h2><p>根据<a href="https://dev.mysql.com/doc/refman/5.7/en/source-installation-prerequisites.html" target="_blank" rel="noopener">MySQL 5.7 Reference Manual</a>，对于<code>MySQL 5.7</code>，必须要使用<code>1.59.0</code>版本。在<a href="https://www.boost.org/users/history/" target="_blank" rel="noopener">Boost Version History</a>下载<code>Boost 1.59.0</code>并解压。</p>
+<blockquote>
+<p>因为<code>1.59.0</code>是比较老的版本，所以并不推荐直接使用包管理器在全局安装一个旧版本的<code>Boost</code>，所以我们这里采用下载后在构建时指定其路径的方法。</p>
+</blockquote>
+<h2 id="5-ncurses"><a href="#5-ncurses" class="headerlink" title="5. ncurses"></a>5. ncurses</h2><p>在<code>Ubuntu</code>下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libncurses5-dev</span><br></pre></td></tr></table></figure>
+<p>在<code>MacOS</code>下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install ncurses</span><br></pre></td></tr></table></figure>
+<h2 id="6-Bison"><a href="#6-Bison" class="headerlink" title="6. Bison"></a>6. Bison</h2><p>在<code>Ubuntu</code>下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install bison</span><br></pre></td></tr></table></figure>
+<p>在<code>MacOS</code>下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install bison</span><br></pre></td></tr></table></figure>
+<p>根据<a href="https://dev.mysql.com/doc/refman/5.7/en/source-installation-prerequisites.html" target="_blank" rel="noopener">MySQL 5.7 Reference Manual</a>，对于<code>MySQL 5.7</code>，支持的<code>bison</code>最低版本是<code>2.1</code>，</p>
+<h1 id="编译构建"><a href="#编译构建" class="headerlink" title="编译构建"></a>编译构建</h1><p>为了不影响机器上原本已经安装的<code>MySQL</code>，在配置构建过程中，我们自定义了一些配置避免与机器上另外的<code>MySQL</code>实例冲突。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入源码目录</span></span><br><span class="line"><span class="built_in">cd</span> mysql-server</span><br><span class="line"><span class="comment"># 创建构建文件的目录及数据目录、临时文件目录</span></span><br><span class="line">mkdir -p bld/data bld/tmp</span><br><span class="line"><span class="comment"># 配置，"/home/jiajiawang/workspace/mysql-server/"为源码目录的绝对路径</span></span><br><span class="line">cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/home/jiajiawang/workspace/mysql-server/bld -DMYSQL_DATADIR=/home/jiajiawang/workspace/mysql-server/bld/data  -DMYSQL_UNIX_ADDR=/home/jiajiawang/workspace/mysql-server/bld/data/mysql.sock -DTMPDIR=/home/jiajiawang/workspace/mysql-server/bld/tmp/ -DMYSQL_TCP_PORT=3336 -DWITH_BOOST=/home/jiajiawang/software/boost_1_59_0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建</span></span><br><span class="line">make</span><br><span class="line"><span class="comment"># 安装MySQL</span></span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>上面配置的目录及文件位置最好都配置成<strong>绝对路径</strong>。</p>
+<p><code>CMake</code>选项说明：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CMAKE_BUILD_TYPE</td>
+<td>生成的构建类型，可选值有：<code>RelWithDebInfo</code>，<code>Debug</code> ，使用<code>Debug</code>可以禁用优化，更有助于调试</td>
+<td><code>RelWithDebInfo</code></td>
+</tr>
+<tr>
+<td>CMAKE_INSTALL_PREFIX</td>
+<td>指定<code>MySQL</code>安装路径</td>
+<td><code>/usr/local/mysql</code></td>
+</tr>
+<tr>
+<td>MYSQL_DATADIR</td>
+<td>指定<code>MySQL</code>数据目录</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_UNIX_ADDR</td>
+<td>指定<code>Unix socket</code>文件目录</td>
+<td><code>/tmp/mysql.sock</code></td>
+</tr>
+<tr>
+<td>TMPDIR</td>
+<td>指定临时文件目录</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_TCP_PORT</td>
+<td><code>MySQL</code>启动<code>TCP</code>端口号</td>
+<td><code>3306</code></td>
+</tr>
+<tr>
+<td>WITH_BOOST</td>
+<td>指定<code>Boost</code>依赖的路径</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>更多选项说明请参考：<a href="https://dev.mysql.com/doc/refman/5.7/en/source-configuration-options.html" target="_blank" rel="noopener">MySQL 5.7 Reference Manual</a></p>
+<h1 id="配置并启动MySQL"><a href="#配置并启动MySQL" class="headerlink" title="配置并启动MySQL"></a>配置并启动MySQL</h1><h2 id="1-数据库初始化"><a href="#1-数据库初始化" class="headerlink" title="1. 数据库初始化"></a>1. 数据库初始化</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> bld</span><br></pre></td></tr></table></figure>
+<p>使用如下命令可以用来初始化数据库。两个参数的区别是<code>--initialize</code>会为<code>root@localhost</code>用户生成一个随机密码，而<code>--initialize-insecure</code>会设置<code>root@localhost</code>用户密码为空：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/mysqld --initialize</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">bin/mysqld --initialize-insecure</span><br></pre></td></tr></table></figure>
+<p>创建加密连接需要的文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/mysql_ssl_rsa_setup</span><br></pre></td></tr></table></figure>
+<h2 id="2-启动-MySQL-Server"><a href="#2-启动-MySQL-Server" class="headerlink" title="2. 启动 MySQL Server"></a>2. 启动 MySQL Server</h2><p>启动<code>MySQL Server</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/mysqld</span><br></pre></td></tr></table></figure>
+<p>关于其他启动方式，参考：<a href="https://dev.mysql.com/doc/refman/5.7/en/programs-server.html" target="_blank" rel="noopener">MySQL 5.7 Reference Manual</a></p>
+<h2 id="3-使用-MySQL-Client-连接-Server"><a href="#3-使用-MySQL-Client-连接-Server" class="headerlink" title="3. 使用 MySQL Client 连接 Server"></a>3. 使用 MySQL Client 连接 Server</h2><p>使用<code>MySQL Client</code>连接<code>Server</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果没有生成密码的话可以不指定-p</span></span><br><span class="line">bin/mysql -uroot -p</span><br></pre></td></tr></table></figure>
+<p>使用初始化时生成的随机密码登录后需要修改密码才可以进行其他操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter user <span class="string">'root'</span>@<span class="string">'localhost'</span> identified by <span class="string">'root'</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="4-关闭MySQL-Server"><a href="#4-关闭MySQL-Server" class="headerlink" title="4. 关闭MySQL Server"></a>4. 关闭MySQL Server</h2><p>使用<code>ps</code>命令找到<code>mysqld</code>的进程ID，使用<code>kill -9 &lt;pid&gt;</code>杀掉进程。</p>
+<h1 id="导入CLion并运行-调试"><a href="#导入CLion并运行-调试" class="headerlink" title="导入CLion并运行/调试"></a>导入<code>CLion</code>并运行/调试</h1><ol>
+<li>导入<code>CLion</code></li>
+<li>设置<code>CMake</code>参数。点击<code>File</code>菜单栏，<code>Settings | Build, Execution, Deployment | CMake</code>，在<code>CMake options</code>输入框中输入上文执行<code>cmake</code>命令时的参数。<br><img src="https://keaper-cn-image.oss-cn-beijing.aliyuncs.com/20200726235304.png" alt=""></li>
+<li>运行/调试<code>MySQL</code>。点击<code>Run</code>菜单栏，<code>Edit Configurations</code>，左侧<code>CMake Application</code>列出了<code>MySQL</code>中的各个程序，例如<code>mysqld</code>为<code>MySQL Server</code>，<code>mysql</code>为<code>MySQL CLient</code>，可以在对应的<code>Program arguments</code>中配置各种参数。</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/source-installation.html" target="_blank" rel="noopener">Installing MySQL from Source</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/postinstallation.html" target="_blank" rel="noopener">Postinstallation Setup and Testing</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html" target="_blank" rel="noopener">Server Command Options</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/multiple-servers.html" target="_blank" rel="noopener">Running Multiple MySQL Instances on One Machine</a></li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/05/%E4%BD%BF%E7%94%A8CLion%E7%BC%96%E8%AF%91Redis/" rel="next" title="使用CLion调试Redis(Ubuntu 16.04 + MacOS 10.15)">
+                <i class="fa fa-chevron-left"></i> 使用CLion调试Redis(Ubuntu 16.04 + MacOS 10.15)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Keaper" />
+            
+              <p class="site-author-name" itemprop="name">Keaper</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%20%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/J-keaper" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#下载源码"><span class="nav-number">1.</span> <span class="nav-text">下载源码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从官方代码库下载最新源代码"><span class="nav-number">1.1.</span> <span class="nav-text">从官方代码库下载最新源代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载源代码分发包"><span class="nav-number">1.2.</span> <span class="nav-text">下载源代码分发包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装依赖"><span class="nav-number">2.</span> <span class="nav-text">安装依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-构建工具-CMake-make"><span class="nav-number">2.1.</span> <span class="nav-text">1. 构建工具 CMake + make</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-编译工具-GCC-Clang"><span class="nav-number">2.2.</span> <span class="nav-text">2. 编译工具 GCC&#x2F;Clang</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-OpenSSL"><span class="nav-number">2.3.</span> <span class="nav-text">3. OpenSSL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Boost"><span class="nav-number">2.4.</span> <span class="nav-text">4. Boost</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-ncurses"><span class="nav-number">2.5.</span> <span class="nav-text">5. ncurses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Bison"><span class="nav-number">2.6.</span> <span class="nav-text">6. Bison</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译构建"><span class="nav-number">3.</span> <span class="nav-text">编译构建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置并启动MySQL"><span class="nav-number">4.</span> <span class="nav-text">配置并启动MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-数据库初始化"><span class="nav-number">4.1.</span> <span class="nav-text">1. 数据库初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-启动-MySQL-Server"><span class="nav-number">4.2.</span> <span class="nav-text">2. 启动 MySQL Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-使用-MySQL-Client-连接-Server"><span class="nav-number">4.3.</span> <span class="nav-text">3. 使用 MySQL Client 连接 Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-关闭MySQL-Server"><span class="nav-number">4.4.</span> <span class="nav-text">4. 关闭MySQL Server</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#导入CLion并运行-调试"><span class="nav-number">5.</span> <span class="nav-text">导入CLion并运行&#x2F;调试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Keaper</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

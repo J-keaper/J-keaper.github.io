@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32%C3%9732.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16%C3%9716.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文主要总结了Java中遍历集合或数组的几种方式，并介绍了各种遍历方式的实现原理，以及一些最佳实践。最后介绍了Java集合类迭代器的快速失败（fail-fast）机制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中的遍历（遍历集合或数组的几种方式）">
+<meta property="og:url" content="http://yoursite.com/2020/08/19/java-zhong-de-bian-li/index.html">
+<meta property="og:site_name" content="Keaper&#39;s Blog">
+<meta property="og:description" content="本文主要总结了Java中遍历集合或数组的几种方式，并介绍了各种遍历方式的实现原理，以及一些最佳实践。最后介绍了Java集合类迭代器的快速失败（fail-fast）机制。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-19T15:18:17.000Z">
+<meta property="article:modified_time" content="2020-08-20T17:12:33.857Z">
+<meta property="article:author" content="Keaper">
+<meta property="article:tag" content="JAVA">
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/19/java-zhong-de-bian-li/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java中的遍历（遍历集合或数组的几种方式） | Keaper's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keaper's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/19/java-zhong-de-bian-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java中的遍历（遍历集合或数组的几种方式）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-19 15:18:17" itemprop="dateCreated datePublished" datetime="2020-08-19T15:18:17+00:00">2020-08-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要总结了<code>Java</code>中遍历集合或数组的几种方式，并介绍了各种遍历方式的实现原理，以及一些最佳实践。最后介绍了<code>Java</code>集合类迭代器的快速失败（<code>fail-fast</code>）机制。</p>
+<a id="more"></a>
+
+<h1 id="Java中的循环结构"><a href="#Java中的循环结构" class="headerlink" title="Java中的循环结构"></a>Java中的循环结构</h1><p>遍历必然需要使用到循环结构，<code>Java</code>中有以下几种循环结构：</p>
+<ol>
+<li><code>while</code>语句</li>
+<li><code>do...while</code>语句</li>
+<li>基本<code>for</code>语句</li>
+<li>增强<code>for</code>语句</li>
+</ol>
+<p>对于<code>do...while</code>语句，其第一个循环体是必须会执行的，这对于空集合或者空数组是不适用的。所以我们一般不会使用<code>do...while</code>语句来进行遍历。其余三种都是我们经常用来遍历的语法结构。</p>
+<blockquote>
+<p><code>for</code>语句和<code>while</code>语句在一般情况下可以互相转化，下文我们并不将两种语句单独区分，会根据场景选择使用更加简单的方式。</p>
+</blockquote>
+<h1 id="遍历数组"><a href="#遍历数组" class="headerlink" title="遍历数组"></a>遍历数组</h1><h2 id="1-使用下标遍历"><a href="#1-使用下标遍历" class="headerlink" title="1. 使用下标遍历"></a>1. 使用下标遍历</h2><p>使用循环遍历数组下标范围，在循环体中用下标访问数组元素：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">    System.out.println(array[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-增强for循环"><a href="#2-增强for循环" class="headerlink" title="2. 增强for循环"></a>2. 增强for循环</h2><p>使用增强<code>for</code>循环语法结构来对数组进行遍历：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> value : array) &#123;</span><br><span class="line">    System.out.println(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>增强<code>for</code>循环 其实只是一种语法糖，使用 增强<code>for</code>循环 在遍历数组时，在编译过程会将其转化为 “使用下标遍历” 的方式，在字节码层面其实等价于第一种方式，效率上也没有太大差别。</p>
+<p>关于增强<code>for</code>循环语法更详细的介绍，请移步：<a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.14.2" target="_blank" rel="noopener">Java Language Specification - 14.14.2. The enhanced for statement</a></p>
+<h1 id="JAVA中的迭代器"><a href="#JAVA中的迭代器" class="headerlink" title="JAVA中的迭代器"></a>JAVA中的迭代器</h1><p>在 面向对象编程里，迭代器模式是一种设计模式，是一种最简单也最常见的设计模式。迭代器模式提供了一种方法顺序访问一个集合对象中的各个元素，而又不暴露其内部的表示。<code>Java</code>中也提供了对迭代器模式的支持，主要是针对<code>Java</code>的各种集合类进行遍历。</p>
+<p><code>Iterator</code>接口是<code>Java</code>中对迭代器的抽象接口定义，其定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 是否还有下一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 返回下一个元素</span></span><br><span class="line">    <span class="function">E <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 删除迭代过程中最近访问的一个元素</span></span><br><span class="line">    <span class="comment">// 也就是在next()之后调用remove()删除刚刚next()返回的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException(<span class="string">"remove"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Iterable</code>接口是在<code>Java 1.5</code>中引入的，为了用来支持增强型<code>for</code>循环，只有实现了<code>Iterable</code>接口的对象才可以使用增强型<code>for</code>循环。<code>Iterable</code>接口定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterable</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 返回迭代器</span></span><br><span class="line">    <span class="function">Iterator&lt;T&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 使用函数式接口对增强型for循环进行包装，可以方便地使用lambda表达式来进行遍历</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">forEach</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span> </span>&#123;</span><br><span class="line">        Objects.requireNonNull(action);</span><br><span class="line">        <span class="keyword">for</span> (T t : <span class="keyword">this</span>) &#123;</span><br><span class="line">            action.accept(t);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到<code>Iterable</code>接口提供了<code>forEach</code>方法的默认实现，函数参数是一个函数式接口<code>action</code>参数来表示对遍历到的每个元素的操作行为，实现逻辑是使用 增强<code>for</code>循环 遍历自身，循环中对每个元素都应用 参数<code>action</code>所表示的操作行为。</p>
+<h1 id="遍历List"><a href="#遍历List" class="headerlink" title="遍历List"></a>遍历List</h1><h2 id="List接口的定义"><a href="#List接口的定义" class="headerlink" title="List接口的定义"></a>List接口的定义</h2><p><code>List</code>表示的是一个有序的元素集合。<code>List</code>接口继承了<code>Collection</code>接口，<code>Collection</code>接口又继承了<code>Iterable</code>接口，其定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterable</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 返回Iterator迭代器</span></span><br><span class="line">    <span class="function">Iterator&lt;T&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Iterable</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 获取指定位置的元素</span></span><br><span class="line">    <span class="function">E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line">    <span class="comment">// 获取ListIterator迭代器</span></span><br><span class="line">    <span class="function">ListIterator&lt;E&gt; <span class="title">listIterator</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 从指定位置获取ListIterator迭代器</span></span><br><span class="line">    <span class="function">ListIterator&lt;E&gt; <span class="title">listIterator</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到<code>List</code>除了可以通过<code>iterator()</code>方法获得<code>Iterator</code>迭代器之外，还可以通过<code>listIterator()</code>方法获得<code>ListIterator</code>迭代器。<code>ListIterator</code>迭代器相比于<code>Iterator</code>迭代器之外，访问和操作元素的方法更加丰富：</p>
+<ol>
+<li><code>Iterator</code>只能向后迭代，而<code>ListIterator</code>可以向两个方向迭代</li>
+<li><code>Iterator</code>只能在迭代过程中删除元素，而<code>ListIterator</code>可以添加元素、删除元素、修改元素。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ListIterator</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// Query Operations</span></span><br><span class="line">    <span class="comment">// 是否还有后一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 访问后一个元素</span></span><br><span class="line">    <span class="function">E <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 是否还有前一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasPrevious</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 访问前一个元素</span></span><br><span class="line">    <span class="function">E <span class="title">previous</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 后一个元素的下标</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">nextIndex</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 前一个元素的下标</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">previousIndex</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Modification Operations</span></span><br><span class="line">    <span class="comment">// 删除元素</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 修改元素</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(E e)</span></span>;</span><br><span class="line">    <span class="comment">// 添加元素      </span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="List的遍历方法"><a href="#List的遍历方法" class="headerlink" title="List的遍历方法"></a>List的遍历方法</h2><h3 id="1-使用下标遍历-1"><a href="#1-使用下标遍历-1" class="headerlink" title="1. 使用下标遍历"></a>1. 使用下标遍历</h3><p><code>List</code>接口提供了<code>get</code>方法来访问指定位置的元素，所以与遍历数组一样，<code>List</code>也可以通过遍历<code>List</code>下标并使用<code>get</code>方法访问元素来遍历<code>List</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">    System.out.println(list.get(i));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-使用Iterator迭代器"><a href="#2-使用Iterator迭代器" class="headerlink" title="2. 使用Iterator迭代器"></a>2. 使用Iterator迭代器</h3><p><code>List</code>可以使用继承自<code>Iterable</code>接口的<code>iterator()</code>方法来获得<code>Iterator</code>迭代器，使用<code>Iterator</code>迭代器来遍历<code>List</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;Integer&gt; iterator = list.iterator();</span><br><span class="line"><span class="keyword">while</span> (iterator.hasNext())&#123;</span><br><span class="line">    System.out.println(iterator.next());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-使用ListIterator迭代器"><a href="#3-使用ListIterator迭代器" class="headerlink" title="3. 使用ListIterator迭代器"></a>3. 使用ListIterator迭代器</h3><p><code>List</code>还可以使用<code>listIterator()</code>方法来获得<code>ListIterator</code>迭代器，使用<code>ListIterator</code>迭代器来遍历<code>List</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ListIterator&lt;Integer&gt; listIterator = list.listIterator();</span><br><span class="line"><span class="keyword">while</span> (listIterator.hasNext())&#123;</span><br><span class="line">    System.out.println(listIterator.next());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ListIterator 可以向前遍历</span></span><br><span class="line">listIterator = list.listIterator(list.size() - <span class="number">1</span>);</span><br><span class="line"><span class="keyword">while</span> (listIterator.hasPrevious())&#123;</span><br><span class="line">    System.out.println(listIterator.previous());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-增强for循环"><a href="#4-增强for循环" class="headerlink" title="4. 增强for循环"></a>4. 增强for循环</h3><p>我们前面说到，实现了<code>Iterable</code>接口的对象可以使用增强<code>for</code>循环遍历。<code>List</code>接口继承自<code>Iterable</code>接口，所以可以使用增强<code>for</code>循环来遍历<code>List</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Integer value : list) &#123;</span><br><span class="line">    System.out.println(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>增强性<code>for</code>循环是一种语法糖，但是与遍历数组不一样的是，使用增强型<code>for</code>循环在遍历实现了<code>Iterable</code>接口的对象时，会在编译过程中将其转化为使用<code>Iterator</code>迭代器进行遍历的方式。所以这种方式本质上与上一种方式是一样的。</p>
+<p>关于增强<code>for</code>循环语法更详细的介绍，请移步：<a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.14.2" target="_blank" rel="noopener">Java Language Specification - 14.14.2. The enhanced for statement</a></p>
+<h3 id="5-Iterable接口的forEach方法"><a href="#5-Iterable接口的forEach方法" class="headerlink" title="5. Iterable接口的forEach方法"></a>5. Iterable接口的forEach方法</h3><p>List接口实现了<code>Iterable</code>接口，<code>Iterable</code>接口中提供了<code>forEach</code>方法来更加方便的遍历集合。其参数是一个函数式接口<code>action</code>，来表示对遍历到的每个元素的操作行为。并且因为参数是一个函数式接口，所以我们可以使用<code>lamdba</code>表达式更简洁的表达遍历过程。</p>
+<p><code>Iterable</code>接口的<code>forEach</code>方法的默认实现是使用增强<code>for</code>循环来遍历自身。所以如果没有重写<code>forEach</code>方法的话，这种方式本质上与上一种方式是一样的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.forEach(value -&gt; System.out.println(value));</span><br><span class="line">list.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>上面几种方式其实本质上来讲只有两种方式：</p>
+<ol>
+<li>使用循环遍历集合的下标范围，配合<code>get</code>方法获取集合元素 来遍历<code>List</code>。</li>
+<li>使用迭代器（<code>Iterator</code>或<code>ListIterator</code>）来遍历<code>List</code>。</li>
+</ol>
+<p>其余方式都只不过是第二种方式的语法糖或其变种。<br>那么到底应该使用哪种方式更好呢？这取决于<code>List</code>的内部实现方式。</p>
+<p><code>List</code>的常用实现数据结构有两种，<code>数组</code>和<code>链表</code>：</p>
+<ol>
+<li>对于数组实现的<code>List</code>及其对应的<code>Iterator</code>/<code>ListIterator</code>实现来说，比如<code>ArrayList</code>、<code>Vector</code>。<code>List.get()</code>方法、<code>Iterator.next()</code>方法、<code>ListIterator.next()</code>方法、<code>ListIterator.previous()</code>方法的时间复杂度都为<code>O(1)</code>。所以使用下标遍历所有元素的时间复杂度为<code>O(N)</code>，使用迭代器遍历所有元素的时间复杂度也为<code>O(N)</code>。但是下标遍历的方式执行的代码更少更简单，所以效率稍高。</li>
+<li>而对于链表实现的<code>List</code>其对应的<code>Iterator</code>/<code>ListIterator</code>实现来说，<code>List.get()</code>方法的时间复杂度为<code>O(N)</code>，<code>Iterator.next()</code>方法、<code>ListIterator.next()</code>方法、<code>ListIterator.previous()</code>方法的时间复杂度都为<code>O(1)</code>。所以使用下标遍历所有元素的时间复杂度为<code>O(N*N)</code>，使用迭代器遍历所有元素的时间复杂度为<code>O(N)</code>。所以使用迭代器遍历效率更高。</li>
+</ol>
+<p><code>Java</code>集合框架中，提供了一个<code>RandomAccess</code>接口，该接口没有方法，只是一个标记。通常被<code>List</code>接口的实现类使用，用来标记该<code>List</code>的实现类是否支持<code>Random Access</code>。一个集合类实现了该接口，就意味着它支持<code>Random Access</code>，按位置读取元素的平均时间复杂度为<code>O(1)</code>，比如<code>ArrayList</code>。而没有实现该接口的，就表示不支持<code>Random Access</code>，比如<code>LinkedList</code>。所以推荐的做法就是，如果想要遍历一个<code>List</code>，<strong>如果其实现了<code>RandomAccess</code>接口，那么使用下标遍历效率更高，否则的话使用迭代器遍历效率更高</strong>。</p>
+<h1 id="遍历Set"><a href="#遍历Set" class="headerlink" title="遍历Set"></a>遍历Set</h1><h2 id="Set接口的定义"><a href="#Set接口的定义" class="headerlink" title="Set接口的定义"></a>Set接口的定义</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterable</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 返回Iterator迭代器</span></span><br><span class="line">    <span class="function">Iterator&lt;T&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Iterable</span>&lt;<span class="title">E</span>&gt; </span>&#123; &#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; </span>&#123; &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Set的遍历方法"><a href="#Set的遍历方法" class="headerlink" title="Set的遍历方法"></a>Set的遍历方法</h2><p>相较于<code>List</code>，<code>Set</code>是无序的，所以<code>Set</code>没有通过下标获取元素的<code>get</code>方法，也就没办法使用下标来遍历。<code>Set</code>也没有类似<code>ListIterator</code>一样特殊的迭代器。所以遍历<code>Set</code>只能使用<code>Iterator</code>迭代器来遍历。下面三种方式其实本质上都是使用<code>Iterator</code>迭代器来遍历，后两种方式只是第一种方式的语法糖或者变种。</p>
+<h3 id="1-使用Iterator迭代器"><a href="#1-使用Iterator迭代器" class="headerlink" title="1. 使用Iterator迭代器"></a>1. 使用Iterator迭代器</h3><p><code>Set</code>接口同样继承了<code>Iterable</code>的<code>iterator()</code>方法，可以使用其返回的<code>Iterator</code>迭代器来遍历<code>Set</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;Integer&gt; iterator = set.iterator();</span><br><span class="line"><span class="keyword">while</span> (iterator.hasNext())&#123;</span><br><span class="line">    System.out.println(iterator.next());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-增强for循环-1"><a href="#2-增强for循环-1" class="headerlink" title="2. 增强for循环"></a>2. 增强for循环</h3><p><code>Set</code>接口实现了<code>Iterable</code>接口，所以也可以使用增强型<code>for</code>循环来遍历<code>Set</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Integer value : set) &#123;</span><br><span class="line">    System.out.println(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Iterable接口的forEach方法"><a href="#3-Iterable接口的forEach方法" class="headerlink" title="3. Iterable接口的forEach方法"></a>3. Iterable接口的forEach方法</h3><p><code>Set</code>接口实现了<code>Iterable</code>接口，所以也可以使用<code>forEach</code>方法来遍历<code>Set</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set.forEach(value -&gt; System.out.println(value));</span><br><span class="line">set.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<h1 id="遍历Map"><a href="#遍历Map" class="headerlink" title="遍历Map"></a>遍历Map</h1><p>不同于<code>List</code>，<code>Map</code>并不是一组元素的集合，而是一组键值对，所以<code>Map</code>没有继承<code>Collection</code>、<code>Iterable</code>等其他接口。</p>
+<h2 id="Map接口的定义"><a href="#Map接口的定义" class="headerlink" title="Map接口的定义"></a>Map接口的定义</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Map</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 返回Map中键的集合</span></span><br><span class="line">    <span class="function">Set&lt;K&gt; <span class="title">keySet</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 返回Map中值的集合</span></span><br><span class="line">    <span class="function">Collection&lt;V&gt; <span class="title">values</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// 返回Map中键值对的集合</span></span><br><span class="line">    Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet();</span><br><span class="line">    <span class="comment">// 类似于Iterable接口的forEach方法</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">forEach</span><span class="params">(BiConsumer&lt;? <span class="keyword">super</span> K, ? <span class="keyword">super</span> V&gt; action)</span> </span>&#123;</span><br><span class="line">        Objects.requireNonNull(action);</span><br><span class="line">        <span class="keyword">for</span> (Map.Entry&lt;K, V&gt; entry : entrySet()) &#123;</span><br><span class="line">            K k;</span><br><span class="line">            V v;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                k = entry.getKey();</span><br><span class="line">                v = entry.getValue();</span><br><span class="line">            &#125; <span class="keyword">catch</span>(IllegalStateException ise) &#123;</span><br><span class="line">                <span class="comment">// this usually means the entry is no longer in the map.</span></span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException(ise);</span><br><span class="line">            &#125;</span><br><span class="line">            action.accept(k, v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Map</code>提供了<code>keySet()</code>、<code>values()</code>、<code>entrySet()</code>方法来分别获取<code>Map</code>的 键集合、值集合、键值对集合。并且提供了类似于<code>Iterable</code>的<code>forEach</code>方法及其默认实现。</p>
+<h2 id="Map的遍历方法"><a href="#Map的遍历方法" class="headerlink" title="Map的遍历方法"></a>Map的遍历方法</h2><p>遍历<code>Map</code>可以通过先获取其 键集合、值集合、键值对集合，然后根据返回的集合类型选择不同的遍历方式。</p>
+<p>同时，<code>Map</code>也提供了类似于<code>Iterable</code>的<code>forEach</code>方法，参数<code>action</code>是一个函数式接口，指定了对于每一个键值对的操作行为，实现逻辑是使用增强<code>for</code>循环遍历<code>Map</code>的<code>entrySet()</code>方法的返回值，对于每一个遍历到的每一个键值对，应用参数<code>action</code>代表的操作行为。</p>
+<h1 id="Java集合中的快速失败机制"><a href="#Java集合中的快速失败机制" class="headerlink" title="Java集合中的快速失败机制"></a>Java集合中的快速失败机制</h1><h2 id="何为快速失败"><a href="#何为快速失败" class="headerlink" title="何为快速失败"></a>何为快速失败</h2><p><a href="https://en.wikipedia.org/wiki/Fail-fast" target="_blank" rel="noopener">wikipedia</a>上对<code>快速失败（fail-fast）</code>的介绍是：</p>
+<blockquote>
+<p>In systems design, a fail-fast system is one which immediately reports at its interface any condition that is likely to indicate a failure. Fail-fast systems are usually designed to stop normal operation rather than attempt to continue a possibly flawed process. </p>
+</blockquote>
+<p>简单来说就是系统运行中，如果有错误发生，那么系统立即结束，而不是继续冒不确定的风险继续执行，这种设计就是”<strong>快速失败</strong>“。</p>
+<h2 id="Java集合迭代器的快速失败机制"><a href="#Java集合迭代器的快速失败机制" class="headerlink" title="Java集合迭代器的快速失败机制"></a>Java集合迭代器的快速失败机制</h2><p><code>Java</code>集合框架中的一些集合类的迭代器也是被设计为<code>快速失败</code>的。集合迭代器中的快速失败机制是说：</p>
+<blockquote>
+<p>在使用迭代器遍历集合时，如果迭代器创建之后，通过 除了迭代器提供的修改方法之外 的其他方式对集合进行了结构性修改（添加、删除元素等），那么迭代器应该抛出一个<code>ConcurrentModificationException</code>异常，表示在此次遍历中集合发生了”并发修改”，应该提前终止迭代过程。因为在迭代器遍历集合的过程中，如果有别的行为改变了集合本身的结构，那么迭代器之后的行为可能就是不符合预期的，可能会出现错误的结果，所以提前检测并抛出异常是一个更好的做法。</p>
+</blockquote>
+<p><code>Java</code>中大部分基本的集合类的迭代器都实现了快速失败机制，包括<code>ArrayList</code>，<code>LinkedList</code>，<code>Vector</code>，<code>HashMap</code>，<code>HashSet</code>等等。但是对于并发集合类，例如<code>ConcurrentHashMap</code>，<code>CopyOnWriteArrayList</code>等，这些类本身就是设计来支持并发的，是线程安全的，所以也不存在快速失败这一说。</p>
+<p>以<code>ArrayList</code>为例，<a href="https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html" target="_blank" rel="noopener">ArrayList (Java Platform SE 8 )</a>中对<code>fail-fast</code>的介绍如下：</p>
+<blockquote>
+<p>The iterators returned by this class’s iterator and listIterator methods are fail-fast: if the list is structurally modified at any time after the iterator is created, in any way except through the iterator’s own remove or add methods, the iterator will throw a ConcurrentModificationException. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+</blockquote>
+<blockquote>
+<p><code>ArrayList</code>的<code>iterator</code>和<code>listIterator</code>方法返回的迭代器都是<code>fail-fast</code>的：如果在迭代器创建之后，通过除了迭代器自身的<code>add</code>/<code>remove</code>方法之外的其他方式，对<code>ArrayList</code>进行了结构性修改（添加、删除元素等），那么该迭代器应该抛出一个<code>ConcurrentModificationException</code>异常。所以，迭代器在面对并发修改时，迭代器将快速而干净地失败，而不是冒着在未来不确定的时间发生不确定行为的风险继续执行。</p>
+</blockquote>
+<h2 id="典型实践"><a href="#典型实践" class="headerlink" title="典型实践"></a>典型实践</h2><p>如果看过阿里的《JAVA开发手册》，会知道里面有这一条规范：</p>
+<blockquote>
+<p>【强制】不要在 <code>foreach</code> 循环里进行元素的 <code>remove</code>/<code>add</code> 操作。<code>remove</code> 元素请使用 <code>Iterator</code>方式，如果并发操作，需要对 <code>Iterator</code> 对象加锁。</p>
+</blockquote>
+<p>上面说的<code>foreach</code>循环指的上面我们提到的使用增强<code>for</code>循环进行遍历的方式。这种方式本质上使用的是迭代器方式。所以更明确一点，这个规范其实就是在说：</p>
+<blockquote>
+<p>在使用<code>Iterator</code>迭代器遍历集合过程中，不要通过集合本身的<code>remove</code>/<code>add</code>方法来进行元素的 <code>remove</code>/<code>add</code> 操作，<code>remove</code>请使用<code>Iterator</code>提供的<code>remove</code>方法。</p>
+</blockquote>
+<p><strong>正确</strong>方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">list.add(<span class="number">1</span>);</span><br><span class="line">list.add(<span class="number">2</span>);</span><br><span class="line">list.add(<span class="number">3</span>);</span><br><span class="line">Iterator&lt;Integer&gt; iterator = list.iterator();</span><br><span class="line"><span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">    Integer item = iterator.next();</span><br><span class="line">    <span class="keyword">if</span> (item == <span class="number">1</span>) &#123;</span><br><span class="line">        iterator.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">list.forEach(System.out::println); <span class="comment">// 输出 2 3</span></span><br></pre></td></tr></table></figure>
+<p><strong>错误</strong>方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">list.add(<span class="number">1</span>);</span><br><span class="line">list.add(<span class="number">2</span>);</span><br><span class="line">list.add(<span class="number">3</span>);</span><br><span class="line"><span class="keyword">for</span> (Integer item : list) &#123;  <span class="comment">// 会在这里抛出异常</span></span><br><span class="line">    <span class="keyword">if</span> (item == <span class="number">1</span>) &#123;</span><br><span class="line">        list.remove(item);  <span class="comment">// 使用 list.remove 删除</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">list.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+<p>上述代码会在第五行抛出<code>java.util.ConcurrentModificationException</code>异常。因为其本质还是使用迭代器遍历，所以为了方便理解其原因，我们将上述方式改写为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">list.add(<span class="number">1</span>);</span><br><span class="line">list.add(<span class="number">2</span>);</span><br><span class="line">list.add(<span class="number">3</span>);</span><br><span class="line">Iterator&lt;Integer&gt; iterator = list.iterator();</span><br><span class="line"><span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">    Integer item = iterator.next();  <span class="comment">// 会在这里抛出异常</span></span><br><span class="line">    <span class="keyword">if</span> (item == <span class="number">1</span>) &#123;</span><br><span class="line">        list.remove(item);  <span class="comment">// 使用 list.remove 删除</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">list.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+<p>这段代码会在第<code>7</code>行抛出<code>java.util.ConcurrentModificationException</code>异常。与第一种方式的差别仅仅在于使用了<code>List.remove</code>方法而不是<code>Iterator.remove</code>方法。</p>
+<h2 id="快速失败的实现原理"><a href="#快速失败的实现原理" class="headerlink" title="快速失败的实现原理"></a>快速失败的实现原理</h2><p>以<code>ArrayList</code>为例来说明快速失败机制的实现原理，其他类的实现方式也是大致相同的。</p>
+<ol>
+<li><code>ArrayList</code>中有一个属性<code>modCount</code>，是一个记录<code>ArrayList</code>修改次数的计数器。</li>
+<li><code>ArrayList</code>的<code>iterator</code>/<code>listIterator</code>方法被调用时，会创建出<code>Iteartor</code>/<code>ListIterator</code>的实现类 <code>ArrayList.Itr</code>/<code>ArrayList.ListItr</code>迭代器对象，其中有一个属性<code>expectedModCount</code>。当迭代器被创建时，<code>ArrayList</code>本身的<code>modCount</code>将被复制给<code>Itr</code>/<code>ListItr</code>中的<code>expectedModCount</code>属性。</li>
+<li>当使用迭代器的<code>remove</code>/<code>add</code>方法增删元素时，在修改<code>ArrayList</code>的<code>modCount</code>之后，还会将其值复制给迭代器自身的<code>expectedModCount</code>。而通过<code>ArrayList</code>的<code>remove</code>/<code>add</code>方法增删元素时，仅仅修改了<code>ArrayList</code>的<code>modCount</code>。</li>
+<li>当迭代器执行<code>next</code>/<code>remove</code>/<code>add</code>/<code>set</code>操作时是会检查迭代器自身的<code>expectedModCount</code>与<code>ArrayList</code>的<code>modCount</code>是否相等，如果不相等则会抛出<code>ConcurrentModificationException</code>异常。</li>
+</ol>
+<p>所以在迭代过程中，如果只使用迭代器的<code>remove</code>/<code>add</code>方法增删元素，是不会出现问题的，因为在增删元素之后迭代器始终会将<code>ArrayList</code>的<code>modCount</code>值赋值给迭代器自身的<code>expectedModCount</code>，所以下次迭代两者一定相等。而如果迭代过程中使用了<code>ArrayList</code>的<code>remove</code>/<code>add</code>方法增删元素，或者有另外一个迭代器进行了增删元素，就会造成<code>ArrayList</code>中的<code>modCount</code>与迭代器中的<code>expectedModCount</code>不一致，抛出<code>ConcurrentModificationException</code>异常。</p>
+<h2 id="快速失败的”bug”"><a href="#快速失败的”bug”" class="headerlink" title="快速失败的”bug”"></a>快速失败的”bug”</h2><p>快速失败机制也不能够保证百分之百生效，例如，在下面这段代码中，使用迭代器遍历<code>ArrayList</code>过程中，使用<code>ArrayList</code>的<code>remove</code>方法删除倒数第二个元素，程序能够正确删除，并不会像我们上面所说的抛出<code>ConcurrentModificationException</code>异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">list.add(<span class="number">1</span>);</span><br><span class="line">list.add(<span class="number">2</span>);</span><br><span class="line">list.add(<span class="number">3</span>);</span><br><span class="line">Iterator&lt;Integer&gt; iterator = list.iterator();</span><br><span class="line"><span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">    Integer item = iterator.next();</span><br><span class="line">    <span class="keyword">if</span> (item == <span class="number">2</span>) &#123;</span><br><span class="line">        list.remove(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">list.forEach(System.out::println);  <span class="comment">// 输出 1 3</span></span><br></pre></td></tr></table></figure>
+<p>这个”<code>bug</code>“发生的原因在于，在第二次执行<code>iterator.next()</code>后，迭代器记录的下一次将要访问的下标应该是<code>2</code>，而在执行<code>list.remove()</code>删除元素后，<code>list</code>的<code>size</code>变为了<code>2</code>，所以在下次执行<code>iterator.hasNext()</code>时认为已经没有元素要继续迭代了，返回<code>false</code>，结束循环。</p>
+<p>所以<code>fail-fast</code>机制并不能够完全保证所有的并发修改的情况都抛出<code>ConcurrentModificationException</code>异常，在程序中也不应该依赖于这个异常信息。<br>在<a href="https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html" target="_blank" rel="noopener">ArrayList (Java Platform SE 8 )</a>中也指出了<code>fail-fast</code>这一性质：</p>
+<blockquote>
+<p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw ConcurrentModificationException on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: the fail-fast behavior of iterators should be used only to detect bugs.</p>
+</blockquote>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.14.2" target="_blank" rel="noopener">The Java Language Specification, Java SE 8 Edition</a></li>
+<li><a href="https://blog.csdn.net/HJF_HUANGJINFU/article/details/51220253#t23" target="_blank" rel="noopener">Java遍历集合的几种方法分析（实现原理、算法性能、适用场合）</a></li>
+<li><a href="https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html" target="_blank" rel="noopener">ArrayList (Java Platform SE 8 )</a></li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/30/mysql-57-bian-yi-diao-shi-zhi-nan-ubuntu-1604-macos-1015/" rel="next" title="MySQL 5.7 编译调试指南(Ubuntu 16.04 + MacOS 10.15)">
+                <i class="fa fa-chevron-left"></i> MySQL 5.7 编译调试指南(Ubuntu 16.04 + MacOS 10.15)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Keaper" />
+            
+              <p class="site-author-name" itemprop="name">Keaper</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%20%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/J-keaper" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java中的循环结构"><span class="nav-number">1.</span> <span class="nav-text">Java中的循环结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#遍历数组"><span class="nav-number">2.</span> <span class="nav-text">遍历数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-使用下标遍历"><span class="nav-number">2.1.</span> <span class="nav-text">1. 使用下标遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-增强for循环"><span class="nav-number">2.2.</span> <span class="nav-text">2. 增强for循环</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JAVA中的迭代器"><span class="nav-number">3.</span> <span class="nav-text">JAVA中的迭代器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#遍历List"><span class="nav-number">4.</span> <span class="nav-text">遍历List</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#List接口的定义"><span class="nav-number">4.1.</span> <span class="nav-text">List接口的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List的遍历方法"><span class="nav-number">4.2.</span> <span class="nav-text">List的遍历方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-使用下标遍历-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">1. 使用下标遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-使用Iterator迭代器"><span class="nav-number">4.2.2.</span> <span class="nav-text">2. 使用Iterator迭代器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-使用ListIterator迭代器"><span class="nav-number">4.2.3.</span> <span class="nav-text">3. 使用ListIterator迭代器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-增强for循环"><span class="nav-number">4.2.4.</span> <span class="nav-text">4. 增强for循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Iterable接口的forEach方法"><span class="nav-number">4.2.5.</span> <span class="nav-text">5. Iterable接口的forEach方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践"><span class="nav-number">4.3.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#遍历Set"><span class="nav-number">5.</span> <span class="nav-text">遍历Set</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Set接口的定义"><span class="nav-number">5.1.</span> <span class="nav-text">Set接口的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Set的遍历方法"><span class="nav-number">5.2.</span> <span class="nav-text">Set的遍历方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-使用Iterator迭代器"><span class="nav-number">5.2.1.</span> <span class="nav-text">1. 使用Iterator迭代器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-增强for循环-1"><span class="nav-number">5.2.2.</span> <span class="nav-text">2. 增强for循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Iterable接口的forEach方法"><span class="nav-number">5.2.3.</span> <span class="nav-text">3. Iterable接口的forEach方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#遍历Map"><span class="nav-number">6.</span> <span class="nav-text">遍历Map</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Map接口的定义"><span class="nav-number">6.1.</span> <span class="nav-text">Map接口的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Map的遍历方法"><span class="nav-number">6.2.</span> <span class="nav-text">Map的遍历方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java集合中的快速失败机制"><span class="nav-number">7.</span> <span class="nav-text">Java集合中的快速失败机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#何为快速失败"><span class="nav-number">7.1.</span> <span class="nav-text">何为快速失败</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java集合迭代器的快速失败机制"><span class="nav-number">7.2.</span> <span class="nav-text">Java集合迭代器的快速失败机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#典型实践"><span class="nav-number">7.3.</span> <span class="nav-text">典型实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速失败的实现原理"><span class="nav-number">7.4.</span> <span class="nav-text">快速失败的实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速失败的”bug”"><span class="nav-number">7.5.</span> <span class="nav-text">快速失败的”bug”</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Keaper</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

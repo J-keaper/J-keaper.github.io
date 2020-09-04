@@ -301,6 +301,162 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/16/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/20.%20%E8%A1%A8%E7%A4%BA%E6%95%B0%E5%80%BC%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/16/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/20.%20%E8%A1%A8%E7%A4%BA%E6%95%B0%E5%80%BC%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/" itemprop="url">
+                  剑指offer - 表示数值的字符串
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-08-16 23:42:00" itemprop="dateCreated datePublished" datetime="2017-08-16T23:42:00+00:00">2017-08-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p><a href="https://www.nowcoder.com/questionTerminal/6f8c901d091949a5837e24bb82a731f2" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/6f8c901d091949a5837e24bb82a731f2</a></p>
+<h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串”+100”,”5e2”,”-123”,”3.1416”和”-1E-16”都表示数值。 但是”12e”,”1a3.14”,”1.2.3”,”+-5”和”12e+4.3”都不是。</p>
+<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>比较清晰的方法就是一位一位来匹配。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isNumeric</span><span class="params">(<span class="keyword">char</span>* <span class="built_in">string</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> len = <span class="built_in">strlen</span>(<span class="built_in">string</span>);</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">string</span>[i]==<span class="string">'+'</span>||<span class="built_in">string</span>[i]==<span class="string">'-'</span>||<span class="built_in">isdigit</span>(<span class="built_in">string</span>[i]))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">isdigit</span>(<span class="built_in">string</span>[i])) i--;</span><br><span class="line">            <span class="keyword">int</span> digitCount = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span>(i&lt;len&amp;&amp;<span class="built_in">isdigit</span>(<span class="built_in">string</span>[++i]))digitCount++;</span><br><span class="line">            <span class="keyword">if</span>(digitCount==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span>(i==len) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">string</span>[i]==<span class="string">'.'</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                digitCount=<span class="number">0</span>;</span><br><span class="line">                <span class="keyword">while</span>(i&lt;len&amp;&amp;<span class="built_in">isdigit</span>(<span class="built_in">string</span>[++i]))digitCount++;</span><br><span class="line">                <span class="keyword">if</span>(digitCount==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">if</span>(i==len) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">string</span>[i]==<span class="string">'e'</span>||<span class="built_in">string</span>[i]==<span class="string">'E'</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    i++;</span><br><span class="line">                    <span class="keyword">if</span>(<span class="built_in">string</span>[i]==<span class="string">'+'</span>||<span class="built_in">string</span>[i]==<span class="string">'-'</span>||<span class="built_in">isdigit</span>(<span class="built_in">string</span>[i]))</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span>(<span class="built_in">isdigit</span>(<span class="built_in">string</span>[i])) i--;</span><br><span class="line">                        digitCount=<span class="number">0</span>;</span><br><span class="line">                        <span class="keyword">while</span>(i&lt;len&amp;&amp;<span class="built_in">isdigit</span>(<span class="built_in">string</span>[++i]))digitCount++;</span><br><span class="line">                        <span class="keyword">if</span>(digitCount==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                        <span class="keyword">if</span>(i==len) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                        <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">string</span>[i]==<span class="string">'e'</span>||<span class="built_in">string</span>[i]==<span class="string">'E'</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                i++;</span><br><span class="line">                <span class="keyword">if</span>(<span class="built_in">string</span>[i]==<span class="string">'+'</span>||<span class="built_in">string</span>[i]==<span class="string">'-'</span>||<span class="built_in">isdigit</span>(<span class="built_in">string</span>[i]))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span>(<span class="built_in">isdigit</span>(<span class="built_in">string</span>[i])) i--;</span><br><span class="line">                    digitCount = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">while</span>(i&lt;len&amp;&amp;<span class="built_in">isdigit</span>(<span class="built_in">string</span>[++i])) digitCount++;</span><br><span class="line">                    <span class="keyword">if</span>(digitCount==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">if</span>(i==len) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                    <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>有个问题是，对于‘+.1’’1e+’这种情况，牛客上可能数据不充分。上述代码这种情况也正确。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/15/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/19.%20%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,7 +520,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
               
             
           </span>
@@ -529,7 +685,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
               
             
           </span>
@@ -685,7 +841,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
               
             
           </span>
@@ -840,7 +996,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
               
             
           </span>
@@ -994,7 +1150,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
               
             
           </span>
@@ -1148,7 +1304,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
               
             
           </span>
@@ -1302,7 +1458,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
               
             
           </span>
@@ -1456,7 +1612,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
               
             
           </span>
@@ -1611,7 +1767,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
+                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
               
             
           </span>
@@ -1687,177 +1843,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/09/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/10.%20%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/09/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/10.%20%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/" itemprop="url">
-                  剑指offer - 斐波那契数列
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-08-09 23:18:00" itemprop="dateCreated datePublished" datetime="2017-08-09T23:18:00+00:00">2017-08-09</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-08-20 17:12:33" itemprop="dateModified" datetime="2020-08-20T17:12:33+00:00">2020-08-20</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p><a href="https://www.nowcoder.com/questionTerminal/c6c7742f5ba7442aada113136ddea0c3" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/c6c7742f5ba7442aada113136ddea0c3</a></p>
-<h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>大家都知道斐波那契数列，现在要求输入一个整数n，请你输出斐波那契数列的第n项。n&lt;=39</p>
-<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p><img src="https://blog-picture.nos-eastchina1.126.net/formula-0001.gif" alt=""><br>递归或迭代均可，递归会进行较多重复计算，迭代更好。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">Fibonacci</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a=<span class="number">0</span>,b=<span class="number">1</span>,c;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">0</span>|n==<span class="number">1</span>) <span class="keyword">return</span> n;</span><br><span class="line">        <span class="keyword">while</span>(n--&gt;<span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            c=a+b;</span><br><span class="line">            a=b;</span><br><span class="line">            b=c;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>更炫的写法：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">Fibonacci</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a=<span class="number">0</span>,b=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(n--)</span><br><span class="line">        &#123;</span><br><span class="line">            b+=a;</span><br><span class="line">            a=b-a;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h4 id="扩展题目1"><a href="#扩展题目1" class="headerlink" title="扩展题目1"></a>扩展题目1</h4><p>一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。</p>
-<h4 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h4><p>跳上n级台阶，最后一步可以跳一级，也可以跳两级，所以f(n)=f(n-1)+f(n-2)。斐波那契数列。</p>
-<h4 id="扩展题目2"><a href="#扩展题目2" class="headerlink" title="扩展题目2"></a>扩展题目2</h4><p>一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。</p>
-<h4 id="题解-2"><a href="#题解-2" class="headerlink" title="题解"></a>题解</h4><p>与上题类似，<br>f(n)=f(n-1)+f(n-2)+……+f(2)+f(1),<br>f(n-1)=f(n-2)+f(n-3)+……+f(2)+f(1)<br>所以有<br>f(n)=f(n-1)*2<br>f(1)=1<br>可得到通项公式f(n)=2^(n-1)</p>
-<h4 id="扩展题目3"><a href="#扩展题目3" class="headerlink" title="扩展题目3"></a>扩展题目3</h4><p>我们可以用2<em>1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2</em>1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？</p>
-<h4 id="题解-3"><a href="#题解-3" class="headerlink" title="题解"></a>题解</h4><p>假设最后一个矩形竖着放，共有f(n-1)中方法，假设最后两个横着放，共有f(n-2)种方法。也是斐波那契数列。</p>
-<h4 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h4><p>上面求斐波那契的方法都是O(N)的，如果我们要求复杂度更小呢？</p>
-<p><img src="https://blog-picture.nos-eastchina1.126.net/formula-0002.gif" alt=""></p>
-<p><img src="https://blog-picture.nos-eastchina1.126.net/formula-0003.gif" alt=""><br>这样我们就可以用矩阵快速幂来求解了。复杂度O(LogN)</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot; aria-label&#x3D;&quot;上一页&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot; aria-label&#x3D;&quot;下一页&quot;&gt;&lt;&#x2F;i&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot; aria-label&#x3D;&quot;上一页&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot; aria-label&#x3D;&quot;下一页&quot;&gt;&lt;&#x2F;i&gt;</a>
   </nav>
 
 
@@ -1904,7 +1894,7 @@
                 
                   <a href="/archives/%20%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-count">61</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1941,7 +1931,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

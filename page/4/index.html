@@ -301,6 +301,160 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/22/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/30.%20%E6%A0%88%E7%9A%84%E5%8E%8B%E5%85%A5%E3%80%81%E5%BC%B9%E5%87%BA%E5%BA%8F%E5%88%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/22/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/30.%20%E6%A0%88%E7%9A%84%E5%8E%8B%E5%85%A5%E3%80%81%E5%BC%B9%E5%87%BA%E5%BA%8F%E5%88%97/" itemprop="url">
+                  剑指offer - 栈的压入、弹出序列
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-08-22 23:18:00" itemprop="dateCreated datePublished" datetime="2017-08-22T23:18:00+00:00">2017-08-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p><a href="https://www.nowcoder.com/questionTerminal/d77d11405cc7470d82554cb392585106" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/d77d11405cc7470d82554cb392585106</a></p>
+<h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，序列4，5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）</p>
+<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>借用一个辅助栈，根据入栈序列来入栈，每次入栈，然后根据出栈序列出栈，直到与出栈序列不匹配。如果是正确的出栈序列，最后辅助栈应该为空，否则不是正确的栈。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt; st;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">IsPopOrder</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; pushV,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; popV)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;pushV.size(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            st.push(pushV[i]);</span><br><span class="line">            <span class="keyword">while</span>(!st.empty())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(st.top()!=popV[index]) <span class="keyword">break</span>;</span><br><span class="line">                st.pop();</span><br><span class="line">                index++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> st.empty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/22/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/30.%20%E5%8C%85%E5%90%ABmin%E5%87%BD%E6%95%B0%E7%9A%84%E6%A0%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,7 +518,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -518,7 +672,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -672,7 +826,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -829,7 +983,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -983,7 +1137,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1137,7 +1291,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1291,7 +1445,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1445,7 +1599,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1606,7 +1760,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1645,165 +1799,6 @@
 <h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>输入一个链表，输出该链表中倒数第k个结点。</p>
 <h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>单向链表没有指向上个节点的指针，所以无法倒数。<br>可以正着扫一遍，计算总长度，然后就可以计算出是正数第几个。然后再扫描一遍。<br>也可以不扫两遍，用两个指针，p和q,p先移动，移动到第k个节点是，q开始移动，p移动到末尾时，q正好为倒数第k个节点。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> val;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">next</span>;</span></span><br><span class="line">	ListNode(<span class="keyword">int</span> x) :</span><br><span class="line">			val(x), next(<span class="literal">NULL</span>) &#123;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">FindKthToTail</span><span class="params">(ListNode* pListHead, <span class="keyword">unsigned</span> <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(pListHead==<span class="literal">NULL</span>||k==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        ListNode * p=pListHead,*q=pListHead;</span><br><span class="line">        <span class="keyword">int</span> pc=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(p)&#123;</span><br><span class="line">            <span class="keyword">if</span>(pc&gt;k) q=q-&gt;next;</span><br><span class="line">            p=p-&gt;next;</span><br><span class="line">            pc++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(pc&lt;=k) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">return</span> q;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/17/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/21.%20%E8%B0%83%E6%95%B4%E6%95%B0%E7%BB%84%E9%A1%BA%E5%BA%8F%E4%BD%BF%E5%A5%87%E6%95%B0%E4%BD%8D%E4%BA%8E%E5%81%B6%E6%95%B0%E5%89%8D%E9%9D%A2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/17/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E5%89%91%E6%8C%87offer/21.%20%E8%B0%83%E6%95%B4%E6%95%B0%E7%BB%84%E9%A1%BA%E5%BA%8F%E4%BD%BF%E5%A5%87%E6%95%B0%E4%BD%8D%E4%BA%8E%E5%81%B6%E6%95%B0%E5%89%8D%E9%9D%A2/" itemprop="url">
-                  剑指offer - 调整数组顺序使奇数位于偶数前面
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-08-17 23:21:00" itemprop="dateCreated datePublished" datetime="2017-08-17T23:21:00+00:00">2017-08-17</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p><a href="https://www.nowcoder.com/questionTerminal/beb5aa231adc45b2a5dcc5b62c93f593" target="_blank" rel="noopener">https://www.nowcoder.com/questionTerminal/beb5aa231adc45b2a5dcc5b62c93f593</a></p>
-<h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。</p>
-<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>插入排序的思想，从前往后扫描，遇到偶数则往后寻找下一个奇数，然后将奇数调整到这些偶数的前面，最坏情况下，就是前半部分全为偶数，后半部分全为奇数，时间复杂度O(N*N)。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">reOrderArray</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;<span class="built_in">array</span>)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="built_in">array</span>.size();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">array</span>[i]%<span class="number">2</span>==<span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">int</span> j=i+<span class="number">1</span>;</span><br><span class="line">                <span class="keyword">while</span>(j&lt;<span class="built_in">array</span>.size()&amp;&amp;<span class="built_in">array</span>[j]%<span class="number">2</span>==<span class="number">0</span>) j++;</span><br><span class="line">                <span class="keyword">if</span>(j==<span class="built_in">array</span>.size()) <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">int</span> val = <span class="built_in">array</span>[j];</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> k=j;k&gt;i;k--)</span><br><span class="line">                    <span class="built_in">array</span>[k]=<span class="built_in">array</span>[k<span class="number">-1</span>];</span><br><span class="line">                <span class="built_in">array</span>[i]=val;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>发现一个STL方法，stable_partition，依据条件稳定划分，两组元素各维持相对顺序，即划分后，各组中元素的先后关系保持不变。<br>至于复杂度：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">If enough extra memory is available, linear in the distance between first and last: Applies pred exactly once to each element, and performs up to that many element moves.</span><br><span class="line">Otherwise, up to linearithmic: Performs up to N*log(N) element swaps (where N is the distance above). It also applies pred exactly once to each element.</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">reOrderArray</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;<span class="built_in">array</span>)</span> </span>&#123;</span><br><span class="line">        stable_partition(<span class="built_in">array</span>.begin(),<span class="built_in">array</span>.end(),[](<span class="keyword">int</span> x)&#123;<span class="keyword">return</span> x%<span class="number">2</span>;&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>当然可以用空间换时间，新建一个数组，从前往后扫描一遍，将奇数放到前面，然后从后往前扫一遍，将偶数放到后面，随后复制回去。</p>
-
           
         
       
@@ -1892,7 +1887,7 @@
                 
                   <a href="/archives/%20%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-count">62</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

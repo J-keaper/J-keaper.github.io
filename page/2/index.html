@@ -301,6 +301,311 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/28/JAVA-%E6%97%A5%E5%BF%97%E7%AE%80%E4%BB%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/28/JAVA-%E6%97%A5%E5%BF%97%E7%AE%80%E4%BB%8B/" itemprop="url">
+                  JAVA 日志简介
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-28 20:43:00" itemprop="dateCreated datePublished" datetime="2018-10-28T20:43:00+00:00">2018-10-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>当我们开发应用程序时，它可能不会按照我们预期的运行，这个时候通常我们会DEBUG，来观察程序中的代码分支(if,else)，观察一些变量在运行中的值等等以便确定程序的运行过程。但是，在生产环境，我们通常没有办法，或者不能够很容易去进行DEBUG。因此，更好的方法是使用日志工具。<br>在生产环境中，日志是查找问题来源的重要依据。应用程序运行时的产生的各种信息，包括记录程序运行时产生的错误信息、状态信息、调试信息和执行时间信息等等，都可以通过日志来进行记录。</p>
+<p>在JAVA中，有哪些记录日志的方法呢？<br>介绍之前我们对下文做如下约定：</p>
+<blockquote>
+<ol>
+<li>依赖方式均以<code>maven denpendency</code>方式给出。</li>
+<li>下文所说的<code>系统属性</code>指的是<code>java</code>中的<code>System Property</code>,即通过<code>System.setProperty</code>设置或者通过<code>java -D</code>设置的系统属性。</li>
+<li>本文只会简单介绍各个日志库的配置方式及基本用法，详细的配置项及更高级的用法请移步官方文档。</li>
+</ol>
+</blockquote>
+<h2 id="最原始的方式"><a href="#最原始的方式" class="headerlink" title="最原始的方式"></a>最原始的方式</h2><p>你一定记得在刚开始学习Java时,下面这种写法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"variable is :"</span> + variable);</span><br></pre></td></tr></table></figure>
+<p>或者这样，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    …………            </span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在程序中打印变量的值，在异常发生时打印异常栈，这都有助于分析程序的运行过程，但是这种方式缺乏灵活性，一般也只会在初学时用到。</p>
+<p>严格来说，这根本算不上记录日志。。。<br>我们需要的日志工具库至少应该满足：</p>
+<ol>
+<li>输出目标(也就是日志库中<code>appender</code>或者<code>handler</code>)<br>上述方式会将日志打印到控制台，但是在现实的应用场景中，我们可能需要将输出到文件系统，数据库，数据总线等系统中。</li>
+<li>环境(可以灵活的设置日志级别<code>level</code>)<br>我们需要根据环境不同来决定是否输出某些日志信息，生产环境只输出必要的信息，而在非生产环境，更多的调试信息会更有助于我们解决问题。  </li>
+</ol>
+<h2 id="JDKLog-JUL"><a href="#JDKLog-JUL" class="headerlink" title="JDKLog(JUL)"></a>JDKLog(JUL)</h2><p>JDK在<code>java.util.logging</code>包下提供了日志相关的API，不过在JDK1.4才加入，在此之前，JDK中并不包含日志记录相关的API和实现。</p>
+<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><p>不需要任何外部依赖，JDK自身提供的。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>JDK通过<code>java.util.logging.config.file</code>系统属性来读取自定义配置文件的位置，如果不配置，JDK中有默认的配置文件，位置在<code>[path/to/jre]/lib/logging.properties</code>。</p>
+<h4 id="配置文件示例"><a href="#配置文件示例" class="headerlink" title="配置文件示例"></a>配置文件示例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 全局的日志handler</span><br><span class="line">handlers&#x3D; java.util.logging.ConsoleHandler,java.util.logging.FileHandler</span><br><span class="line"># 全局的日志级别</span><br><span class="line">.level&#x3D; INFO</span><br><span class="line"></span><br><span class="line"># ConsoleHandler配置level以及formater</span><br><span class="line">java.util.logging.ConsoleHandler.level &#x3D; INFO</span><br><span class="line">java.util.logging.ConsoleHandler.formatter &#x3D; java.util.logging.SimpleFormatter</span><br><span class="line"># SimpleFormatter的格式</span><br><span class="line">java.util.logging.SimpleFormatter.format &#x3D; %1$tc [%4$s]:%5$s %n</span><br><span class="line"></span><br><span class="line"># FileHandler配置</span><br><span class="line">java.util.logging.FileHandler.pattern &#x3D; %h&#x2F;java%u.log</span><br><span class="line">java.util.logging.FileHandler.limit &#x3D; 50000</span><br><span class="line">java.util.logging.FileHandler.count &#x3D; 1</span><br><span class="line">java.util.logging.FileHandler.formatter &#x3D; java.util.logging.XMLFormatter</span><br></pre></td></tr></table></figure>
+<p><code>SimpleFormatter.format</code>如何自定义格式？参见：<br><a href="https://docs.oracle.com/javase/7/docs/api/java/util/logging/SimpleFormatter.html#method_detail" target="_blank" rel="noopener">https://docs.oracle.com/javase/7/docs/api/java/util/logging/SimpleFormatter.html#method_detail</a></p>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.logging.Logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="comment">//Logger.getLogger(String name),参数为logger的name，通常为类的全限定名</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Logger logger = Logger.getLogger(App<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>())</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            logger.info(<span class="string">"This is test log."</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"test Exception"</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            logger.severe(<span class="string">"This is test Exception:"</span> + e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Log4j"><a href="#Log4j" class="headerlink" title="Log4j"></a>Log4j</h2><p>Log4j 是Apache的一个用于JAVA的日志库。是出现较早的日志工具，目前已经发展到Log4j2.X，但是这里我们讨论的是Log4j1.X，Log4j2.X下文会单独讨论。</p>
+<h3 id="依赖-1"><a href="#依赖-1" class="headerlink" title="依赖"></a>依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.17<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h3><p>Log4j没有任何默认的日志配置，如果没有配置文件。你将会遇到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">log4j:WARN No appenders could be found for logger (xx.xx.xx).</span><br><span class="line">log4j:WARN Please initialize the log4j system properly.</span><br><span class="line">log4j:WARN See http:&#x2F;&#x2F;logging.apache.org&#x2F;log4j&#x2F;1.2&#x2F;faq.html#noconfig for more info.</span><br></pre></td></tr></table></figure>
+<p>我们看下Log4j默认的初始化过程(具体过程在<code>org.apache.log4j.LogManager</code>类中)：</p>
+<ol>
+<li>设置<code>log4j.defaultInitOverride</code>为除了<code>false</code>之外的其他值都会导致<code>Log4j</code>跳过初始化过程。(但是一般我们不会这么做)</li>
+<li>试图将<code>log4j.configuration</code>系统属性转换为一个<code>URL</code>(<code>java.net.URL</code>),从该URL加载配置,如果转换失败，则从<code>classpath</code>中寻找<code>log4j.configuration</code>系统属性配置的文件,从该文件加载配置</li>
+<li>如果没有设置<code>log4j.configuration</code>属性，则在<code>classpath</code>目录下寻找<code>log4j.xml</code>文件，从该文件加载配置。</li>
+<li>如果仍然没有，则在<code>classpath</code>目录下寻找<code>log4j.properties</code>文件，从该文件加载配置。</li>
+<li>如果以上均失败了，中止初始化。</li>
+</ol>
+<p>从以上流程可以看出，最简单的配置方式就是提供<code>log4j.xml</code>或者<code>log4j.properties</code>文件。</p>
+<h4 id="log4j-xml文件示例："><a href="#log4j-xml文件示例：" class="headerlink" title="log4j.xml文件示例："></a><code>log4j.xml</code>文件示例：</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">log4j</span>:configuration <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//APACHE//DTD LOG4J 1.2//EN"</span> <span class="meta-string">"log4j.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">log4j:configuration</span> <span class="attr">xmlns:log4j</span>=<span class="string">'http://jakarta.apache.org/log4j/'</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--配置Console Appender--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"stdout"</span> <span class="attr">class</span>=<span class="string">"org.apache.log4j.ConsoleAppender"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">layout</span> <span class="attr">class</span>=<span class="string">"org.apache.log4j.PatternLayout"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"ConversionPattern"</span> <span class="attr">value</span>=<span class="string">"[%-5p %d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;] [%t] %l [%m]%n"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--配置File Appender--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"file"</span> <span class="attr">class</span>=<span class="string">"org.apache.log4j.FileAppender"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--文件位置--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"File"</span> <span class="attr">value</span>=<span class="string">" out.log"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"Append"</span> <span class="attr">value</span>=<span class="string">"false"</span> /&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--日志格式--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">layout</span> <span class="attr">class</span>=<span class="string">"org.apache.log4j.PatternLayout"</span> &gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"ConversionPattern"</span> <span class="attr">value</span>=<span class="string">"[%-5p %d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;] [%t] %l [%m]%n"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!--配置Logger--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">"cn.keaper"</span> <span class="attr">additivity</span>=<span class="string">"false"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">level</span> <span class="attr">value</span>=<span class="string">"debug"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"file"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">logger</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">root</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">level</span> <span class="attr">value</span>=<span class="string">"debug"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"stdout"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">log4j:configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="用法："><a href="#用法：" class="headerlink" title="用法："></a>用法：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.log4j.Logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="comment">//Logger.getLogger()可以传递string作为 logger name</span></span><br><span class="line">    <span class="comment">//也可以传递Class，此时则用类的全限定名作为 logger name</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = Logger.getLogger(App<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            logger.info(<span class="string">"This is test log."</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"test Exception"</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            logger.error(<span class="string">"This is test Exception:"</span>,e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="休息一下"><a href="#休息一下" class="headerlink" title="休息一下"></a>休息一下</h2><blockquote>
+<p>除了 <code>JUL</code> 和 <code>Log4J</code>这样的日志记录库之外，还有一类库用来封装不同的日志记录库。这样的封装库中一开始以 <code>Apache Commons  Logging</code>框架最为流行，现在比较流行的是<code>SLF4J</code>。这样封装库的API都比较简单，只是在日志记录库的API基础上做了一层简单的封装，屏蔽不同实现之间的区别。</p>
+</blockquote>
+<p>这样做典型的好处是可以在一个公共的项目中，可以通过这类公共的API去操作日志，但是具体的实现由调用方去指定。这样可以避免在依赖多个不同的日志库时需要对多种不同的日志库提供实现及配置。</p>
+<h2 id="commoning-log-JCL"><a href="#commoning-log-JCL" class="headerlink" title="commoning-log(JCL)"></a>commoning-log(JCL)</h2><blockquote>
+<p>JCL provides thin-wrapper Log implementations for other logging tools, including Log4J, Avalon LogKit (the Avalon Framework’s logging infrastructure), JDK 1.4, and an implementation of JDK 1.4 logging APIs (JSR-47) for pre-1.4 systems.</p>
+</blockquote>
+<p>JCL内置支持的日志实现工具包括<code>Log4J</code>、<code>Avalon LogKit</code>(项目目前已经关闭)、JDK 1.4和为JDK1.4之前系统提供的JDK log API的实现(JSR-47)。这几个中使用最多的还是<code>Log4j</code>。</p>
+<h3 id="依赖-2"><a href="#依赖-2" class="headerlink" title="依赖"></a>依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-logging<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>为了实现具体的日志实现，则需要引入具体的依赖库，如果用<code>Log4j</code>，那么需要引入<code>Log4j</code>的依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.17<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="配置-2"><a href="#配置-2" class="headerlink" title="配置"></a>配置</h3><p><code>JCL</code>的配置文件是<code>classpath</code>路径中的<code>commons-logging.properties</code>。<code>JCL</code>中使用<code>LogFactory</code>来获取具体的<code>Log</code>,<code>LogFactory</code>可以通过<code>org.apache.commons.logging.LogFactory</code>属性指定，当然<code>JCL</code>提供了默认的<code>LogFactory</code>,默认的<code>Logfactory</code>通过如下流程决定使用哪种具体的日志实现：</p>
+<ol>
+<li>寻找<code>LogFactory</code>中名为<code>org.apache.commons.logging.Log</code>(同时兼容1.0版本之前的<code>org.apache.commons.logging.log</code>)的属性指定的<code>Log</code>。  <blockquote>
+<p>这里的属性指的是通过<code>LogFactory</code>类的<code>getAttribute</code>方法获得的，注意定义在<code>commons-logging.properties</code>文件中的每个属性都会成为这个默认的<code>LogFactory</code>的<code>Attribte</code>.</p>
+</blockquote>
+</li>
+<li>如果没有找到，寻找系统属性中名为<code>org.apache.commons.logging.Log</code>(同时兼容1.0版本之前的<code>org.apache.commons.logging.log</code>)的属性指定的<code>Log</code>。</li>
+<li>如果依然没有找到，<code>Log4j</code>是可用的(可以找到<code>Log4j</code>相关的类),使用<code>Log4j</code>。</li>
+<li>如果没有找到<code>Log4j</code>，JDK版本在1.4以上，那么使用<code>JDKLog</code>。</li>
+<li>使用JCL内置的<code>SimpleLog</code>。</li>
+</ol>
+<p>如果我们使用<code>Log4j</code>，<code>JDKLog</code>，我们可以不用配置<code>commons-logging</code>,注意着并不等于不用配置<code>Log4j</code>或者<code>JDKLog</code>，在使用了<code>commons-logging</code>之后，不管是<code>Log4j</code>还是<code>JDKLog</code>，配置方式都是与单独使用时是相同的，<code>commoons-logging</code>和具体的日志实现的配置是分开的。</p>
+<h3 id="用法-1"><a href="#用法-1" class="headerlink" title="用法"></a>用法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.logging.Log;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.logging.LogFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log logger = LogFactory.getLog(App<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            logger.info(<span class="string">"This is test log."</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"test Exception"</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            logger.error(<span class="string">"This is test Exception:"</span>,e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="slf4j"><a href="#slf4j" class="headerlink" title="slf4j"></a>slf4j</h2><p><code>slf4j</code>与<code>commons-logging</code>相似，是有一个日志门面框架。<br><code>slf4j</code>支持<code>log4j</code>,<code>JDKLog</code>,<code>logback</code>同时支持<code>commons-logging</code>(相当于两层门面)。</p>
+<h3 id="依赖-3"><a href="#依赖-3" class="headerlink" title="依赖"></a>依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>slf4j-api</code>提供Log的接口，而具体使用哪种实现则需要提供另一类包：绑定包(<code>SLF4J bindings</code>)，每一种绑定包对应一种实现：</p>
+<table>
+<thead>
+<tr>
+<th align="center">binding jar</th>
+<th align="center">支持日志实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>slf4j-log4j12.jar</code></td>
+<td align="center">log4j 1.2</td>
+</tr>
+<tr>
+<td align="center"><code>slf4j-jdk14.jar</code></td>
+<td align="center">JDKLog</td>
+</tr>
+<tr>
+<td align="center"><code>slf4j-jcl.jar</code></td>
+<td align="center">commons-logging</td>
+</tr>
+</tbody></table>
+<p>同时<code>logback</code>内置slf4j实现，所以使用<code>logback</code>并不需要<code>binding jar</code>。<br><img src="https://blog-picture.nos-eastchina1.126.net/picture0005.png" alt=""></p>
+<p>引入了对应的<code>binding jar</code>之后，我们还需要引入日志实现库所需要的依赖。<br>例如如果我们用<code>Log4j</code>作为日志实现，除了<code>slf4j-api</code>需要引入，还需要引入</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-log4j12<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.21<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.17<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-3"><a href="#配置-3" class="headerlink" title="配置"></a>配置</h3><p><code>Slf4j</code>并不需要单独配置，只要引入相应日志的<code>binding jar</code>以及其对应依赖并配置即可。</p>
+<p>这里的绑定实际上是加载<code>org.slf4j.impl.StaticLoggerBinder</code>类，每个<code>binding jar</code>中都有这样一个类。如果找到多个绑定，则取决于加载的先后顺序。</p>
+<h3 id="用法-2"><a href="#用法-2" class="headerlink" title="用法"></a>用法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(App<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            logger.info(<span class="string">"This is test log."</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"test Exception"</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            logger.error(<span class="string">"This is test Exception:"</span>,e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="slf4j-bridging"><a href="#slf4j-bridging" class="headerlink" title="slf4j bridging"></a>slf4j bridging</h3><p>如果在你依赖的模块中使用了别的日志库，而在你的项目中你使用的是<code>slf4j</code>,这个时候<code>slf4j</code> 提供了一些桥接模块可以避免你同时对多个日志库进行配置，这些桥接模块可以重定向对其他日志库的调用到<code>slf4j</code>.<br>官方图表达的很清晰：<br><img src="https://blog-picture.nos-eastchina1.126.net/picture0006.png" alt=""></p>
+<h2 id="Logback"><a href="#Logback" class="headerlink" title="Logback"></a>Logback</h2><p><code>Logback</code>是由<code>Log4j</code>创始人设计的又一个开源日日志组件。<code>Logback</code>当前分成三个模块：<code>logback-core</code>,<code>logback-classic</code>和<code>logback-access</code>。<br><code>logback-core</code>是其它两个模块的基础模块。<code>logback-classic</code>是<code>log4j</code>的一个改良版本。此外<code>logback-classic</code>完整实现了<code>SLF4J  API</code>，使你可以很方便地更换成其它日记系统如<code>Log4J</code>或<code>JDK14 Logging</code>。<code>logback-access</code>模块可以与Servlet容器集成以提供HTTP日志相关的功能。</p>
+<h3 id="依赖-4"><a href="#依赖-4" class="headerlink" title="依赖"></a>依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ch.qos.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logback-classic<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>logback-classic</code>这个包内部依赖<code>logback-coer</code>和<code>slf4j-api</code>。所以不需要再额外引入。另外我们在上一节说到，logback提供了对slf4j接口的原生实现，所以不需要提供<code>bingding jar</code>。</p>
+<h3 id="配置-4"><a href="#配置-4" class="headerlink" title="配置"></a>配置</h3><p>logback通过以下步骤完成初始化：</p>
+<ol>
+<li>logback尝试在classpath目录下寻找<code>logback-test.xml</code>文件。</li>
+<li>如果不存在，logback尝试在classpath目录下寻找<code>logback.groovy</code>文件。</li>
+<li>如果不存在，logback尝试在classpath目录下寻找<code>logback.xml</code>文件。</li>
+<li>如果都不存在，在classpath目录下寻找<code>META-INF\services\ch.qos.logback.classic.spi.Configurator</code>,这个文件的内容是<code>com.qos.logback.classic.spi.Configurator</code>接口的实现类的全限定名，logback将使用该类作为配置类。</li>
+<li>如果仍然没有找到，那么logback使用默认的<code>BasicConfigurator</code>类作为配置类，这个<code>Configurator</code>将日志输出至控制台。</li>
+</ol>
+<p><code>logback.xml</code>示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0"  encoding="UTF-8" ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--Console Appender配置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"STDOUT"</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.ConsoleAppender"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- encoders are  by default assigned the type</span></span><br><span class="line"><span class="comment">             ch.qos.logback.classic.encoder.PatternLayoutEncoder --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">encoder</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>%d&#123;HH:mm:ss.SSS&#125; [%thread] %-5level %logger&#123;36&#125; - %msg%n<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--File Appender配置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"FILE"</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.FileAppender"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">file</span>&gt;</span>myApp.log<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">encoder</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>%date %level [%thread] %logger&#123;10&#125; [%file:%line] %msg%n<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">"cn.keaper"</span> <span class="attr">level</span>=<span class="string">"INFO"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"FILE"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">logger</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">root</span> <span class="attr">level</span>=<span class="string">"DEBUG"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"STDOUT"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="用法-3"><a href="#用法-3" class="headerlink" title="用法"></a>用法</h3><p>既然logback内置了对slf4j的实现，那么他的使用方式就和slf4j的使用方式一样。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(App<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            logger.info(<span class="string">"This is test log."</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"test Exception"</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            logger.error(<span class="string">"This is test Exception:"</span>,e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Log4j-2"><a href="#Log4j-2" class="headerlink" title="Log4j 2"></a>Log4j 2</h2><p>以上我们说的全部都是<code>Log4j 1</code>,而<code>Log4j</code>现在已经升级到了<code>2.X</code>版本。<code>Log4j 2</code>已经不仅仅是一个日志实现框架了，他也能够作为一个门面框架来使用，并提供对其他框架丰富的支持。我们只介绍他单纯作为一个日志实现框架的用法，更多的用法请移步官网自行查阅。</p>
+<h3 id="依赖-5"><a href="#依赖-5" class="headerlink" title="依赖"></a>依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.11.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.11.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-5"><a href="#配置-5" class="headerlink" title="配置"></a>配置</h3><p><code>Log4j 2</code>通过初始化实现自动配置的流程如下：</p>
+<ol>
+<li>检查<code>log4j.configurationFile</code>系统属性，如果有设置，将使用</li>
+<li>如果没有设置，依次从classpath中寻找配置文件,顺序依次为：<ul>
+<li><code>log4j2-test.properties</code></li>
+<li><code>log4j2-test.yaml</code>或者<code>log4j2-test.yml</code></li>
+<li><code>log4j2-test.json</code>或者<code>log4j2-test.jsn</code></li>
+<li><code>log4j2-test.xml</code></li>
+<li><code>log4j2.properties</code></li>
+<li><code>log4j2.yaml</code>或者<code>log4j2.yml</code></li>
+<li><code>log4j2.json</code>或者<code>log4j2.jsn</code></li>
+<li><code>log4j2.xml</code></li>
+</ul>
+</li>
+<li>如果这么多文件都没有没有找到，则会有一个默认的配置，这个配置会将日志输出至控制台。</li>
+</ol>
+<p>Log4J2.X的xml配置方式上有一些不同,主要的不同可以看这里：<a href="https://logging.apache.org/log4j/2.x/manual/migration.html" target="_blank" rel="noopener">Migrating from Log4j 1.x</a>  </p>
+<p><code>log4j2.xml</code>配置文件示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Appenders</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--配置Console Appender--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Console</span> <span class="attr">name</span>=<span class="string">"STDOUT"</span> <span class="attr">target</span>=<span class="string">"SYSTEM_OUT"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">PatternLayout</span> <span class="attr">pattern</span>=<span class="string">"%d %-5p [%t] %C&#123;2&#125; (%F:%L) - %m%n"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">Console</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--配置File Appender--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">File</span> <span class="attr">name</span>=<span class="string">"FILE"</span> <span class="attr">filename</span>=<span class="string">"out.log"</span> <span class="attr">append</span>=<span class="string">"false"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">PatternLayout</span> <span class="attr">pattern</span>=<span class="string">"%d %-5p [%t] %C&#123;2&#125; (%F:%L) - %m%n"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">File</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Appenders</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Loggers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Logger</span> <span class="attr">name</span>=<span class="string">"cn.keaper"</span> <span class="attr">level</span>=<span class="string">"info"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">"FILE"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">Logger</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Root</span> <span class="attr">level</span>=<span class="string">"debug"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">"STDOUT"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">Root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Loggers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="用法-4"><a href="#用法-4" class="headerlink" title="用法"></a>用法</h3><p>在使用方式上，也有了变化，主要变化是在Log4J1.X中Logger是具体的类，而在Log4J2.X中，Logger变成了接口(log4j-api包中)，在log4j-core中提供具体实现。这样做的好处是使用log4j的api同时可以使用其他不同日志库的实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//注意类的位置不同了</span></span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.LogManager;</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.Logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="comment">//Log4j 1.x中可以使用Logger.gerLogger()来获取Logger</span></span><br><span class="line">    <span class="comment">//但是在Log4j 2.X中需要使用LogManager.getLogger()来获取</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LogManager.getLogger(App<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            logger.info(<span class="string">"This is test log."</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"test Exception"</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            logger.error(<span class="string">"This is test Exception:"</span>,e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="几种框架的关系"><a href="#几种框架的关系" class="headerlink" title="几种框架的关系"></a>几种框架的关系</h2><p>以上介绍的这几种框架可以分为两类(log4j 2 暂时不做区分)：</p>
+<ol>
+<li>JUL, Log4j 1 和 Logback 是真正的日志实现。</li>
+<li>commons-logging和sl4j是在真正日志实现之上的门面框架。每个框架都有自己一个简单实现，也可以使用一个另外的日志实现。</li>
+</ol>
+<p>commons-logging和slf4j都可以作为JDKLog和Log4j 1的日志门面，此外slf4j还能够作为commons-logging本身和logback的门面框架。<br>他们之间的关系可以用下图表示：<br><img src="https://blog-picture.nos-eastchina1.126.net/picture0007.png" alt=""></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html" target="_blank" rel="noopener">JDKLog文档</a></li>
+<li><a href="http://logging.apache.org/log4j/1.2/manual.html" target="_blank" rel="noopener">Log4J1.X文档</a></li>
+<li><a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="noopener">Log4j2.X文档</a></li>
+<li><a href="https://commons.apache.org/proper/commons-logging/guide.html" target="_blank" rel="noopener">commons-loggging</a></li>
+<li><a href="https://logback.qos.ch/manual/index.html" target="_blank" rel="noopener">logback文档</a></li>
+<li><a href="https://note.youdao.com/" target="_blank" rel="noopener">Java日志管理最佳实践</a></li>
+<li><a href="https://www.javacodegeeks.com/2011/09/java-logging-mess.html" target="_blank" rel="noopener">The Java Logging Mess</a></li>
+<li><a href="https://vectorbeta.wordpress.com/2014/08/26/the-java-logging-quagmire/" target="_blank" rel="noopener">The Java logging quagmire</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/16/JSONObject.toBean%E4%B8%8D%E8%83%BD%E6%AD%A3%E7%A1%AE%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96thrift%E7%94%9F%E6%88%90%E7%9A%84java%E7%B1%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,7 +669,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -555,7 +860,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -774,7 +1079,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1021,7 +1326,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1187,7 +1492,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1379,7 +1684,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1537,7 +1842,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1690,7 +1995,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1879,7 +2184,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
+                <time title="修改时间：2020-09-09 17:49:33" itemprop="dateModified" datetime="2020-09-09T17:49:33+00:00">2020-09-09</time>
               
             
           </span>
@@ -1916,177 +2221,6 @@
           
             <p>整理一下各种排序算法。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sort</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">//冒泡排序,O(N*N)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">bubbo_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;arr.size()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=arr.size()<span class="number">-1</span>;j&gt;i;j--)&#123;</span><br><span class="line">               <span class="keyword">if</span>(arr[j]&lt;arr[j<span class="number">-1</span>]) swap(arr[j],arr[j<span class="number">-1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//直接插入排序,O(N*N)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt; arr.size();i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> key = arr[i];</span><br><span class="line">            <span class="keyword">int</span> j = i;</span><br><span class="line">            <span class="keyword">while</span>(j&gt;<span class="number">0</span>&amp;&amp;arr[j<span class="number">-1</span>]&gt;key)&#123;</span><br><span class="line">                arr[j] = arr[j<span class="number">-1</span>];</span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            arr[j] = key;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//选择排序,O(N*N)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">select_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;arr.size();i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> minVal = arr[i];</span><br><span class="line">            <span class="keyword">int</span> minPos = i;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>;j&lt;arr.size();j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(minVal&gt;arr[j])&#123;</span><br><span class="line">                    minVal = arr[j];</span><br><span class="line">                    minPos = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            swap(arr[i],arr[minPos]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//快速排序,O(N*LogN)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">quick_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp; arr,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(l&gt;=r) <span class="keyword">return</span> ;</span><br><span class="line">        <span class="keyword">int</span> i = l,j = r,key = arr[l];</span><br><span class="line">        <span class="keyword">while</span>(i&lt;j)&#123;</span><br><span class="line">            <span class="keyword">while</span>(i &lt; j &amp;&amp; arr[j] &gt; key) j--;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; j) arr[i++] = arr[j];</span><br><span class="line">            <span class="keyword">while</span>(i &lt; j &amp;&amp; arr[i] &lt; key) i++;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; j) arr[j--] = arr[i];</span><br><span class="line">        &#125;</span><br><span class="line">        arr[i] = key;</span><br><span class="line">        quick_sort(arr,l,i<span class="number">-1</span>);</span><br><span class="line">        quick_sort(arr,i+<span class="number">1</span>,r);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//归并排序,O(N*LogN)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">merge_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">tmp</span><span class="params">(r-l+<span class="number">1</span>)</span></span>;</span><br><span class="line">        <span class="keyword">if</span>(l&gt;=r) <span class="keyword">return</span> ;</span><br><span class="line">        <span class="keyword">int</span> mid = (l+r) / <span class="number">2</span>;</span><br><span class="line">        merge_sort(arr,l,mid);</span><br><span class="line">        merge_sort(arr,mid+<span class="number">1</span>,r);</span><br><span class="line">        <span class="keyword">int</span> i = l,j = mid+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=mid&amp;&amp;j&lt;=r)&#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[i]&lt;arr[j])</span><br><span class="line">                tmp[k++] = arr[i++];</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                tmp[k++] = arr[j++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=mid)&#123;</span><br><span class="line">            tmp[k++] = arr[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(j&lt;=r)&#123;</span><br><span class="line">            tmp[k++] = arr[j++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=r-l;i++)&#123;</span><br><span class="line">            arr[l+i] = tmp[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">shiftDown</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr,<span class="keyword">int</span> index,<span class="keyword">int</span> heapSize)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> key = arr[index];</span><br><span class="line">        <span class="keyword">int</span> father = index,child;</span><br><span class="line">        <span class="keyword">while</span>((child=father*<span class="number">2</span>+<span class="number">1</span>)&lt;heapSize)&#123;</span><br><span class="line">            <span class="keyword">if</span>(child+<span class="number">1</span>&lt;heapSize &amp;&amp; arr[child] &lt; arr[child+<span class="number">1</span>]) child++;</span><br><span class="line">            <span class="keyword">if</span>(key &gt; arr[child]) <span class="keyword">break</span>;</span><br><span class="line">            arr[father] = arr[child];</span><br><span class="line">            father = child;</span><br><span class="line">        &#125;</span><br><span class="line">        arr[father] = key;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//堆排序,O(N*LogN)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">heap_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span>&#123;</span><br><span class="line">        <span class="comment">//construct max heap</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=arr.size()/<span class="number">2</span><span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">            shiftDown(arr,i,arr.size());</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//        for(int i=0;i&lt;arr.size();i++)&#123;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;arr[i]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=arr.size()<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">            swap(arr[<span class="number">0</span>],arr[i]);</span><br><span class="line">            shiftDown(arr,<span class="number">0</span>,i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/15/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E7%AC%94%E8%AF%95-%E9%9F%B3%E4%B9%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Keaper">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Keaper's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/15/%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE/%E7%AC%94%E8%AF%95-%E9%9F%B3%E4%B9%90/" itemprop="url">
-                  笔试-音乐
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-10-15 19:21:00" itemprop="dateCreated datePublished" datetime="2017-10-15T19:21:00+00:00">2017-10-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-09-04 13:42:21" itemprop="dateModified" datetime="2020-09-04T13:42:21+00:00">2020-09-04</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h4><p>迈克喜欢在火车旅行的时候用手机听音乐，他有N首歌在手机里，在整个火车途中，他可以听P首歌，所以他想产生一个播放表产生P首歌曲，这个播放表的规则是： </p>
-<ul>
-<li>每首歌都要至少被播放一次 </li>
-<li>在两首一样的歌中间，至少有M首其他的歌 </li>
-</ul>
-<p>迈克在想有多少种不同的播放表可以产生，那么给你N,M,P，你来算一下，输出结果取1000000007的余数。</p>
-<p>输入:</p>
-<blockquote>
-<p>输入N,M,P<br>N范围在1到100<br>M范围在0到N<br>P范围在N到100</p>
-</blockquote>
-<p>输出 :</p>
-<blockquote>
-<p>输出结果mod 1000000007的余数<br>样例输入<br><code>1 0 3</code><br>样例输出<br><code>1</code><br>提示<br>其他样例<br><code>1 1 3</code><br><code>0</code></p>
-<p><code>2 0 3</code><br><code>6</code></p>
-<p><code>50 5 100</code><br><code>222288991</code></p>
-</blockquote>
-<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>DP[i][j]表示前 i 首歌共使用了 j 首<strong>不同</strong>的歌。<br>考虑第i首歌，如果取前面已经用过的歌，那么可选的歌有（j-m）首歌，如果选用前面没用过的歌，那么可选的歌有（n-j+1）首歌可选。所以</p>
-<p>dp[i][j] = dp[i-1][j] * (j-m) + dp[i-1][j-1] * (n-j+1)</p>
-<p>，注意int会超出范围。</p>
-<p>代码：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> LL;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX = <span class="number">105</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MOD = <span class="number">1e9</span>+<span class="number">7</span>;</span><br><span class="line">LL dp[MAX][MAX];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,m,p;</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m&gt;&gt;p)&#123;</span><br><span class="line">        <span class="built_in">memset</span>(dp,<span class="number">0</span>,<span class="keyword">sizeof</span>(dp));</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=p;i++)&#123;</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">            dp[<span class="number">0</span>][j] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=p;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">                dp[i][j] = (dp[i<span class="number">-1</span>][j<span class="number">-1</span>]*(n-j+<span class="number">1</span>))%MOD;</span><br><span class="line">                <span class="keyword">if</span>(j&gt;m) dp[i][j] = (dp[i][j] + (dp[i<span class="number">-1</span>][j]*(j-m))%MOD)%MOD;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//        for(int i=0;i&lt;=p;i++)&#123;</span></span><br><span class="line"><span class="comment">//            for(int j=0;j&lt;=n;j++)&#123;</span></span><br><span class="line"><span class="comment">//                cout&lt;&lt;dp[i][j]&lt;&lt;" ";</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//            cout&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;dp[p][n]&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           
         
       
@@ -2175,7 +2309,7 @@
                 
                   <a href="/archives/%20%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-count">62</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

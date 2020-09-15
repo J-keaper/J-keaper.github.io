@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32%C3%9732.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16%C3%9716.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在使用JetBrains CLion调试OpenJDK的过程中，有时候会发现Call Stack中有一部分是汇编代码，导致无法完全探究其内部实现。本文主要针对此问题给出了如何在不引入汇编代码（零汇编，Zero-Assembler）的情况下完成OpenJDK项目的编译和调试。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何编译&quot;零汇编(Zero-Assembler)&quot;的OpenJDK">
+<meta property="og:url" content="http://yoursite.com/2020/09/15/ru-he-bian-yi-ling-hui-bian-zero-assemblerde-openjdk/index.html">
+<meta property="og:site_name" content="Keaper&#39;s Blog">
+<meta property="og:description" content="在使用JetBrains CLion调试OpenJDK的过程中，有时候会发现Call Stack中有一部分是汇编代码，导致无法完全探究其内部实现。本文主要针对此问题给出了如何在不引入汇编代码（零汇编，Zero-Assembler）的情况下完成OpenJDK项目的编译和调试。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-15T08:49:24.000Z">
+<meta property="article:modified_time" content="2020-09-15T01:05:02.568Z">
+<meta property="article:author" content="Keaper">
+<meta property="article:tag" content="JAVA">
+<meta property="article:tag" content="OpenJDK">
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/09/15/ru-he-bian-yi-ling-hui-bian-zero-assemblerde-openjdk/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>如何编译"零汇编(Zero-Assembler)"的OpenJDK | Keaper's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keaper's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/15/ru-he-bian-yi-ling-hui-bian-zero-assemblerde-openjdk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Keaper">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keaper's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何编译"零汇编(Zero-Assembler)"的OpenJDK
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-15 08:49:24 / 修改时间：01:05:02" itemprop="dateCreated datePublished" datetime="2020-09-15T08:49:24+00:00">2020-09-15</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在使用<code>JetBrains CLion</code>调试<code>OpenJDK</code>的过程中，有时候会发现<code>Call Stack</code>中有一部分是汇编代码，导致无法完全探究其内部实现。本文主要针对此问题给出了如何在不引入汇编代码（零汇编，<code>Zero-Assembler</code>）的情况下完成<code>OpenJDK</code>项目的编译和调试。</p>
+<a id="more"></a>
+
+<blockquote>
+<p>在<a href="http://keaper.cn/2020/07/04/OpenJDK%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95%E6%8C%87%E5%8D%97/" target="_blank" rel="noopener">OpenJDK 编译调试指南</a>一文中，已经详细介绍了编译调试<code>OpenJDK</code>的步骤，这里不再详述具体过程。</p>
+</blockquote>
+<h1 id="为什么存在部分汇编代码？"><a href="#为什么存在部分汇编代码？" class="headerlink" title="为什么存在部分汇编代码？"></a>为什么存在部分汇编代码？</h1><p>首先我们来看下为什么会存在部分汇编代码，以及这部分汇编代码是什么？<br>从 <a href="https://openjdk.java.net/groups/hotspot/docs/RuntimeOverview.html#Interpreter|outline" target="_blank" rel="noopener">HotSpot Runtime Overview - Interpreter</a> 了解到，<code>HotSpot</code>为了提高性能，使用了基于模板的解释器（<code>template based interpreter</code>）来解释执行<code>JAVA虚拟机指令</code>，<code>JVM</code>在启动时会根据<code>TemplateTable</code>（与每个字节码对应的汇编代码）来生成解释器，所以说这个解释器其实是部分基于汇编代码实现的。除了解释器之外，在<code>OpenJDK</code>项目中还有一些部分也是基于汇编代码的，例如<code>即时编译器JIT</code>（<code>C1</code>编译器，<code>C2</code>编译器）等，但汇编代码是依赖于硬件架构的，这种做法在提升了性能的同时却降低了可移植性。</p>
+<p><code>OpenJDK</code>社区的<code>IcedTea</code>项目提供了一种比较通用的移植方法，使得<code>OpenJDK</code>可以在所有的<code>Linux</code>系统上构建， 而无需进一步进行移植工作。</p>
+<h1 id="IcedTea项目"><a href="#IcedTea项目" class="headerlink" title="IcedTea项目"></a>IcedTea项目</h1><p><code>IcedTea</code>项目最初的出现是因为<code>Sun</code>公司在发布<code>JDK</code>时，类库的一些部分由于产权原因没有发布其源代码，而是仅以二进制插件的形式提供， 因为这部分源代码属于受版权保护的第三方。<code>IcedTea</code>的主要目标就是提供这些二进制插件的免费等效替代品，使得完全使用免费开源软件构建<code>JDK</code>成为可能。</p>
+<p>此外，<code>IdeaTea</code>还做了很多工作以促进用户更容易地构建和部署<code>JDK</code>，其中包括将<code>OpenJDK</code>移植到更多的平台。</p>
+<p>因为<code>OpenJDK</code>的代码中除了 <code>C++</code> 代码之外还包含许多汇编代码，而<code>OpenJDK</code>支持的硬件平台架构有限，远远少于<code>Linux</code>系统所支持的。于是<code>IcedTea</code>的子项目<code>Zero</code>出现了，<code>Zero</code>项目旨在通过移除<code>OpenJDK</code>项目代码中的与平台相关的汇编代码，使用纯<code>C++</code>来替代，从而可以在任何 <code>Linux</code> 系统上构建，而无需进一步进行移植工作。</p>
+<blockquote>
+<p>这也正是标题中”零汇编”的含义所在，就是指不使用汇编代码来构建<code>OpenJDK</code>。</p>
+</blockquote>
+<p><code>OpenJDK</code> 的虚拟机在很大程度上依赖 <code>JIT（即时编译器）</code> 编译来提高性能。而<code>Zero</code>中只包含一个纯<code>C++</code>解释器，<code>Zero</code> 在相同的硬件上要比原始（<code>vanilla</code>）的 <code>OpenJDK</code> 慢得多。于是又一个子项目<code>Shark</code>出现了， <code>Shark</code>使用 <code>LLVM</code> 来即时编译 <code>Java</code> 代码，从而在不引入系统特定的代码的情况下提高性能。</p>
+<h1 id="如何实现”零汇编-Zero-Assembler-”"><a href="#如何实现”零汇编-Zero-Assembler-”" class="headerlink" title="如何实现”零汇编(Zero-Assembler)”"></a>如何实现”零汇编(Zero-Assembler)”</h1><p>到这里我们已经明白了，使用<code>zero</code>来构建<code>OpenJDK</code>就可以实现”零汇编(<code>Zero-Assembler</code>)”，那么如何使用呢？目前<code>Zero</code>和<code>Shark</code>已经集成到了<code>OpenJDK</code>的主分支中，只要在配置<code>OpenJDK</code>的时候指定参数<code>--with-jvm-variants=zero</code>重新编译即可。</p>
+<blockquote>
+<p>虽然在<code>OpenJDK 8</code>中提供了<code>--with-jvm-variants=zeroshark</code>的配置项，但经过几番尝试发现并不能真正构建成功。根据<code>OpenJDK</code>社区的一些资料（<a href="https://bugs.openjdk.java.net/browse/JDK-8171853" target="_blank" rel="noopener">[JDK-8171853] Remove Shark compiler - Java Bug System</a>、<a href="http://hg.openjdk.java.net/jdk-updates/jdk10u/rev/fb290fd1f9d4" target="_blank" rel="noopener">jdk-updates/jdk10u: fb290fd1f9d4</a>）， <code>Shark</code>由于长期缺乏维护已经在<code>JDK 10</code>版本中被移除了，也不再支持配置<code>--with-jvm-variants=zeroshark</code>参数了。所以下文我们只考虑<code>Zero</code>而不设计<code>Shark</code>相关内容。</p>
+</blockquote>
+<blockquote>
+<p>这篇文章<a href="https://jerboaa.fedorapeople.org/presentations/OpenJDK_Zero_FOSDEM_2015-02-01.pdf" target="_blank" rel="noopener">Sustaining the zero assembler port in OpenJDK: An inside perspective of CPU specific issues</a>比较形象地描述了<code>模板解释器</code>和<code>C++解释器</code>的区别，以及如何构建<code>zero</code>版的<code>OpenJDK</code>，推荐阅读。</p>
+</blockquote>
+<p>下面主要记录一下在<code>MacOS</code>和<code>Ubuntu</code>平台下编译<code>Zero</code>版<code>OpenJDK</code>所遇到的问题。</p>
+<h2 id="Ubuntu-16-04"><a href="#Ubuntu-16-04" class="headerlink" title="Ubuntu 16.04"></a>Ubuntu 16.04</h2><p>在<code>Ubuntu 16.04</code>平台上编译<code>OpenJDK 8</code>时遇到的一个问题是缺少 <code>libffi</code> 依赖。运行<code>configure</code>时出现下面的错误信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">checking for LIBFFI... configure: error: Package requirements (libffi) were not met:</span><br><span class="line">No package &#39;libffi&#39; found</span><br></pre></td></tr></table></figure>
+<p>使用如下命令安装之后重新配置编译即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libffi-dev</span><br></pre></td></tr></table></figure>
+
+<p>在<code>Ubuntu 16.04</code>平台上编译<code>OpenJDK 11</code>时没有问题，很顺利就编译完成了。</p>
+<h2 id="MacOS-10-15"><a href="#MacOS-10-15" class="headerlink" title="MacOS 10.15"></a>MacOS 10.15</h2><p>在<code>MacOS 10.15</code>平台上编译时遇到较多问题，主要原因是<code>OpenJDK</code>项目对<code>MacOS</code>平台编译<code>zero</code>版本 支持不够完善，导致有一些代码编译不通过。</p>
+<h3 id="OpenJDK-8"><a href="#OpenJDK-8" class="headerlink" title="OpenJDK 8"></a>OpenJDK 8</h3><ol>
+<li><p>运行<code>configure</code>出现下面的错误信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">checking for LIBFFI... configure: error: in &#96;&#x2F;Users&#x2F;jiajiawang&#x2F;Workspace&#x2F;openjdk-jdk8u&#39;:</span><br><span class="line">configure: error: The pkg-config script could not be found or is too old.  Make sure it</span><br><span class="line">is in your PATH or set the PKG_CONFIG environment variable to the full</span><br><span class="line">path to pkg-config.</span><br></pre></td></tr></table></figure>
+<p>同样是因为缺少了<code>libffi</code>库，除了<code>libffi</code>之外还缺少<code>pkg-config</code>，使用<code>HomeBrew</code>安装这两个依赖即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install libffi pkg-config</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>configure</code>完成，运行<code>make</code>时出现下面的错误信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;clang++  ...  ... ... openjdk-jdk8u&#x2F;hotspot&#x2F;src&#x2F;share&#x2F;vm&#x2F;precompiled&#x2F;precompiled.hpp -o precompiled.hpp.pch </span><br><span class="line">clang: error: unsupported option &#39;-gstabs&#39;</span><br></pre></td></tr></table></figure>
+<p>这是因为<code>clang</code>不支持<code>gcc</code>的<code>-gstabs</code>选项，需要对<code>hotspot/make/bsd/makefiles/gcc.make</code>文件进行修改，修改内容如下：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">   DEBUG_CFLAGS/ppc   = -g</span><br><span class="line">   DEBUG_CFLAGS += $(DEBUG_CFLAGS/$(BUILDARCH))</span><br><span class="line">   ifeq ($(DEBUG_CFLAGS/$(BUILDARCH)),)</span><br><span class="line"><span class="deletion">-  DEBUG_CFLAGS += -gstabs</span></span><br><span class="line"><span class="addition">+      ifeq ($(USE_CLANG), true)</span></span><br><span class="line"><span class="addition">+        # Clang doesn't understand -gstabs</span></span><br><span class="line"><span class="addition">+        DEBUG_CFLAGS += -g</span></span><br><span class="line"><span class="addition">+      else</span></span><br><span class="line"><span class="addition">+        DEBUG_CFLAGS += -gstabs</span></span><br><span class="line"><span class="addition">+      endif</span></span><br><span class="line">   endif</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>继续运行<code>make</code>时出现下面的错误信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">... ... ... &#x2F;src&#x2F;os&#x2F;bsd&#x2F;vm&#x2F;os_perf_bsd.cpp:29:10: fatal error: &#39;vm_version_ext_x86.hpp&#39; file not found</span><br><span class="line">#include &quot;vm_version_ext_x86.hpp&quot;</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~</span><br></pre></td></tr></table></figure>
+<p>这里引入了错误的文件，需要对<code>hotspot/src/os/bsd/vm/os_perf_bsd.cpp</code>做如下修改，使其引入正确的<code>vm_version_ext_zero.hpp</code>文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> #include &quot;memory&#x2F;resourceArea.hpp&quot;</span><br><span class="line"> #include &quot;runtime&#x2F;os.hpp&quot;</span><br><span class="line"> #include &quot;runtime&#x2F;os_perf.hpp&quot;</span><br><span class="line">-#include &quot;vm_version_ext_x86.hpp&quot;</span><br><span class="line">+</span><br><span class="line">+#ifdef TARGET_ARCH_aarch32</span><br><span class="line">+# include &quot;vm_version_ext_aarch32.hpp&quot;</span><br><span class="line">+#endif</span><br><span class="line">+#ifdef TARGET_ARCH_x86</span><br><span class="line">+# include &quot;vm_version_ext_x86.hpp&quot;</span><br><span class="line">+#endif</span><br><span class="line">+#ifdef TARGET_ARCH_sparc</span><br><span class="line">+# include &quot;vm_version_ext_sparc.hpp&quot;</span><br><span class="line">+#endif</span><br><span class="line">+#ifdef TARGET_ARCH_zero</span><br><span class="line">+# include &quot;vm_version_ext_zero.hpp&quot;</span><br><span class="line">+#endif</span><br><span class="line">+#ifdef TARGET_ARCH_arm</span><br><span class="line">+# include &quot;vm_version_ext_arm.hpp&quot;</span><br><span class="line">+#endif</span><br><span class="line">+#ifdef TARGET_ARCH_ppc</span><br><span class="line">+# include &quot;vm_version_ext_ppc.hpp&quot;</span><br><span class="line">+#endif</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>继续运行<code>make</code>时出现下面的错误信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make[2]: *** No rule to make target &#96; ... ... openjdk-jdk8u&#x2F;jdk&#x2F;src&#x2F;macosx&#x2F;bin&#x2F;zero&#x2F;jvm.cfg&#39;, needed by &#96; ... ... openjdk-jdk8u&#x2F;build&#x2F;macosx-x86_64-normal-zero-slowdebug&#x2F;jdk&#x2F;lib&#x2F;jvm.cfg&#39;.  Stop.</span><br></pre></td></tr></table></figure>
+<p>缺少<code>jdk/src/macosx/bin/zero/jvm.cfg</code>文件，我们从其他目录拷贝一份过来：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p jdk/src/macosx/bin/zero/</span><br><span class="line">cp jdk/src/macosx/bin/x86_64/jvm.cfg jdk/src/macosx/bin/zero</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="OpenJDK-11"><a href="#OpenJDK-11" class="headerlink" title="OpenJDK 11"></a>OpenJDK 11</h3><ol>
+<li><p>运行<code>configure</code>出现下面的错误信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">checking for ffi.h... no</span><br><span class="line">configure: error: Could not find libffi!</span><br></pre></td></tr></table></figure>
+<p>同样是因为缺少<code>ligffi</code>依赖，与<code>OpenJDK 8</code>不同的是在<code>OpenJDK 11</code>中，安装 <code>libffi</code>之后需要通过<code>--with-libffi=&lt;path&gt;</code>来指定<code>libffi</code>的地址：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装libffi</span></span><br><span class="line">brew install libffi</span><br><span class="line"><span class="comment"># 配置</span></span><br><span class="line">sh ./configure ...省略其他参数... --with-jvm-variants=zero --with-libffi=/usr/<span class="built_in">local</span>/Cellar/libffi/3.3/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>configure</code>完成，执行<code>make</code>出现下面的错误信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">... ... ... &#x2F;openjdk-jdk11u&#x2F;src&#x2F;hotspot&#x2F;share&#x2F;interpreter&#x2F;bytecodeInterpreter.cpp:2926:13: error: 7 enumeration values not handled in switch: &#39;T_VOID&#39;, &#39;T_ADDRESS&#39;, &#39;T_NARROWOOP&#39;... [-Werror,-Wswitch]</span><br><span class="line">    switch (istate-&gt;method()-&gt;result_type()) &#123;</span><br><span class="line">            ^</span><br><span class="line">... ... ... &#x2F;openjdk-jdk11u&#x2F;src&#x2F;hotspot&#x2F;share&#x2F;interpreter&#x2F;bytecodeInterpreter.cpp:2926:13: note: add missing switch cases</span><br><span class="line">    switch (istate-&gt;method()-&gt;result_type()) &#123;</span><br><span class="line">            ^</span><br></pre></td></tr></table></figure>
+<p>这是因为源代码中的<code>switch</code>语句没有处理所有的分支情况，所有<code>clang</code>给出了警告（<code>Diagnostic</code>）,导致编译不通过，我们可以通过<code>clang</code>的<code>-w</code>参数来取消所有的警告（<code>Diagnostic</code>），需要在配置时添加如下两个参数，重新编译即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh ./configure  ...省略其他参数... --with-extra-cflags=-w --with-extra-cxxflags=-w</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>继续运行<code>make</code>时出现下面的错误信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">... ... ... &#x2F;src&#x2F;os&#x2F;bsd&#x2F;vm&#x2F;os_perf_bsd.cpp:29:10: fatal error: &#39;vm_version_ext_x86.hpp&#39; file not found</span><br><span class="line">#include &quot;vm_version_ext_x86.hpp&quot;</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~</span><br></pre></td></tr></table></figure>
+<p>这里引入了错误的文件，需要对<code>src/hotspot/os/bsd/os_perf_bsd.cpp</code>做如下修改，使其引入正确的<code>vm_version_ext_zero.hpp</code>文件（与<code>OpenJDK 8</code>中稍有不同）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> #include &quot;runtime&#x2F;os.hpp&quot;</span><br><span class="line"> #include &quot;runtime&#x2F;os_perf.hpp&quot;</span><br><span class="line"> #include &quot;utilities&#x2F;globalDefinitions.hpp&quot;</span><br><span class="line">-#include &quot;vm_version_ext_x86.hpp&quot;</span><br><span class="line">+</span><br><span class="line">+#include CPU_HEADER(vm_version_ext)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="https://openjdk.java.net/groups/hotspot/docs/RuntimeOverview.html#Interpreter|outline" target="_blank" rel="noopener">HotSpot Runtime Overview - Interpreter</a></li>
+<li><a href="https://jerboaa.fedorapeople.org/presentations/OpenJDK_Zero_FOSDEM_2015-02-01.pdf" target="_blank" rel="noopener">Sustaining the zero assembler port in OpenJDK: An inside perspective of CPU specific issues</a></li>
+<li><a href="https://metebalci.com/blog/demystifying-the-jvm-jvm-variants-cppinterpreter-and-templateinterpreter/" target="_blank" rel="noopener">Demystifying the JVM: JVM Variants, Cppinterpreter and TemplateInterpreter</a></li>
+<li><a href="https://openjdk.java.net/projects/icedtea/" target="_blank" rel="noopener">OpenJDK: IcedTea Project</a></li>
+<li><a href="https://en.wikipedia.org/wiki/IcedTea" target="_blank" rel="noopener">IcedTea - Wikipedia</a></li>
+<li><a href="https://icedtea.classpath.org/wiki/Main_Page" target="_blank" rel="noopener">Main Page - IcedTea</a></li>
+<li><a href="https://openjdk.java.net/projects/zero/" target="_blank" rel="noopener">Zero-Assembler Project</a></li>
+<li><a href="https://icedtea.classpath.org/wiki/ZeroSharkFaq" target="_blank" rel="noopener">ZeroSharkFaq - IcedTea</a></li>
+<li><a href="http://cr.openjdk.java.net/~ihse/docs/new-hotspot-build.html" target="_blank" rel="noopener">The New Hotspot Build System</a></li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+            <a href="/tags/OpenJDK/" rel="tag"># OpenJDK</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/08/java-string-mian-mian-guan/" rel="next" title="Java String 面面观">
+                <i class="fa fa-chevron-left"></i> Java String 面面观
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Keaper" />
+            
+              <p class="site-author-name" itemprop="name">Keaper</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%20%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">63</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/J-keaper" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么存在部分汇编代码？"><span class="nav-number">1.</span> <span class="nav-text">为什么存在部分汇编代码？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IcedTea项目"><span class="nav-number">2.</span> <span class="nav-text">IcedTea项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何实现”零汇编-Zero-Assembler-”"><span class="nav-number">3.</span> <span class="nav-text">如何实现”零汇编(Zero-Assembler)”</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ubuntu-16-04"><span class="nav-number">3.1.</span> <span class="nav-text">Ubuntu 16.04</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MacOS-10-15"><span class="nav-number">3.2.</span> <span class="nav-text">MacOS 10.15</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#OpenJDK-8"><span class="nav-number">3.2.1.</span> <span class="nav-text">OpenJDK 8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OpenJDK-11"><span class="nav-number">3.2.2.</span> <span class="nav-text">OpenJDK 11</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Keaper</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
